@@ -1,0 +1,7 @@
+form .input {
+	margin-bottom: 1em;
+}
+
+form .input label {
+	display: block;
+}
