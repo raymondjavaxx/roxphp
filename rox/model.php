@@ -13,6 +13,7 @@
  * @access public
  */
 class Model extends Object {
+	var $name = null;
 	var $table = null;
 	var $primaryKey = 'id';
 	var $data = null;
@@ -52,7 +53,7 @@ class Model extends Object {
 			$this->data = $data;
 		}
 
-		$values = array_values($this->data);
+		$values = array_values($this->data[$this->name]);
 
 		$total = count($values);
 		for($i=0; $i<$total; $i++) {
