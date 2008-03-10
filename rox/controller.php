@@ -5,7 +5,7 @@
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
- * @package	rox
+ * @package rox
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
@@ -78,6 +78,17 @@ class Controller extends Object {
    */
 	function isIPhone() {
 		return strpos($_SERVER['HTTP_USER_AGENT'], 'iPho') !== FALSE;
+	}
+
+  /**
+   * Send redirects headers and exit
+   *
+   * @param string $url
+   */
+	function redirect($url) {
+		header('HTTP/1.1 301');
+		header('Location: ' . Router::url($url));
+		exit;
 	}
 }
 ?>
