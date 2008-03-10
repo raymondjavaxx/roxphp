@@ -5,7 +5,7 @@
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
- * @package	rox
+ * @package rox
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
@@ -17,22 +17,23 @@ class HtmlHelper extends Object {
   /**
    * HtmlHelper::image()
    *
-   * @param mixed $path
+   * @param string $path
    * @param string $alt
-   * @return
+   * @return string
    */
 	function image($path, $alt = '') {
-		return '<img src="' . Router::url('/img/' . $path) .  '" alt="{$alt}" />';
+		return '<img src="' . Router::url('/img/' . $path) .  '" alt="' . $alt . '" />';
 	}
 
   /**
-   * HtmlHelper::img()
+   * Alias for HtmlHelper::image()
    *
-   * @param mixed $path
-   * @return
+   * @param string $path
+   * @param string $alt
+   * @return string
    */
-	function img($path) {
-		return $this->image($path);
+	function img($path, $alt = '') {
+		return $this->image($path, $alt);
 	}
 
   /**

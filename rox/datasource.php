@@ -71,7 +71,7 @@ class DataSource extends Object {
    * @return
    */
 	function describe($table) {
-		return $this->query('DESCRIBE users');;
+		return $this->query('DESCRIBE ' . $table);
 	}
 
   /**
