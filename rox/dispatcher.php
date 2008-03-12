@@ -40,7 +40,7 @@ class Dispatcher extends Object {
 		$controller->action = $parts[1];
 		$controller->data = isset($_POST['d']) ? $_POST['d'] : array();
 
-		$controller->{$parts[1]}();
+		call_user_func_array(array(&$controller, $parts[1]), array_slice($parts, 2));
 		$controller->render();
 	}
 
