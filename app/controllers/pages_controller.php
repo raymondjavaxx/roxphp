@@ -12,9 +12,9 @@
  * @link http://roxphp.com 
  * @access public
  */
-class pages_controller extends Controller {
+class PagesController extends Controller {
 
-	var $name = 'pages';
+	var $name = 'Pages';
 
 	var $models = array();
 

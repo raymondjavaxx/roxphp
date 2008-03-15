@@ -21,14 +21,16 @@ class Dispatcher extends Object {
    * @return
    */
 	function dispatch($url = null) {
+		$url = strtolower($url);
 		$parts = explode('/', $url);
 
 		if (!isset($parts[1])) {
 			$parts[1] = 'index';
 		}
 
-		$controllerName = $parts[0] . '_controller';
 		$this->loadController($parts[0]);
+
+		$controllerName = str_replace(' ', '', ucwords(str_replace('_', ' ', $parts[0]))) . 'Controller';
 		$controller = new $controllerName;
 
 		if ( method_exists('Controller', $parts[1]) ||
@@ -51,7 +53,7 @@ class Dispatcher extends Object {
    * @return
    */
 	function loadController($name) {
-		$fileName = CONTROLLERS . DS . strtolower($name) . '_controller.php';
+		$fileName = CONTROLLERS . DS . $name . '_controller.php';
 		if (!file_exists($fileName)) {
 			throw new RoxException(404);
 		}
