@@ -14,6 +14,8 @@
  */
 class DataSource extends Object {
 
+	var $queries = array();
+
 	private $link = null;
 
 	private $result = null;
@@ -119,6 +121,10 @@ class DataSource extends Object {
    * @return resource
    */
 	function execute($sql) {
+		if (ROX_DEBUG) {
+			$this->queries[] = $sql;
+		}
+
 		return mysql_query($sql, $this->link);
 	}
 
@@ -130,6 +136,15 @@ class DataSource extends Object {
 	function lastInsertedID() {
 		$result = $this->query('SELECT LAST_INSERT_ID() AS `id`');
 		return $result[0]['id'];
+	}
+
+  /**
+   * Returns the number of the affected rows in previous operation
+   *
+   * @return integer
+   */
+	function affectedRows() {
+		return mysql_affected_rows();
 	}
 }
 ?>

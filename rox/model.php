@@ -46,7 +46,7 @@ class Model extends Object {
    * Model::save()
    *
    * @param mixed $data
-   * @return
+   * @return boolean
    */
 	function save($data = null) {
 		if (!empty($data)) {
@@ -60,12 +60,17 @@ class Model extends Object {
 			$values[$i] = '\'' . $this->datasource->escape($values[$i]) . '\'';
 		}
 
-		$fields = implode(', ', array_keys($this->data));
+		$fields = implode(', ', array_keys($this->data[$this->name]));
 		$values = implode(', ', $values);
 
 		$this->datasource->execute("INSERT INTO `{$this->table}` ({$fields}) VALUES ({$values})");
+		$saved = $this->datasource->affectedRows() == 1;
+		if (!$saved) {
+			return false;	
+		}
 
 		$this->id = $this->datasource->lastInsertedID();
+		return $saved;
 	}
 
   /**
@@ -78,19 +83,20 @@ class Model extends Object {
 	function read($fields = null, $id = null) {
 		if (empty($fields)) {
 			$fields = '*';
-		} else if (is_array()) {
+		} else if (is_array($fields)) {
 			$fields = implode(', ', $fields);
 		}
 
 		$sql = "SELECT {$fields} FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id}";
-		return $this->datasource->query($sql);
+		$result = $this->datasource->query($sql);
+		return array($this->name => $result[0]);
 	}
 
   /**
-   * Model::delete()
+   * Deletes a record
    *
-   * @param mixed $id
-   * @return
+   * @param integer $id
+   * @return boolean
    */
 	function delete($id = null) {
 		if (empty($id)) {
@@ -102,13 +108,14 @@ class Model extends Object {
 		}
 
 		$this->datasource->execute("DELETE FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id}");
+		return $this->datasource->affectedRows() > 0;
 	}
 
   /**
-   * Model::query()
+   * Performs a SQL query
    *
-   * @param mixed $sql
-   * @return
+   * @param string $sql
+   * @return mixed
    */
 	function query($sql) {
 		return $this->datasource->query($sql); 
