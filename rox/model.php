@@ -53,17 +53,26 @@ class Model extends Object {
 			$this->data = $data;
 		}
 
-		$values = array_values($this->data[$this->name]);
+		if (empty($this->id) || !$this->exists($this->id)) {
+			$values = array_values($this->data[$this->name]);
+	
+			foreach($values as &$v) {
+				$v = "'" . $this->datasource->escape($v) . "'";
+			}
 
-		$total = count($values);
-		for($i=0; $i<$total; $i++) {
-			$values[$i] = '\'' . $this->datasource->escape($values[$i]) . '\'';
+			$fields = implode(', ', array_keys($this->data[$this->name]));
+			$values = implode(', ', $values);
+
+			$this->datasource->execute("INSERT INTO `{$this->table}` ({$fields}) VALUES ({$values})");
+		} else {
+			$updateData = '';
+			foreach($this->data[$this->name] as $f => $v) {
+				$updateData .= $f . " = '" . $this->datasource->escape($v) . "'";
+			}
+
+			$this->datasource->execute("UPDATE `{$this->table}` SET {$updateData} WHERE {$this->primaryKey} = {$this->id}");
 		}
 
-		$fields = implode(', ', array_keys($this->data[$this->name]));
-		$values = implode(', ', $values);
-
-		$this->datasource->execute("INSERT INTO `{$this->table}` ({$fields}) VALUES ({$values})");
 		$saved = $this->datasource->affectedRows() == 1;
 		if (!$saved) {
 			return false;	
@@ -74,11 +83,23 @@ class Model extends Object {
 	}
 
   /**
+   * Returns true if a record exists
+   *
+   * @param mixed $id
+   * @return boolean
+   */
+	function exists($id) {
+		$sql = "SELECT COUNT(*) AS `count` FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id} LIMIT 1";
+		$result = $this->datasource->query($sql);
+		return (boolean)$result[0]['count'];
+	}
+
+  /**
    * Model::read()
    *
    * @param mixed $fields
-   * @param mixed $id
-   * @return
+   * @param integer $id
+   * @return array
    */
 	function read($fields = null, $id = null) {
 		if (empty($fields)) {
