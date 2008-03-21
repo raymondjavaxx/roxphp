@@ -33,19 +33,17 @@ class RoxException extends Exception {
 	var $info = null;
 
   /**
-   * RoxException::__construct()
+   * Class constructor
    *
-   * @param string $info
-   * @return
+   * @param mixed $type
+   * @param string $message
    */
-	function __construct($info = 'unknown') {
-		if (!is_array($info)) {
-			$info = array('type' => $info);
-		}
-
-		$info['rox_page_title'] = 'Error';
-
-		$this->info = $info;
+	function __construct($type = 'unknown', $message = 'Unknown exception') {
+		$this->info = array(
+			'type' => $type,
+			'message' => $message,
+			'rox_page_title' => 'Error',
+		);
 	}
 
   /**
