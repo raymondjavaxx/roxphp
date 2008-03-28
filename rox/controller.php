@@ -35,7 +35,7 @@ class Controller extends Object {
    */
 	function __construct() {
 		foreach($this->models as $model) {
-			require_once(MODELS . DS . $model . '.php');
+			Rox::loadModel($model);
 			$this->{$model} = new $model;
 		}
 	}
@@ -48,7 +48,7 @@ class Controller extends Object {
 	function render() {
 		$this->set('rox_page_title', $this->pageTitle);
 		$View = new View($this->viewVars, $this->data);
-		$View->render($this->name, $this->action, $this->layout);
+		$View->render(strtolower($this->name), $this->action, $this->layout);
 	}
 
   /**

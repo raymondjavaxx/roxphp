@@ -38,6 +38,7 @@ error_reporting(ROX_DEBUG ? E_ALL : 0);
 // include core files
 include(ROX.DS.'exception.php');
 include(ROX.DS.'object.php');
+include(ROX.DS.'rox.php');
 include(ROX.DS.'registry.php');
 include(ROX.DS.'dispatcher.php');
 include(ROX.DS.'datasource.php');
