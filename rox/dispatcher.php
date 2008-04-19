@@ -24,7 +24,7 @@ class Dispatcher extends Object {
 		$url = strtolower($url);
 		$parts = explode('/', $url);
 
-		if (preg_match('/^[a-z-A-Z_]+$/', $parts[0]) != 1) {
+		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
 			throw new RoxException(404, 'Ilegal controller name');
 		}
 
@@ -65,4 +65,3 @@ class Dispatcher extends Object {
 		require_once($fileName);
 	}
 }
-?>
