@@ -33,7 +33,6 @@ class Rox extends Object {
    * @param string $name
    */
 	static function loadModel($name) {
-		require_once(MODELS . DS . strtolower($name) . '.php');
+		require_once(MODELS . strtolower($name) . '.php');
 	}
 }
-?>

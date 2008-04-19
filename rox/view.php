@@ -37,8 +37,8 @@ class View extends Object {
    */
 	function render($path, $name, $layout = 'default') {
 		//load basic helpers
-		require(ROX . DS . 'helpers' . DS . 'html.php');
-		require(ROX . DS . 'helpers' . DS . 'form.php');
+		require(ROX . 'helpers' . DS . 'html.php');
+		require(ROX . 'helpers' . DS . 'form.php');
 
 		$html = new HtmlHelper;
 		$form = new FormHelper($this->data);
@@ -46,13 +46,12 @@ class View extends Object {
 		extract($this->vars, EXTR_SKIP);
 
 		ob_start();
-		include(VIEWS . DS . $path . DS . $name . '.tpl');
+		include(VIEWS . $path . DS . $name . '.tpl');
 		$rox_layout_content = ob_get_contents();
 		ob_end_clean();
 
 		ob_start();
-		include(LAYOUTS . DS . $layout . '.tpl');
+		include(LAYOUTS . $layout . '.tpl');
 		ob_end_flush();
 	}
 }
-?>

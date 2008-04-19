@@ -13,39 +13,41 @@
  * @access public
  */
 
-$NOW = microtime(true);
+define('DS', DIRECTORY_SEPARATOR);
 
 // define paths
-define('DS', DIRECTORY_SEPARATOR);
-define('WEBROOT', dirname(__FILE__));
-define('APP', dirname(WEBROOT));
-define('CONTROLLERS', APP.DS.'controllers');
-define('MODELS', APP.DS.'models');
-define('VIEWS', APP.DS.'views');
-define('LAYOUTS', VIEWS.DS.'layouts');
-define('ROX', dirname(APP).DS.'rox');
-define('CACHE', APP.DS.'tmp'.DS.'cache');
+define('WEBROOT', dirname(__FILE__) . DS);
+define('APP', dirname(WEBROOT) . DS);
+ 
+define('ROX', dirname(APP).DS.'rox' . DS);
+
+define('CONFIG', APP . 'config' . DS);
+define('MODELS', APP . 'models' . DS);
+define('VIEWS', APP . 'views' . DS);
+define('LAYOUTS', VIEWS . 'layouts' . DS);
+define('CONTROLLERS', APP . 'controllers' . DS);
 
 define('WWW', dirname(dirname(dirname($_SERVER['PHP_SELF']))));
 
 // include configuration files
-include(APP.DS.'config'.DS.'main.php');
-include(APP.DS.'config'.DS.'database.php');
+include(CONFIG . 'main.php');
+include(CONFIG . 'database.php');
 
 // set error reporting level
 error_reporting(ROX_DEBUG ? E_ALL : 0);
 
 // include core files
-include(ROX.DS.'exception.php');
-include(ROX.DS.'object.php');
-include(ROX.DS.'rox.php');
-include(ROX.DS.'registry.php');
-include(ROX.DS.'dispatcher.php');
-include(ROX.DS.'datasource.php');
-include(ROX.DS.'router.php');
-include(ROX.DS.'model.php');		// M
-include(ROX.DS.'view.php');			// V
-include(ROX.DS.'controller.php');	// C 
+include(ROX . 'exception.php');
+include(ROX . 'object.php');
+include(ROX . 'rox.php');
+include(ROX . 'validator.php');
+include(ROX . 'registry.php');
+include(ROX . 'dispatcher.php');
+include(ROX . 'datasource.php');
+include(ROX . 'router.php');
+include(ROX . 'model.php');			// M
+include(ROX . 'view.php');			// V
+include(ROX . 'controller.php');	// C 
 
 $DataSource = new DataSource;
 $DataSource->connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -53,6 +55,3 @@ Registry::addObject('DataSource', $DataSource);
 
 $Dispatcher = new Dispatcher;
 $Dispatcher->dispatch(isset($_GET['route']) ? $_GET['route'] : ROX_DEFAULT_ROUTE);
-
-//echo '<p> Page generated in: ' . round(microtime(true) - $NOW, 3) . ' seconds</p>';
-?>
