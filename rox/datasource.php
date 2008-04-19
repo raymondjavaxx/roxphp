@@ -14,11 +14,28 @@
  */
 class DataSource extends Object {
 
+    const DBMS_DATE_FORMAT     = 'Y-m-d';
+    const DBMS_DATETIME_FORMAT = 'Y-m-d h-i-s';
+
 	public $queries = array();
 
 	private $link = null;
 
 	private $result = null;
+
+  /**
+   * Returns a singleton instance of DataSource
+   *
+   * @return DataSource
+   */
+	public static function &getInstance() {
+		static $instance;
+		if (!is_object($instance)) {
+			$instance = new DataSource;
+		}
+
+		return $instance;
+	}
 
   /**
    * Connects to a database server and selects the database
@@ -83,7 +100,7 @@ class DataSource extends Object {
    * @return array
    */
 	public function escape($value) {
-		return mysql_escape_string($value);
+		return mysql_real_escape_string($value);
 	}
 
   /**
@@ -136,6 +153,26 @@ class DataSource extends Object {
 	public function lastInsertedID() {
 		$result = $this->query('SELECT LAST_INSERT_ID() AS `id`');
 		return $result[0]['id'];
+	}
+
+  /**
+   * Date formater
+   * 
+   * @param string
+   * @return string
+   */
+	function formatDate($date) {
+		return date(DataSource::DBMS_DATE_FORMAT, strtotime($date));
+	}
+
+  /**
+   * DateTime formater
+   * 
+   * @param string
+   * @return string
+   */
+	function formatDateTime($dateTime) {
+		return date(DataSource::DBMS_DATETIME_FORMAT, strtotime($dateTime));
 	}
 
   /**
