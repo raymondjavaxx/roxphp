@@ -23,9 +23,9 @@ class Registry extends Object {
    *
    * @return
    */
-	function &getInstance() {
+	public static function &getInstance() {
 		if (empty(self::$_instance)) {
-			self::$_instance =& new Registry();
+			self::$_instance = new Registry();
 		}
 
 		return self::$_instance;
@@ -38,8 +38,8 @@ class Registry extends Object {
    * @param mixed $instance
    * @return
    */
-	static function addObject($name, &$instance) {
-		$_self =& Registry::getInstance();
+	public static function addObject($name, &$instance) {
+		$_self = Registry::getInstance();
 		if (!isset($_self->objects[$name])) {
 			$_self->objects[$name] = &$instance;
 			return true;
@@ -54,8 +54,8 @@ class Registry extends Object {
    * @param mixed $name
    * @return
    */
-	static function &getObject($name) {
-		$_self =& Registry::getInstance();
+	public static function &getObject($name) {
+		$_self = Registry::getInstance();
 		if (isset($_self->objects[$name])) {
 			return $_self->objects[$name];
 		}
@@ -64,4 +64,3 @@ class Registry extends Object {
 		return $result;
 	}
 }
-?>

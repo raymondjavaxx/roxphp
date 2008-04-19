@@ -20,7 +20,7 @@ class Rox extends Object {
    * @param string $name
    * @return object
    */
-	static function getModel($name) {
+	public static function getModel($name) {
 		if (class_exists($name)) {
 			return new $name;
 		}
@@ -32,7 +32,7 @@ class Rox extends Object {
    *
    * @param string $name
    */
-	static function loadModel($name) {
+	public static function loadModel($name) {
 		require_once(MODELS . strtolower($name) . '.php');
 	}
 }

@@ -14,7 +14,7 @@
  */
 class DataSource extends Object {
 
-	var $queries = array();
+	public $queries = array();
 
 	private $link = null;
 
@@ -29,7 +29,7 @@ class DataSource extends Object {
    * @param string $database
    * @return boolean
    */
-	function connect($server, $username, $password, $database) {
+	public function connect($server, $username, $password, $database) {
 		$this->link = mysql_connect($server, $username, $password);
 		if($this->link === FALSE) {
 			return FALSE;
@@ -43,7 +43,7 @@ class DataSource extends Object {
    *
    * @return boolean
    */
-	function disconnect() {
+	public function disconnect() {
 		return mysql_close($this->link);
 	}
 
@@ -52,7 +52,7 @@ class DataSource extends Object {
    *
    * @return array
    */
-	function listTables() {
+	public function listTables() {
 		$result = $this->execute('SHOW TABLES');
 		if (!$result) {
 			return array();
@@ -72,7 +72,7 @@ class DataSource extends Object {
    * @param mixed $table
    * @return
    */
-	function describe($table) {
+	public function describe($table) {
 		return $this->query('DESCRIBE ' . $table);
 	}
 
@@ -82,7 +82,7 @@ class DataSource extends Object {
    * @param string $sql
    * @return array
    */
-	function escape($value) {
+	public function escape($value) {
 		return mysql_escape_string($value);
 	}
 
@@ -92,7 +92,7 @@ class DataSource extends Object {
    * @param string $sql
    * @return array
    */
-	function query($sql) {
+	public function query($sql) {
 		$this->result = $this->execute($sql);
 		if (!$this->result) {
 			return array();
@@ -106,7 +106,7 @@ class DataSource extends Object {
    *
    * @return array
    */
-	function fetchAll() {
+	public function fetchAll() {
 		$data = array();
 		while($_data = mysql_fetch_assoc($this->result)) {
 			$data[] = $_data;
@@ -120,7 +120,7 @@ class DataSource extends Object {
    * @param string $sql
    * @return resource
    */
-	function execute($sql) {
+	public function execute($sql) {
 		if (ROX_DEBUG) {
 			$this->queries[] = $sql;
 		}
@@ -133,7 +133,7 @@ class DataSource extends Object {
    *
    * @return mixed
    */
-	function lastInsertedID() {
+	public function lastInsertedID() {
 		$result = $this->query('SELECT LAST_INSERT_ID() AS `id`');
 		return $result[0]['id'];
 	}
@@ -143,8 +143,7 @@ class DataSource extends Object {
    *
    * @return integer
    */
-	function affectedRows() {
+	public function affectedRows() {
 		return mysql_affected_rows();
 	}
 }
-?>

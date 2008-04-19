@@ -20,8 +20,7 @@ class Router extends Object {
    * @param string $path
    * @return string
    */
-	static function url($path) {
+	public static function url($path) {
 		return WWW . $path;
 	}
 }
-?>
