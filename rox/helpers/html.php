@@ -21,7 +21,7 @@ class HtmlHelper extends Object {
    * @param string $alt
    * @return string
    */
-	function image($path, $alt = '') {
+	public function image($path, $alt = '') {
 		return '<img src="' . Router::url('/img/' . $path) .  '" alt="' . $alt . '" />';
 	}
 
@@ -32,7 +32,7 @@ class HtmlHelper extends Object {
    * @param string $alt
    * @return string
    */
-	function img($path, $alt = '') {
+	public function img($path, $alt = '') {
 		return $this->image($path, $alt);
 	}
 
@@ -42,8 +42,7 @@ class HtmlHelper extends Object {
    * @param mixed $file
    * @return
    */
-	function css($file) {
+	public function css($file) {
 		return '<link rel="stylesheet" type="text/css" href="' . Router::url('/css/' . $file . '.css') . '" />';
 	}
 }
-?>

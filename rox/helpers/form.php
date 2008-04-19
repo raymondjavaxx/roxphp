@@ -14,17 +14,16 @@
  */
 class FormHelper extends Object {
 
-	var $currentModel = null;
+	private $currentModel = null;
 
-	var $data = array();
+	private $data = array();
 
   /**
    * FormHelper::__construct()
    *
    * @param array $data
-   * @return
    */
-	function __construct(&$data = array()) {
+	public function __construct(&$data = array()) {
 		$this->data = $data;
 	}
 
@@ -36,7 +35,7 @@ class FormHelper extends Object {
    * @param string $method
    * @return string
    */
-	function create($model, $action, $method = 'post') {
+	public function create($model, $action, $method = 'post') {
 		$this->currentModel = strtolower($model);
 		$formTag = '<form action="%s" method="%s">';
 		return sprintf($formTag, Router::url($action), $method); 
@@ -48,7 +47,7 @@ class FormHelper extends Object {
    * @param string $name
    * @return string
    */
-	function input($name) {
+	public function input($name) {
 		$id = $this->currentModel . '_' . $name;
 		$fieldName = "d[{$this->currentModel}][{$name}]";
 
@@ -73,7 +72,7 @@ class FormHelper extends Object {
    * @param string $text
    * @return string
    */
-	function submit($text = 'Submit') {
+	public function submit($text = 'Submit') {
 		return '<div class="submit"><input type="submit" name="submit" value="' . $text . '" /></div>';
 	}
 
@@ -81,9 +80,9 @@ class FormHelper extends Object {
    * FormHelper::label()
    *
    * @param string $text
-   * @return
+   * @return string
    */
-	function label($text) {
+	public function label($text) {
 		return '<label>'.$text.'</label>';
 	}
 
@@ -92,8 +91,7 @@ class FormHelper extends Object {
    *
    * @return string
    */
-	function end() {
+	public function end() {
 		return '</form>';
 	}
 }
-?>
