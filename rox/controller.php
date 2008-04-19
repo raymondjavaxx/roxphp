@@ -14,26 +14,26 @@
  */
 class Controller extends Object {
 
-	var $name = '';
+	public $name = '';
 
-	var $pageTitle = 'RoxPHP';
+	protected $pageTitle = 'RoxPHP';
 
-	var $layout = 'default';
+	public $layout = 'default';
 
-	var $viewVars = array();
+	protected $viewVars = array();
 
-	var $data = array();
+	public $data = array();
 
-	var $action = '';
+	public $action = '';
 
-	var $models = array();
+	protected $models = array();
 
   /**
    * Class constructor
    *
    * @return
    */
-	function __construct() {
+	public function __construct() {
 		foreach($this->models as $model) {
 			Rox::loadModel($model);
 			$this->{$model} = new $model;
@@ -45,7 +45,7 @@ class Controller extends Object {
    *
    * @return
    */
-	function render() {
+	public function render() {
 		$this->set('rox_page_title', $this->pageTitle);
 		$View = new View($this->viewVars, $this->data);
 		$View->render(strtolower($this->name), $this->action, $this->layout);
@@ -58,7 +58,7 @@ class Controller extends Object {
    * @param mixed $value
    * @return
    */
-	function set($varName, $value = null) {
+	public function set($varName, $value = null) {
 		$this->viewVars[$varName] = $value;
 	}
 
@@ -67,7 +67,7 @@ class Controller extends Object {
    *
    * @return boolean
    */
-	function isAjax() {
+	public function isAjax() {
 		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
 	}
 
@@ -76,7 +76,7 @@ class Controller extends Object {
    *
    * @return boolean
    */
-	function isIPhone() {
+	public function isIPhone() {
 		return strpos($_SERVER['HTTP_USER_AGENT'], 'iPho') !== FALSE;
 	}
 
@@ -85,10 +85,9 @@ class Controller extends Object {
    *
    * @param string $url
    */
-	function redirect($url) {
+	public function redirect($url) {
 		header('HTTP/1.1 301');
 		header('Location: ' . Router::url($url));
 		exit;
 	}
 }
-?>

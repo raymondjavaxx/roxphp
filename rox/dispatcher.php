@@ -20,7 +20,7 @@ class Dispatcher extends Object {
    * @param mixed $url
    * @return
    */
-	function dispatch($url = null) {
+	public function dispatch($url = null) {
 		$url = strtolower($url);
 		$parts = explode('/', $url);
 
@@ -56,7 +56,7 @@ class Dispatcher extends Object {
    * @param mixed $name
    * @return
    */
-	function loadController($name) {
+	public function loadController($name) {
 		$fileName = CONTROLLERS . DS . $name . '_controller.php';
 		if (!file_exists($fileName)) {
 			throw new RoxException(404, 'Missing controller file');

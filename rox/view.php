@@ -14,16 +14,16 @@
  */
 class View extends Object {
 
-	var $vars = array();
-	var $data = array();
+	protected $vars = array();
+	protected $data = array();
 
   /**
-   * Constructor
+   * Class Constructor
    *
    * @param array $vars
    * @param array $data
    */
-	function __construct(&$vars, &$data) {
+	public function __construct(&$vars, &$data) {
 		$this->vars = $vars;
 		$this->data = $data;
 	}
@@ -35,7 +35,7 @@ class View extends Object {
    * @param string $name
    * @param string $layout
    */
-	function render($path, $name, $layout = 'default') {
+	public function render($path, $name, $layout = 'default') {
 		//load basic helpers
 		require(ROX . 'helpers' . DS . 'html.php');
 		require(ROX . 'helpers' . DS . 'form.php');

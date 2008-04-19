@@ -17,9 +17,8 @@ class RoxExceptionHandler {
    * RoxExceptionHandler::handleException()
    *
    * @param mixed $Exception
-   * @return
    */
-	static function handleException($Exception) {
+	public static function handleException($Exception) {
 		$Exception->render();
 		exit;
 	}
@@ -30,7 +29,7 @@ class RoxExceptionHandler {
  */
 class RoxException extends Exception {
 
-	var $info = null;
+	private $info = null;
 
   /**
    * Class constructor
@@ -38,7 +37,7 @@ class RoxException extends Exception {
    * @param mixed $type
    * @param string $message
    */
-	function __construct($type = 'unknown', $message = 'Unknown exception') {
+	public function __construct($type = 'unknown', $message = 'Unknown exception') {
 		$this->info = array(
 			'type' => $type,
 			'message' => $message,
@@ -47,11 +46,9 @@ class RoxException extends Exception {
 	}
 
   /**
-   * RoxException::render()
-   *
-   * @return
+   * Renders the exception
    */
-	function render() {
+	public function render() {
 		// this header will be overwritten
 		header("HTTP/1.0 500 Internal Server Error");
 
@@ -62,5 +59,3 @@ class RoxException extends Exception {
 }
 
 set_exception_handler(array('RoxExceptionHandler', 'handleException'));
-
-?>
