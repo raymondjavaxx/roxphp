@@ -14,7 +14,7 @@
  */
 class Controller extends Object {
 
-	public $name = '';
+	protected $name = '';
 
 	protected $pageTitle = 'RoxPHP';
 

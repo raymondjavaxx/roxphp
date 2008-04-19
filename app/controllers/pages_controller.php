@@ -14,17 +14,14 @@
  */
 class PagesController extends Controller {
 
-	var $name = 'Pages';
+	protected $name = 'Pages';
 
-	var $models = array();
+	protected $models = array();
 
   /**
-   * pages_controller::home()
-   *
-   * @return
+   * Renders the homepage
    */
-	function home() {
-		// render the home page
+	public function home() {
+		// just render it!
 	}
 }
-?>
