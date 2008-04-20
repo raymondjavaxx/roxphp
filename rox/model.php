@@ -131,8 +131,7 @@ class Model extends Object {
 				$this->smartQuote($this->primaryKey, $this->id)
 			);
 
-			$DataSource->execute($sql);
-			return $DataSource->affectedRows() == 1;
+			return $DataSource->execute($sql) !== FALSE;
 		}
 
 		return false;
@@ -161,7 +160,7 @@ class Model extends Object {
    *
    * @param mixed $id 
    * @param mixed $fields
-   * @return array
+   * @return boolean
    */
 	public function read($id = null, $fields = null) {
 		if (empty($fields)) {
@@ -186,7 +185,7 @@ class Model extends Object {
 		$this->setId($id);
 		$this->setData($result[0]);
 
-		return $result[0];
+		return true;
 	}
 
   /**
