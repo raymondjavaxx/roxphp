@@ -1,6 +1,6 @@
 <?php
 /**
- * pages_controller
+ * PagesController
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -15,8 +15,6 @@
 class PagesController extends Controller {
 
 	protected $name = 'Pages';
-
-	protected $models = array();
 
   /**
    * Renders the homepage

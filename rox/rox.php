@@ -21,10 +21,11 @@ class Rox extends Object {
    * @return object
    */
 	public static function getModel($name) {
-		if (class_exists($name)) {
-			return new $name;
+		if (!class_exists($name)) {
+			Rox::loadModel($name);
 		}
-		return false;
+
+		return new $name;
 	}
 
   /**
