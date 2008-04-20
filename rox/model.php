@@ -13,73 +13,129 @@
  * @access public
  */
 class Model extends Object {
-	var $name = null;
-	var $table = null;
-	var $primaryKey = 'id';
-	var $data = null;
-	var $id = null;
 
-	private $datasource = null;
+	public $name = '';
+	protected $table = '';
+	protected $primaryKey = 'id';
+	protected $id = null;
+	protected $data = array();
+	protected $fieldMap = array('id' => array('type' => 'integer'));
 
   /**
-   * Class constructor
+   * ID setter
    *
-   * @return
+   * @param mixed $id 
    */
-	function __construct() {
-		$this->datasource = Registry::getObject('DataSource');
+	public function setId($id) {
+		$this->id = $id;
 	}
 
   /**
-   * Resets the model data
+   * ID getter
+   *
+   * @return mixed $id 
+   */
+	public function getId() {
+		return $this->id;
+	}
+
+  /**
+   * Set data
+   *
+   * @param string|array $what
+   * @param mixed $value 
+   */
+	public function setData($what, $value = null) {
+		if (is_array($what)) {
+			$this->data = $what;
+		} else {
+			$this->data[$what] = $value;
+		}
+	}
+
+  /**
+   * Get data
+   *
+   * @param string $what
+   * @return mixed
+   */
+	public function getData($what = null) {
+		if (empty($what)) {
+			return $this->data;
+		}
+
+		if (array_key_exists($what, $this->data)) {
+			return $this->data[$what];
+		}
+
+		return null;
+	}
+
+  /**
+   * Resets the model data and ID
    *
    * @param mixed $data
-   * @return
    */
 	function create($data) {
-		//reset the id
-		$this->id = null;
-		$this->data = $data;
+		$this->setId(null);
+		$this->setData($data);
 	}
 
   /**
    * Model::save()
    *
-   * @param mixed $data
    * @return boolean
    */
-	function save($data = null) {
-		if (!empty($data)) {
-			$this->data = $data;
+	function save() {
+		$data = $this->getData();
+		if (empty($data)) {
+			return false;
 		}
+
+		unset($data[$this->primaryKey]);
+
+		$DataSource = DataSource::getInstance();
 
 		if (empty($this->id) || !$this->exists($this->id)) {
-			$values = array_values($this->data[$this->name]);
-	
-			foreach($values as &$v) {
-				$v = "'" . $this->datasource->escape($v) . "'";
+			foreach($data as $f => $v) {
+				$data[$f] = $this->smartQuote($f, $v);
 			}
 
-			$fields = implode(', ', array_keys($this->data[$this->name]));
-			$values = implode(', ', $values);
+			$fields = '`' . implode('`, `', array_keys($data)) . '`';
+			$values = implode(', ', array_values($data));
 
-			$this->datasource->execute("INSERT INTO `{$this->table}` ({$fields}) VALUES ({$values})");
+			$sql = sprintf(
+				"INSERT INTO `%s` (%s) VALUES (%s)",
+				$this->table,
+				$fields,
+				$values
+			);
+
+			$DataSource->execute($sql);
+			$saved = $DataSource->affectedRows() == 1;
+			if ($saved) {
+				$this->setId($DataSource->lastInsertedID());
+				return true;
+			}
 		} else {
-			$updateData = '';
-			foreach($this->data[$this->name] as $f => $v) {
-				$updateData .= $f . " = '" . $this->datasource->escape($v) . "'";
+			$updateData = array();
+			foreach($data as $f => $v) {
+				$updateData[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
 			}
 
-			$this->datasource->execute("UPDATE `{$this->table}` SET {$updateData} WHERE {$this->primaryKey} = {$this->id}");
+			$sql = sprintf(
+				"UPDATE `%s` SET %s WHERE `%s` = %s",
+				$this->table,
+				implode(', ', $updateData),
+				$this->primaryKey,
+				$this->smartQuote($this->primaryKey, $this->id)
+			);
+
+			$DataSource->execute($sql);
+			return $DataSource->affectedRows() == 1;
 		}
 
-		$saved = $this->datasource->affectedRows() == 1;
-		if (!$saved) {
-			return false;	
-		}
-
-		$this->id = $this->datasource->lastInsertedID();
-		return $saved;
+		return false;
 	}
 
   /**
@@ -88,29 +144,49 @@ class Model extends Object {
    * @param mixed $id
    * @return boolean
    */
-	function exists($id) {
-		$sql = "SELECT COUNT(*) AS `count` FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id} LIMIT 1";
-		$result = $this->datasource->query($sql);
-		return (boolean)$result[0]['count'];
+	public function exists($id) {
+		$sql = sprintf(
+			"SELECT COUNT(*) AS `count` FROM `%s` WHERE `%s` = %s LIMIT 1",
+			$this->table,
+			$this->primaryKey,
+			$this->smartQuote($this->primaryKey, $id)
+		);
+
+		$result = DataSource::getInstance()->query($sql);
+		return $result[0]['count'] == 1;
 	}
 
   /**
    * Model::read()
    *
+   * @param mixed $id 
    * @param mixed $fields
-   * @param integer $id
    * @return array
    */
-	function read($fields = null, $id = null) {
+	public function read($id = null, $fields = null) {
 		if (empty($fields)) {
 			$fields = '*';
 		} else if (is_array($fields)) {
-			$fields = implode(', ', $fields);
+			$fields = '`' . implode('`, `', $fields) . '`';
 		}
 
-		$sql = "SELECT {$fields} FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id}";
-		$result = $this->datasource->query($sql);
-		return array($this->name => $result[0]);
+		$sql = sprintf(
+			"SELECT %s FROM `%s` WHERE `%s` = %s",
+			$fields,
+			$this->table,
+			$this->primaryKey,
+			$this->smartQuote($this->primaryKey, $id)
+		);
+
+		$result = DataSource::getInstance()->query($sql);
+		if (empty($result)) {
+			return false;
+		}
+
+		$this->setId($id);
+		$this->setData($result[0]);
+
+		return $result[0];
 	}
 
   /**
@@ -128,18 +204,37 @@ class Model extends Object {
 			return false;
 		}
 
-		$this->datasource->execute("DELETE FROM `{$this->table}` WHERE `{$this->primaryKey}` = {$id}");
-		return $this->datasource->affectedRows() > 0;
+		$sql = sprintf(
+			"DELETE FROM `%s` WHERE `%s` = %s",
+			$this->table,
+			$this->primaryKey,
+			$this->smartQuote($this->primaryKey, $id)
+		);
+
+		$DataSource = DataSource::getInstance();
+		$DataSource->execute($sql);
+		return $DataSource->affectedRows() > 0;
 	}
 
   /**
-   * Performs a SQL query
+   * Quotes and escapes values to be used in SQL queries  
    *
-   * @param string $sql
-   * @return mixed
+   * @param string $field
+   * @param mixed $value
+   * @return mixed 
    */
-	function query($sql) {
-		return $this->datasource->query($sql); 
+	public function smartQuote($field, $value) {
+		$type = 'string';
+		if (isset($this->fieldMap[$field]['type'])) {
+			$type = $this->fieldMap[$field]['type'];
+		}
+
+		if ($type == 'string') {
+			return "'" . DataSource::getInstance()->escape($value) . "'";
+		} else if($type == 'integer') {
+			return (integer)$value;
+		}
+
+		return DataSource::getInstance()->escape($value);
 	}
 }
-?>

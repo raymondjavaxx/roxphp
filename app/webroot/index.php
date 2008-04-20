@@ -49,9 +49,8 @@ include(ROX . 'model.php');			// M
 include(ROX . 'view.php');			// V
 include(ROX . 'controller.php');	// C 
 
-$DataSource = new DataSource;
+$DataSource = DataSource::getInstance();
 $DataSource->connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-Registry::addObject('DataSource', $DataSource);
 
 $Dispatcher = new Dispatcher;
 $Dispatcher->dispatch(isset($_GET['route']) ? $_GET['route'] : ROX_DEFAULT_ROUTE);
