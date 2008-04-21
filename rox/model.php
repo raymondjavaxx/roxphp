@@ -189,6 +189,72 @@ class Model extends Object {
 	}
 
   /**
+   * Model::findAll()
+   *
+   * @param mixed $fields
+   * @param mixed $conditions
+   * @param string $order
+   * @param mixed $limit   
+   * @return array
+   */
+	public function findAll($fields = null, $conditions = array(), $order = null, $limit = null) {
+		if (empty($fields)) {
+			$fields = '*';
+		} else if (is_array($fields)) {
+			$fields = '`' . implode('`, `', $fields) . '`';
+		}
+
+		$sql = sprintf("SELECT %s FROM `%s` WHERE", $fields, $this->table);
+
+		if (empty($conditions)) {
+			$conditions = array('1 = 1');
+		}
+
+		if (is_string($conditions)) {
+			$sql .= ' ' . $conditions;
+		} else {
+			$_conditions = array();
+			foreach($conditions as $f => $v) {
+				if (is_int($f)) {
+					$_conditions[] = ' ' . $v;
+				} else {
+					$_conditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
+				}
+			}
+
+			$sql .= implode(' AND ', $_conditions);
+		}
+
+		if (!empty($order)) {
+			$sql .= ' ORDER BY ' . $order;
+		}
+
+		if (!empty($limit)) {
+			$sql .= ' LIMIT ' . $limit;
+		}
+
+		$DataSource = DataSource::getInstance();
+		return $DataSource->query($sql);
+	}
+
+  /**
+   * Model::find()
+   *
+   * @param mixed $fields
+   * @param mixed $conditions
+   * @param string $order
+   * @return array
+   */
+	public function find($fields = null, $conditions = array(), $order = null) {
+		$result = $this->findAll($fields, $conditions, $order, '1');
+		if (empty($result)) {
+			return array();
+		}
+
+		return $result[0];
+	}
+
+  /**
    * Deletes a record
    *
    * @param integer $id
