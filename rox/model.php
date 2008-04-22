@@ -54,6 +54,17 @@ class Model extends Object {
 	}
 
   /**
+   * Adds data without replacing the existing data 
+   *
+   * @param array $data
+   */
+	function addData($data) {
+		foreach($data as $f => $v) {
+			$this->setData($f, $v);
+		}
+	}
+
+  /**
    * Get data
    *
    * @param string $what
