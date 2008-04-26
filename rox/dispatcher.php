@@ -18,7 +18,7 @@ class Dispatcher extends Object {
    * Dispatcher::dispatch()
    *
    * @param mixed $url
-   * @return
+   * @throws RoxException
    */
 	public function dispatch($url = null) {
 		$url = strtolower($url);
@@ -53,8 +53,8 @@ class Dispatcher extends Object {
   /**
    * Dispatcher::loadController()
    *
-   * @param mixed $name
-   * @return
+   * @param string $name
+   * @throws RoxException
    */
 	public function loadController($name) {
 		$fileName = CONTROLLERS . DS . $name . '_controller.php';

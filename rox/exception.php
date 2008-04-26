@@ -43,6 +43,8 @@ class RoxException extends Exception {
 			'message' => $message,
 			'rox_page_title' => 'Error',
 		);
+
+		$this->message = $message;
 	}
 
   /**

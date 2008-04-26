@@ -271,7 +271,7 @@ class Model extends Object {
    * @param integer $id
    * @return boolean
    */
-	function delete($id = null) {
+	public function delete($id = null) {
 		if (empty($id)) {
 			$id = $this->id;
 		}
@@ -297,7 +297,7 @@ class Model extends Object {
    *
    * @param string $field
    * @param mixed $value
-   * @return mixed 
+   * @return mixed
    */
 	public function smartQuote($field, $value) {
 		$type = 'string';
