@@ -36,9 +36,13 @@ class FormHelper extends Object {
    * @return string
    */
 	public function create($model, $action, $method = 'post') {
-		$this->currentModel = strtolower($model);
-		$formTag = '<form action="%s" method="%s">';
-		return sprintf($formTag, Router::url($action), $method); 
+		$this->currentModel = $model;
+		$formTag = sprintf(
+			'<form action="%s" method="%s">',
+			Router::url($action),
+			$method
+		);
+		return $formTag;
 	}
 
   /**
@@ -47,23 +51,23 @@ class FormHelper extends Object {
    * @param string $name
    * @return string
    */
-	public function input($name) {
-		$id = $this->currentModel . '_' . $name;
-		$fieldName = "d[{$this->currentModel}][{$name}]";
+	public function input($name, $type = null, $value = null, $label = null) {
+		$fieldName = 'd[' . $this->currentModel . '][' . $name . ']';
 
-		$div = '<div class="input">%s</div>';
-		$input = '<input type="%s" name="%s" id="%s" value="%s" />';
-
-		if (isset($this->data[$this->currentModel][$name])) {
-			$value = htmlspecialchars($this->data[$this->currentModel][$name]);
-		} else {
-			$value = null;
+		if (is_null($value) && isset($this->data[$this->currentModel][$name])) {
+			$value = $this->data[$this->currentModel][$name];
 		}
 
-		$output = $this->label(ucwords($name));
-		$output .= sprintf($input, 'text', $fieldName, $id, $value);
+		$output = $this->label(empty($label) ? ucwords($name) : $label);
+		$output .= sprintf(
+			'<input type="%s" name="%s" id="%s" value="%s" />',
+			$type,
+			$fieldName,
+			$this->currentModel . '_' . $name . '_input',
+			htmlspecialchars($value)
+		);
 
-		return sprintf($div, $output);
+		return sprintf('<div class="input">%s</div>', $output);
 	}
 
   /**
