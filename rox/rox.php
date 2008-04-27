@@ -14,6 +14,8 @@
  */
 class Rox extends Object {
 
+	private static $helperInstances = array();
+
   /**
    * Returns instance of a model
    *
@@ -35,5 +37,30 @@ class Rox extends Object {
    */
 	public static function loadModel($name) {
 		require_once(MODELS . strtolower($name) . '.php');
+	}
+
+  /**
+   * Returns a singleton instance of a helper 
+   *  
+   * @param string $name
+   * @return object
+   */
+	public static function getHelper($name) {
+		if (!isset(self::$helperInstances[$name])) {
+			Rox::loadHelper($name);
+			$className = $name . 'Helper';
+			self::$helperInstances[$name] = new $className();
+		}
+
+		return self::$helperInstances[$name];
+	}
+
+  /**
+   * Loads a helper
+   *
+   * @param string $name
+   */
+	public static function loadHelper($name) {
+		require_once(HELPERS . strtolower($name) . '.php');
 	}
 }

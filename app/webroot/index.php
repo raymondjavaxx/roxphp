@@ -26,6 +26,7 @@ define('MODELS', APP . 'models' . DS);
 define('VIEWS', APP . 'views' . DS);
 define('LAYOUTS', VIEWS . 'layouts' . DS);
 define('CONTROLLERS', APP . 'controllers' . DS);
+define('HELPERS', APP . 'helpers' . DS);
 
 define('WWW', dirname(dirname(dirname($_SERVER['PHP_SELF']))));
 
