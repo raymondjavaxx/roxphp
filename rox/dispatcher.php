@@ -57,7 +57,7 @@ class Dispatcher extends Object {
    * @throws RoxException
    */
 	public function loadController($name) {
-		$fileName = CONTROLLERS . DS . $name . '_controller.php';
+		$fileName = CONTROLLERS . $name . '_controller.php';
 		if (!file_exists($fileName)) {
 			throw new RoxException(404, 'Missing controller file');
 		}
