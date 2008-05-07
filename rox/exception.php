@@ -13,50 +13,40 @@
  * @access public
  */
 class RoxExceptionHandler {
+
   /**
    * RoxExceptionHandler::handleException()
    *
-   * @param mixed $Exception
+   * @param Exception $Exception
    */
 	public static function handleException($Exception) {
-		$Exception->render();
+		RoxExceptionHandler::render($Exception);
 		exit;
-	}
-}
-
-/**
- * RoxException
- */
-class RoxException extends Exception {
-
-	private $info = null;
-
-  /**
-   * Class constructor
-   *
-   * @param mixed $type
-   * @param string $message
-   */
-	public function __construct($type = 'unknown', $message = 'Unknown exception') {
-		$this->info = array(
-			'type' => $type,
-			'message' => $message,
-			'rox_page_title' => 'Error',
-		);
-
-		$this->message = $message;
 	}
 
   /**
    * Renders the exception
+   * 
+   * @param Exception $Exception   
    */
-	public function render() {
-		// this header will be overwritten
+	private static function render(&$Exception) {
 		header("HTTP/1.0 500 Internal Server Error");
 
+		$viewVars = array(
+			'code' => $Exception->getCode(),
+			'message' => $Exception->getMessage(),
+			'rox_page_title' => 'Error'
+		);
+
+		$viewName = (string)$viewVars['code'];
+
+		if (!file_exists(VIEWS . 'errors' . DS . $viewName . '.tpl')) {
+			$viewName = 'unknown';
+		}
+
 		$data = array();
-		$View = new View($this->info, $data);
-		$View->render('errors', $this->info['type']);
+		$View = new View($viewVars, $data);
+		$View->render('errors', $viewName);
 	}
 }
 

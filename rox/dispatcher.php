@@ -18,14 +18,14 @@ class Dispatcher extends Object {
    * Dispatcher::dispatch()
    *
    * @param mixed $url
-   * @throws RoxException
+   * @throws Exception
    */
 	public function dispatch($url = null) {
 		$url = strtolower($url);
 		$parts = explode('/', $url);
 
 		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
-			throw new RoxException(404, 'Ilegal controller name');
+			throw new Exception('Ilegal controller name', 404);
 		}
 
 		if (!isset($parts[1])) {
@@ -40,7 +40,7 @@ class Dispatcher extends Object {
 		if ( method_exists('Controller', $parts[1]) ||
 			!method_exists($controller, $parts[1]) ||
 			!is_callable(array($controller, $parts[1]))) {
-			throw new RoxException(404, 'Action does not exist');
+			throw new Exception('Action does not exist', 404);
 		}
 
 		$controller->action = $parts[1];
@@ -54,12 +54,12 @@ class Dispatcher extends Object {
    * Dispatcher::loadController()
    *
    * @param string $name
-   * @throws RoxException
+   * @throws Exception
    */
 	public function loadController($name) {
 		$fileName = CONTROLLERS . $name . '_controller.php';
 		if (!file_exists($fileName)) {
-			throw new RoxException(404, 'Missing controller file');
+			throw new Exception('Missing controller file', 404);
 		}
 
 		require_once($fileName);
