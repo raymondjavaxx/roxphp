@@ -48,7 +48,7 @@ class DataSource extends Object {
    */
 	public function connect($server, $username, $password, $database) {
 		$this->link = mysql_connect($server, $username, $password);
-		if($this->link === FALSE) {
+		if ($this->link === FALSE) {
 			return FALSE;
 		}
 
@@ -76,7 +76,7 @@ class DataSource extends Object {
 		}
 
 		$tables = array();
-		while($row = mysql_fetch_array($result)) {
+		while ($row = mysql_fetch_array($result)) {
 			$tables[] = $row[0];
 		}
 
@@ -125,7 +125,7 @@ class DataSource extends Object {
    */
 	public function fetchAll() {
 		$data = array();
-		while($_data = mysql_fetch_assoc($this->result)) {
+		while ($_data = mysql_fetch_assoc($this->result)) {
 			$data[] = $_data;
 		}
 		return $data;
@@ -146,6 +146,33 @@ class DataSource extends Object {
 	}
 
   /**
+   * Begin a transaction
+   *
+   * @return boolean
+   */
+	public function beginTransaction() {
+		return $this->execute('BEGIN');
+	}
+
+  /**
+   * Commit a transaction
+   *
+   * @return boolean
+   */
+	public function commitTransaction() {
+		return $this->execute('COMMIT');
+	}
+
+  /**
+   * Rollback a transaction
+   *
+   * @return boolean
+   */
+	public function rollbackTransaction() {
+		return $this->execute('ROLLBACK');
+	}
+
+  /**
    * DataSource::lastInsertedID()
    *
    * @return mixed
@@ -161,7 +188,7 @@ class DataSource extends Object {
    * @param string
    * @return string
    */
-	function formatDate($date) {
+	public function formatDate($date) {
 		return date(DataSource::DBMS_DATE_FORMAT, strtotime($date));
 	}
 
@@ -171,7 +198,7 @@ class DataSource extends Object {
    * @param string
    * @return string
    */
-	function formatDateTime($dateTime) {
+	public function formatDateTime($dateTime) {
 		return date(DataSource::DBMS_DATETIME_FORMAT, strtotime($dateTime));
 	}
 
