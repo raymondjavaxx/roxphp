@@ -34,8 +34,7 @@ class RoxExceptionHandler {
 
 		$viewVars = array(
 			'code' => $Exception->getCode(),
-			'message' => $Exception->getMessage(),
-			'rox_page_title' => 'Error'
+			'message' => $Exception->getMessage()
 		);
 
 		$viewName = (string)$viewVars['code'];
@@ -46,7 +45,7 @@ class RoxExceptionHandler {
 
 		$data = array();
 		$View = new View($viewVars, $data);
-		$View->render('errors', $viewName);
+		$View->render('errors', $viewName, 'exception');
 	}
 }
 
