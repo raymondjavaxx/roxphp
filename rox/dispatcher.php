@@ -35,19 +35,19 @@ class Dispatcher extends Object {
 		$this->loadController($parts[0]);
 
 		$controllerName = str_replace(' ', '', ucwords(str_replace('_', ' ', $parts[0]))) . 'Controller';
-		$controller = new $controllerName;
+		$Controller = new $controllerName;
 
 		if ( method_exists('Controller', $parts[1]) ||
-			!method_exists($controller, $parts[1]) ||
-			!is_callable(array($controller, $parts[1]))) {
+			!method_exists($Controller, $parts[1]) ||
+			!is_callable(array($Controller, $parts[1]))) {
 			throw new Exception('Action does not exist', 404);
 		}
 
-		$controller->setAction($parts[1]);
-		$controller->setData(isset($_POST['d']) ? $_POST['d'] : array());
+		$Controller->setAction($parts[1]);
+		$Controller->setData(isset($_POST['d']) ? $_POST['d'] : array());
 
-		call_user_func_array(array(&$controller, $parts[1]), array_slice($parts, 2));
-		$controller->render();
+		call_user_func_array(array(&$Controller, $parts[1]), array_slice($parts, 2));
+		$Controller->render();
 	}
 
   /**

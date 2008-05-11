@@ -50,6 +50,9 @@ include(ROX . 'model.php');			// M
 include(ROX . 'view.php');			// V
 include(ROX . 'controller.php');	// C 
 
+include(APP . 'base' . DS . 'app_model.php');
+include(APP . 'base' . DS . 'app_controller.php');
+
 $DataSource = DataSource::getInstance();
 $DataSource->connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
