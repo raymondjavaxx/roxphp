@@ -15,26 +15,21 @@
 class Controller extends Object {
 
 	protected $name = '';
-
+	protected $layout = 'default';
 	protected $pageTitle = 'RoxPHP';
 
-	public $layout = 'default';
-
-	protected $viewVars = array();
-
+	protected $action = '';
+	protected $models = array();
 	protected $data = array();
 
-	public $action = '';
-
-	protected $models = array();
+	protected $viewVars = array();
 
   /**
    * Class constructor
    */
 	public function __construct() {
 		foreach($this->models as $model) {
-			Rox::loadModel($model);
-			$this->{$model} = new $model;
+			$this->{$model} = Rox::getModel($model);
 		}
 	}
 
@@ -67,6 +62,33 @@ class Controller extends Object {
 	}
 
   /**
+   * Page title setter
+   *
+   * @param $title
+   */
+	public function setTitle($title) {
+		$this->pageTitle = $title;
+	}
+
+  /**
+   * Action setter
+   *
+   * @param $action
+   */
+	public function setAction($action) {
+		$this->action = $action;
+	}
+
+  /**
+   * Layout setter
+   *
+   * @param $layout
+   */
+	public function setLayout($layout) {
+		$this->layout = $layout;
+	}
+
+  /**
    * Returns true if the request is an Ajax request
    *
    * @return boolean
@@ -85,7 +107,7 @@ class Controller extends Object {
 	}
 
   /**
-   * Send redirects headers and exit
+   * Send redirect headers and exit
    *
    * @param string $url
    */

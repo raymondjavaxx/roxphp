@@ -43,7 +43,7 @@ class Dispatcher extends Object {
 			throw new Exception('Action does not exist', 404);
 		}
 
-		$controller->action = $parts[1];
+		$controller->setAction($parts[1]);
 		$controller->setData(isset($_POST['d']) ? $_POST['d'] : array());
 
 		call_user_func_array(array(&$controller, $parts[1]), array_slice($parts, 2));
