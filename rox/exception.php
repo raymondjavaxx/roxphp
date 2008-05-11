@@ -32,18 +32,15 @@ class RoxExceptionHandler {
 	private static function render(&$Exception) {
 		header("HTTP/1.0 500 Internal Server Error");
 
-		$viewVars = array(
-			'code' => $Exception->getCode(),
-			'message' => $Exception->getMessage()
-		);
-
-		$viewName = (string)$viewVars['code'];
+		$viewName = (string)$Exception->getCode();
 
 		if (!file_exists(VIEWS . 'errors' . DS . $viewName . '.tpl')) {
 			$viewName = 'unknown';
 		}
 
 		$data = array();
+		$viewVars = array('exception' => $Exception);
+
 		$View = new View($viewVars, $data);
 		$View->render('errors', $viewName, 'exception');
 	}

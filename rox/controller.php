@@ -22,7 +22,7 @@ class Controller extends Object {
 
 	protected $viewVars = array();
 
-	public $data = array();
+	protected $data = array();
 
 	public $action = '';
 
@@ -30,8 +30,6 @@ class Controller extends Object {
 
   /**
    * Class constructor
-   *
-   * @return
    */
 	public function __construct() {
 		foreach($this->models as $model) {
@@ -41,9 +39,16 @@ class Controller extends Object {
 	}
 
   /**
-   * Renders the current action
+   * Data setter
    *
-   * @return
+   * @param array $data 
+   */   
+	public function setData($data) {
+		$this->data = $data;
+	}
+
+  /**
+   * Renders the current action
    */
 	public function render() {
 		$this->set('rox_page_title', $this->pageTitle);
@@ -56,7 +61,6 @@ class Controller extends Object {
    *
    * @param string $varName
    * @param mixed $value
-   * @return
    */
 	public function set($varName, $value = null) {
 		$this->viewVars[$varName] = $value;

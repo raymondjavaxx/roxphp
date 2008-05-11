@@ -5,3 +5,10 @@ form .input {
 form .input label {
 	display: block;
 }
+
+.exception {
+	color: #7E2217;
+	background-color: #FDFAA4;
+	border: 1px solid #444;
+	padding: 8px;
+}
