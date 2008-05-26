@@ -14,14 +14,53 @@
  */
 class Controller extends Object {
 
+  /**
+   * Controller name
+   *
+   * @var string
+   */
 	protected $name = '';
-	protected $layout = 'default';
+
+  /**
+   * Page title
+   *
+   * @var string
+   */
 	protected $pageTitle = 'RoxPHP';
 
+  /**
+   * Layout name
+   *
+   * @var array  
+   */
+	protected $layout = 'default';
+
+  /**
+   * Current action
+   *
+   * @var string
+   */
 	protected $action = '';
+
+  /**
+   * Models to load automatically
+   *
+   * @var array
+   */
 	protected $models = array();
+
+  /**
+   * Posted data
+   *
+   * @var array  
+   */
 	protected $data = array();
 
+  /**
+   * View variables
+   *
+   * @var array  
+   */
 	protected $viewVars = array();
 
   /**
@@ -106,8 +145,12 @@ class Controller extends Object {
    *
    * @return boolean
    */
-	public function isAjax() {
-		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+	protected function isAjax() {
+		if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+			return false;
+		}
+
+		return strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'XMLHttpRequest') == 0;
 	}
 
   /**
@@ -115,7 +158,7 @@ class Controller extends Object {
    *
    * @return boolean
    */
-	public function isIPhone() {
+	protected function isIPhone() {
 		return strpos($_SERVER['HTTP_USER_AGENT'], 'iPho') !== FALSE;
 	}
 
@@ -124,9 +167,26 @@ class Controller extends Object {
    *
    * @param string $url
    */
-	public function redirect($url) {
+	protected function redirect($url) {
 		header('HTTP/1.1 301');
 		header('Location: ' . Router::url($url));
+		exit;
+	}
+
+  /**
+   * Redirects to referer
+   *
+   * @param string $default
+   */
+	protected function redirectToReferer($default = '/') {
+		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
+			$referer = $_SERVER['HTTP_REFERER'];
+		} else {
+			$referer = Router::url($default);
+		}
+
+		header('HTTP/1.1 301');
+		header('Location: ' . $referer);
 		exit;
 	}
 }
