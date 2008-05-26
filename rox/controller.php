@@ -89,6 +89,19 @@ class Controller extends Object {
 	}
 
   /**
+   * Controller::isPost()
+   *
+   * @return boolean
+   */
+	protected function isPost() {
+		if (!isset($_SERVER['REQUEST_METHOD'])) {
+			return false;
+		}
+
+		return strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0;
+	}
+
+  /**
    * Returns true if the request is an Ajax request
    *
    * @return boolean
