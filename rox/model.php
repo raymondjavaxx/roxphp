@@ -14,12 +14,47 @@
  */
 class Model extends Object {
 
+  /**
+   * Object name
+   *
+   * @var string
+   */   	
 	public $name = '';
+
+  /**
+   * Table name
+   *
+   * @var string
+   */
 	protected $table = '';
+
+  /**
+   * Primary key
+   *
+   * @var string
+   */
 	protected $primaryKey = 'id';
+
+  /**
+   * Object ID
+   *
+   * @var mixed
+   */
 	protected $id = null;
+
+  /**
+   * Object data
+   *
+   * @var array
+   */
 	protected $data = array();
-	protected $fieldMap = array('id' => array('type' => 'integer'));
+
+  /**
+   * Field map
+   *
+   * @var array
+   */
+	protected $fieldMap = array('id' => 'integer');
 
   /**
    * ID setter
@@ -58,7 +93,7 @@ class Model extends Object {
    *
    * @param array $data
    */
-	function addData($data) {
+	public function addData($data) {
 		foreach($data as $f => $v) {
 			$this->setData($f, $v);
 		}
@@ -87,7 +122,7 @@ class Model extends Object {
    *
    * @param mixed $data
    */
-	function create($data) {
+	public function create($data) {
 		$this->setId(null);
 		$this->setData($data);
 	}
@@ -97,7 +132,7 @@ class Model extends Object {
    *
    * @return boolean
    */
-	function save() {
+	public function save() {
 		$data = $this->getData();
 		if (empty($data)) {
 			return false;
@@ -167,13 +202,13 @@ class Model extends Object {
 	}
 
   /**
-   * Model::read()
+   * Load object by ID
    *
-   * @param mixed $id 
-   * @param mixed $fields
+   * @param mixed $id
+   * @param array $fields
    * @return boolean
    */
-	public function read($id = null, $fields = null) {
+	public function read($id, $fields = null) {
 		if (empty($fields)) {
 			$fields = '*';
 		} else if (is_array($fields)) {
@@ -301,16 +336,15 @@ class Model extends Object {
    */
 	public function smartQuote($field, $value) {
 		$type = 'string';
-		if (isset($this->fieldMap[$field]['type'])) {
-			$type = $this->fieldMap[$field]['type'];
+		if (isset($this->fieldMap[$field])) {
+			$type = $this->fieldMap[$field];
 		}
 
-		if ($type == 'string') {
-			return "'" . DataSource::getInstance()->escape($value) . "'";
-		} else if($type == 'integer') {
-			return (integer)$value;
+		switch ($type) {
+			case 'string':
+				return "'" . DataSource::getInstance()->escape($value) . "'";
+			case 'integer':
+				return (integer)$value;
 		}
-
-		return DataSource::getInstance()->escape($value);
 	}
 }
