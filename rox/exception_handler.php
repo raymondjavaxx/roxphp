@@ -19,7 +19,7 @@ class RoxExceptionHandler {
    *
    * @param Exception $Exception
    */
-	public static function handleException($Exception) {
+	public static function handle($Exception) {
 		RoxExceptionHandler::render($Exception);
 		exit;
 	}
@@ -46,4 +46,4 @@ class RoxExceptionHandler {
 	}
 }
 
-set_exception_handler(array('RoxExceptionHandler', 'handleException'));
+set_exception_handler(array('RoxExceptionHandler', 'handle'));

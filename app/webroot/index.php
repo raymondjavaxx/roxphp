@@ -38,7 +38,7 @@ include(CONFIG . 'database.php');
 error_reporting(ROX_DEBUG ? E_ALL : 0);
 
 // include core files
-include(ROX . 'exception.php');
+include(ROX . 'exception_handler.php');
 include(ROX . 'object.php');
 include(ROX . 'rox.php');
 include(ROX . 'validator.php');
