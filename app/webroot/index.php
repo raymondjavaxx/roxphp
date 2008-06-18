@@ -53,6 +53,8 @@ include(ROX . 'controller.php');	// C
 include(APP . 'base' . DS . 'app_model.php');
 include(APP . 'base' . DS . 'app_controller.php');
 
+include(CONFIG . 'init.php');
+
 $DataSource = DataSource::getInstance();
 $DataSource->connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
