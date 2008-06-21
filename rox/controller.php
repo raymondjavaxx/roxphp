@@ -82,6 +82,21 @@ class Controller extends Object {
 	}
 
   /**
+   * Controller::getData()
+   *
+   * @param string $model
+   * @param string $field
+   * @param mixed $default
+   * @return mixed
+   */
+	public function getData($model, $field, $default = null) {
+		if (isset($this->data[$model][$field])) {
+			return $this->data[$model][$field];
+		}
+		return $default;
+	}
+
+  /**
    * Renders the current action
    */
 	public function render() {

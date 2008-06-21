@@ -125,6 +125,7 @@ class Model extends Object {
 	public function create($data) {
 		$this->setId(null);
 		$this->setData($data);
+		return $this;
 	}
 
   /**
@@ -199,6 +200,17 @@ class Model extends Object {
 
 		$result = DataSource::getInstance()->query($sql);
 		return $result[0]['count'] == 1;
+	}
+
+  /**
+   * Model::findCount()
+   *
+   * @param mixed $conditions
+   * @return integer
+   */
+	public function findCount($conditions = array()) {
+		$result = $this->find('COUNT(*) AS `count`', $conditions);
+		return (integer)$result['count'];
 	}
 
   /**
