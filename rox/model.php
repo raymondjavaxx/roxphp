@@ -159,9 +159,9 @@ class Model extends Object {
 			);
 
 			$DataSource->execute($sql);
-			$saved = $DataSource->affectedRows() == 1;
-			if ($saved) {
+			if ($DataSource->affectedRows() == 1) {
 				$this->setId($DataSource->lastInsertedID());
+				$this->afterSave(true);
 				return true;
 			}
 		} else {
@@ -178,7 +178,10 @@ class Model extends Object {
 				$this->smartQuote($this->primaryKey, $this->id)
 			);
 
-			return $DataSource->execute($sql) !== FALSE;
+			if ($DataSource->execute($sql) !== FALSE) {
+				$this->afterSave(false);
+				return true;
+			}
 		}
 
 		return false;
@@ -336,7 +339,15 @@ class Model extends Object {
 
 		$DataSource = DataSource::getInstance();
 		$DataSource->execute($sql);
-		return $DataSource->affectedRows() > 0;
+
+		$deleted = $DataSource->affectedRows() > 0;
+
+		// trigger callback
+		if ($deleted) {
+			$this->afterDelete();
+		}
+
+		return $deleted;
 	}
 
   /**
@@ -358,5 +369,15 @@ class Model extends Object {
 			case 'integer':
 				return (integer)$value;
 		}
+	}
+
+	// ---------------------------------------------
+	//  Callbacks
+	// ---------------------------------------------
+
+	protected function afterSave($created) {
+	}
+
+	protected function afterDelete() {
 	}
 }
