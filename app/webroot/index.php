@@ -46,9 +46,10 @@ include(ROX . 'registry.php');
 include(ROX . 'dispatcher.php');
 include(ROX . 'datasource.php');
 include(ROX . 'router.php');
-include(ROX . 'model.php');			// M
-include(ROX . 'view.php');			// V
-include(ROX . 'controller.php');	// C 
+include(ROX . 'model.php');      // M
+include(ROX . 'view.php');       // V
+include(ROX . 'controller.php'); // C
+include(ROX . 'constants.php');
 
 include(APP . 'base' . DS . 'app_model.php');
 include(APP . 'base' . DS . 'app_controller.php');

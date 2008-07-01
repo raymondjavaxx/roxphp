@@ -54,7 +54,9 @@ class Model extends Object {
    *
    * @var array
    */
-	protected $fieldMap = array('id' => 'integer');
+	protected $fieldMap = array(
+		'id' => DATATYPE_INTEGER
+	);
 
   /**
    * ID setter
@@ -358,16 +360,24 @@ class Model extends Object {
    * @return mixed
    */
 	public function smartQuote($field, $value) {
-		$type = 'string';
+		$type = DATATYPE_STRING;
+
 		if (isset($this->fieldMap[$field])) {
 			$type = $this->fieldMap[$field];
 		}
 
 		switch ($type) {
-			case 'string':
-				return "'" . DataSource::getInstance()->escape($value) . "'";
-			case 'integer':
+			case DATATYPE_INTEGER:
 				return (integer)$value;
+
+			case DATATYPE_BOOLEAN:
+				return $value ? '1' : '0';
+
+			case DATATYPE_STRING:
+			case DATATYPE_DATE:
+			case DATATYPE_DATETIME:
+			case DATATYPE_BINARY:
+				return "'" . DataSource::getInstance()->escape($value) . "'";
 		}
 	}
 
@@ -375,9 +385,18 @@ class Model extends Object {
 	//  Callbacks
 	// ---------------------------------------------
 
+	/**
+	 * After save callback
+	 *
+	 * @param boolean $created
+	 */
 	protected function afterSave($created) {
 	}
 
+	/**
+	 * After delete callback
+	 *
+	 */
 	protected function afterDelete() {
 	}
 }

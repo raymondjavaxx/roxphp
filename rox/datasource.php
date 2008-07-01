@@ -14,8 +14,8 @@
  */
 class DataSource extends Object {
 
-    const DBMS_DATE_FORMAT     = 'Y-m-d';
-    const DBMS_DATETIME_FORMAT = 'Y-m-d h-i-s';
+	const DBMS_DATE_FORMAT     = 'Y-m-d';
+	const DBMS_DATETIME_FORMAT = 'Y-m-d h-i-s';
 
 	public $queries = array();
 
