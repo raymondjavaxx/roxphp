@@ -76,7 +76,7 @@ class DataSource extends Object {
 		}
 
 		$tables = array();
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysql_fetch_row($result)) {
 			$tables[] = $row[0];
 		}
 
