@@ -1,6 +1,6 @@
 <?php
 /**
- * Cache_FileAdapter
+ * Cache_Adapter_File
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -12,15 +12,20 @@
  * @link http://roxphp.com 
  * @access public
  */
-class Cache_FileAdapter {
+class Cache_Adapter_File extends Cache_Adapter_Abstract {
 
+	/**
+	 * Path where to save cache files
+	 *
+	 * @var string
+	 */
 	protected $cacheDir;
 
-  /**
-   * Class constructor
-   *
-   * @param array $options
-   */
+	/**
+	 * Class constructor
+	 *
+	 * @param array $options
+	 */
 	public function __construct($options) {
 		if (isset($options['cache_dir'])) {
 			$this->setCacheDir($options['cache_dir']);
@@ -29,13 +34,13 @@ class Cache_FileAdapter {
 		}
 	}
 
-  /**
-   * Cache::setCacheDir()
-   *
-   * @param string $key
-   * @param mixed $data
-   * @param mixed $expires
-   */
+	/**
+	 * Cache_Adapter_File::setCacheDir()
+	 *
+	 * @param string $key
+	 * @param mixed $data
+	 * @param mixed $expires
+	 */
 	protected function setCacheDir($cacheDir) {
 		if (!is_dir($cacheDir)) {
 			throw new Exception('Cache directory does not exists');
@@ -44,22 +49,22 @@ class Cache_FileAdapter {
 		$this->cacheDir = $cacheDir;
 	}
 
-  /**
-   * Cache::getCacheDir()
-   *
-   * @return string
-   */
+	/**
+	 * Cache_Adapter_File::getCacheDir()
+	 *
+	 * @return string
+	 */
 	protected function getCacheDir() {
 		return $this->cacheDir;
 	}
 
-  /**
-   * Cache::write()
-   *
-   * @param string $key
-   * @param mixed $data
-   * @param mixed $expires
-   */
+	/**
+	 * Cache_Adapter_File::write()
+	 *
+	 * @param string $key
+	 * @param mixed $data
+	 * @param mixed $expires
+	 */
 	public function write($key, &$data, $expires) {
 		if (is_string($expires)) {
 			$expires = strtotime($expires);
@@ -77,12 +82,12 @@ class Cache_FileAdapter {
 		fclose($fp);
 	}
 
-  /**
-   * Cache::read()
-   *
-   * @param string $key
-   * @return mixed
-   */
+	/**
+	 * Cache_Adapter_File::read()
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function read($key) {
 		$fp = @fopen($this->getCacheDir() . 'cache_' . sha1($key) . '.txt', 'r');
 		if ($fp === false) {
@@ -108,12 +113,12 @@ class Cache_FileAdapter {
 		return $data;
 	}
 
-  /**
-   * Cache::delete()
-   *
-   * @param string $key
-   * @return boolean
-   */
+	/**
+	 * Cache_Adapter_File::delete()
+	 *
+	 * @param string $key
+	 * @return boolean
+	 */
 	public function delete($key) {
 		return @unlink($this->getCacheDir() . 'cache_' . sha1($key) . '.txt');
 	}

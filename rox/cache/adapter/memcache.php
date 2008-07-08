@@ -1,6 +1,6 @@
 <?php
 /**
- * Cache_MemcacheAdapter
+ * Cache_Adapter_Memcache
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -12,9 +12,20 @@
  * @link http://roxphp.com 
  * @access public
  */
-class Cache_MemcacheAdapter {
+class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
 
+	/**
+	 * Memcache hosts and ports
+	 *
+	 * @var array
+	 */
 	protected $servers = array('localhost' => 11211);
+
+	/**
+	 * Memcache instance
+	 *
+	 * @var Memcache
+	 */
 	protected $Memcache;
 
 	/**
@@ -32,7 +43,7 @@ class Cache_MemcacheAdapter {
 	}
 
 	/**
-	 * Cache_MemcacheAdapter::setServers()
+	 * Cache_Adapter_Memcache::setServers()
 	 *
 	 * @param mixed $servers
 	 */
@@ -41,7 +52,7 @@ class Cache_MemcacheAdapter {
 	}
 
 	/**
-	 * Cache_MemcacheAdapter::connect()
+	 * Cache_Adapter_Memcache::connect()
 	 */
 	protected function connect() {
 		foreach($this->servers as $host => $port) {
@@ -50,12 +61,12 @@ class Cache_MemcacheAdapter {
 	}
 
 	/**
-	 * Cache_MemcacheAdapter::write()
+	 * Cache_Adapter_Memcache::write()
 	 *
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $data
 	 * @param mixed $expires
-	 * @return
+	 * @return boolean
 	 */
 	public function write($key, &$data, $expires) {
 		if (is_string($expires)) {
@@ -68,9 +79,9 @@ class Cache_MemcacheAdapter {
 	}
 
 	/**
-	 * Cache_MemcacheAdapter::read()
+	 * Cache_Adapter_Memcache::read()
 	 *
-	 * @param mixed $key
+	 * @param string $key
 	 * @return mixed
 	 */
 	public function read($key) {
@@ -78,8 +89,8 @@ class Cache_MemcacheAdapter {
 	}
 
 	/**
-	 * Cache_MemcacheAdapter::delete()
-	 * 
+	 * Cache_Adapter_Memcache::delete()
+	 *
 	 * @param mixed $key
 	 * @return boolean
 	 */

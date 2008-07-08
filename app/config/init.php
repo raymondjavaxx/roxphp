@@ -16,7 +16,7 @@
 /**
  * Load and init the Cache class
  */
-require_once(ROX . 'cache' . DS . 'cache.php');
+require_once(ROX . 'cache.php');
 
 Cache::init(Cache::ADAPTER_FILE, array(
 	'cache_dir' => APP . 'tmp' . DS . 'cache' . DS
