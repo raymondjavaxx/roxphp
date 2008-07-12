@@ -1,4 +1,7 @@
 <?php
+
+require_once(ROX . 'cache' . DS . 'adapter' . DS . 'abstract.php');
+
 /**
  * Cache
  *
