@@ -1,40 +1,49 @@
 <?php
 /**
- *  View
+ * RoxPHP
+ *
+ * Copyright (C) 2008 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
- * @package	rox
+ * @package Rox
  * @author Ramon Torres
+ * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @license http://roxphp.com/static/license.html
+ * @version $Id:$
+ */
+
+/**
+ *  View
+ *
+ * @package Rox
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
- * @link http://roxphp.com 
- * @access public
  */
-class View extends Object {
+class View {
 
 	protected $vars = array();
 	protected $data = array();
 
-  /**
-   * Class Constructor
-   *
-   * @param array $vars
-   * @param array $data
-   */
+	/**
+	 * Class Constructor
+	 *
+	 * @param array $vars
+	 * @param array $data
+	 */
 	public function __construct(&$vars, &$data) {
 		$this->vars = $vars;
 		$this->data = $data;
 	}
 
-  /**
-   * Renders a view + layout
-   *
-   * @param string $path
-   * @param string $name
-   * @param string $layout
-   */
+	/**
+	 * Renders a view + layout
+	 *
+	 * @param string $path
+	 * @param string $name
+	 * @param string $layout
+	 */
 	public function render($path, $name, $layout = 'default') {
 		//load basic helpers
 		require(ROX . 'helpers' . DS . 'html.php');

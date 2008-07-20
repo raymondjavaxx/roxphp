@@ -1,16 +1,25 @@
 <?php
 /**
- * Cache_Adapter_Memcache
+ * RoxPHP
+ *
+ * Copyright (C) 2008 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
- * @package	rox
+ * @package Rox
  * @author Ramon Torres
+ * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @license http://roxphp.com/static/license.html
+ * @version $Id:$
+ */
+
+/**
+ * Cache_Adapter_Memcache
+ *
+ * @package Rox
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
- * @link http://roxphp.com 
- * @access public
  */
 class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
 
