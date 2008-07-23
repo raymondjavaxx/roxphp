@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -40,6 +40,8 @@ error_reporting(ROX_DEBUG ? E_ALL : 0);
 
 // include core files
 include(ROX . 'exception_handler.php');
+set_exception_handler(array('RoxExceptionHandler', 'handle'));
+
 include(ROX . 'object.php');
 include(ROX . 'rox.php');
 include(ROX . 'validator.php');

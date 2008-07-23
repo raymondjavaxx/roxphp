@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -54,5 +54,3 @@ class RoxExceptionHandler {
 		$View->render('errors', $viewName, 'exception');
 	}
 }
-
-set_exception_handler(array('RoxExceptionHandler', 'handle'));
