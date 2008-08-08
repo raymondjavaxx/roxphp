@@ -11,8 +11,13 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
+
+/**
+ * @see Request
+ */
+require ROX . 'request.php';
 
 /**
  * Dispatcher
@@ -21,7 +26,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Dispatcher extends Object {
+class Dispatcher {
 
   /**
    * Dispatcher::dispatch()
@@ -52,6 +57,7 @@ class Dispatcher extends Object {
 			throw new Exception('Action does not exist', 404);
 		}
 
+		$Controller->setRequest(new Request);
 		$Controller->setAction($parts[1]);
 		$Controller->setData(isset($_POST['d']) ? $_POST['d'] : array());
 

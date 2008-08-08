@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Controller extends Object {
+class Controller {
 
   /**
    * Controller name
@@ -64,6 +64,13 @@ class Controller extends Object {
    * @var array  
    */
 	protected $data = array();
+
+  /**
+   * Request object
+   *
+   * @var Request
+   */
+	protected $request;
 
   /**
    * View variables
@@ -151,39 +158,14 @@ class Controller extends Object {
 		$this->layout = $layout;
 	}
 
-  /**
-   * Controller::isPost()
-   *
-   * @return boolean
-   */
-	protected function isPost() {
-		if (!isset($_SERVER['REQUEST_METHOD'])) {
-			return false;
-		}
-
-		return strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0;
-	}
-
-  /**
-   * Returns true if the request is an Ajax request
-   *
-   * @return boolean
-   */
-	protected function isAjax() {
-		if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-			return false;
-		}
-
-		return strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'XMLHttpRequest') == 0;
-	}
-
-  /**
-   * Detects iPhone/iPod touch
-   *
-   * @return boolean
-   */
-	protected function isIPhone() {
-		return strpos($_SERVER['HTTP_USER_AGENT'], 'iPho') !== FALSE;
+	/**
+	 * Controller::setRequest()
+	 * 
+	 * @param Request $request
+	 * @return void
+	 */
+	public function setRequest(Request $request) {
+		$this->request = $request;
 	}
 
   /**
