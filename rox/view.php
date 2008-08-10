@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -23,8 +23,7 @@
  */
 class View {
 
-	protected $vars = array();
-	protected $data = array();
+	protected $_vars = array();
 
 	/**
 	 * Class Constructor
@@ -32,9 +31,8 @@ class View {
 	 * @param array $vars
 	 * @param array $data
 	 */
-	public function __construct(&$vars, &$data) {
-		$this->vars = $vars;
-		$this->data = $data;
+	public function __construct($vars = array()) {
+		$this->_vars = $vars;
 	}
 
 	/**
@@ -43,6 +41,7 @@ class View {
 	 * @param string $path
 	 * @param string $name
 	 * @param string $layout
+	 * @return string
 	 */
 	public function render($path, $name, $layout = 'default') {
 		//load basic helpers
@@ -50,17 +49,17 @@ class View {
 		require(ROX . 'helpers' . DS . 'form.php');
 
 		$html = new HtmlHelper;
-		$form = new FormHelper($this->data);
+		$form = new FormHelper;
 
-		extract($this->vars, EXTR_SKIP);
+		extract($this->_vars, EXTR_SKIP);
 
 		ob_start();
-		include(VIEWS . $path . DS . $name . '.tpl');
+		include VIEWS . $path . DS . $name . '.tpl';
 		$rox_layout_content = ob_get_contents();
 		ob_end_clean();
 
 		ob_start();
-		include(LAYOUTS . $layout . '.tpl');
-		ob_end_flush();
+		include LAYOUTS . $layout . '.tpl';
+		return ob_get_clean();
 	}
 }

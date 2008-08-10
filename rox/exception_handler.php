@@ -29,7 +29,7 @@ class RoxExceptionHandler {
    * @param Exception $Exception
    */
 	public static function handle($Exception) {
-		RoxExceptionHandler::render($Exception);
+		self::_render($Exception);
 		exit;
 	}
 
@@ -38,7 +38,7 @@ class RoxExceptionHandler {
    * 
    * @param Exception $Exception   
    */
-	private static function render(&$Exception) {
+	private static function _render(&$Exception) {
 		header("HTTP/1.0 500 Internal Server Error");
 
 		$viewName = (string)$Exception->getCode();
@@ -47,10 +47,7 @@ class RoxExceptionHandler {
 			$viewName = 'unknown';
 		}
 
-		$data = array();
-		$viewVars = array('exception' => $Exception);
-
-		$View = new View($viewVars, $data);
-		$View->render('errors', $viewName, 'exception');
+		$View = new View(array('exception' => $Exception));
+		echo $View->render('errors', $viewName, 'exception');
 	}
 }

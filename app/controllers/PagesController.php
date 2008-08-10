@@ -23,7 +23,7 @@
  */
 class PagesController extends AppController {
 
-	protected $name = 'Pages';
+	protected $_name = 'Pages';
 
 	/**
 	 * Renders the homepage
