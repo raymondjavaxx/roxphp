@@ -66,11 +66,12 @@ class Registry {
 	 * @param string $name
 	 * @return boolean
 	 */
-	public function removeObject($name) {
+	public static function removeObject($name) {
 		if (self::contains($name)) {
 			unset(self::$_objects[$name]);
 			return true;
 		}
+
 		return false;
 	}
 
