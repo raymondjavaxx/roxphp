@@ -28,7 +28,7 @@ class Locale {
 	 * 
 	 * @var string
 	 */
-	protected $tag = 'en_US';
+	private $_tag = 'en_US';
 
 	/**
 	 * Returns current locale tag
@@ -36,7 +36,7 @@ class Locale {
 	 * @return string
 	 */
 	public function getTag() {
-		return $this->tag;
+		return $this->_tag;
 	}
 
 	/**
@@ -45,13 +45,13 @@ class Locale {
 	 * @param string $tag
 	 */
 	public function setTag($tag) {
-		$this->tag = $tag;
+		$this->_tag = $tag;
 	}
 
 	/**
 	 * Autodetect the locale based on browser preferences
 	 *
-	 * @param array $available
+	 * @param array $available Available locales
 	 * @param bool $fallback
 	 * @return boolean
 	 */
@@ -70,7 +70,7 @@ class Locale {
 			$subTags = explode('_', $locale);
 			foreach ($available as $a) {
 				if (strpos($a, $subTags[0]) === 0) {
-					$this->tag = $a;
+					$this->setTag($a);
 					return true;
 				}
 			}

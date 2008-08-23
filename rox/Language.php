@@ -28,19 +28,20 @@ class Language {
 	 * 
 	 * @var Locale
 	 */
-	protected $locale;
+	private $_locale;
 
 	/**
 	 * Loaded translation tables
 	 * 
 	 * @var array
 	 */
-	protected $tables = array();
+	private $_tables = array();
 
 	/**
 	 * Language::init()
 	 * 
 	 * @param Locale $locale
+	 * @throws Exception
 	 */
 	public function init($locale = null) {
 		if (is_null($locale)) {
@@ -49,7 +50,7 @@ class Language {
 			throw new Exception('Param must be instance of Locale');
 		}
 
-		$this->locale = $locale;
+		$this->_locale = $locale;
 	}
 
 	/**
@@ -74,11 +75,11 @@ class Language {
 	 * @return string
 	 */
 	public function translateText($text, $table = 'messages') {
-		if (!isset($this->tables[$table][$text])) {
+		if (!isset($this->_tables[$table][$text])) {
 			return $text;
 		}
 
-		return $this->tables[$table][$text];
+		return $this->_tables[$table][$text];
 	}
 
 	/**
@@ -98,13 +99,13 @@ class Language {
 	 * @return void
 	 */
 	public function loadTable($name = 'messages') {
-		$fp = @fopen(APP . 'locale' . DS . $this->locale->getTag() . DS . $name . '.csv', 'r');
+		$fp = @fopen(APP . 'locale' . DS . $this->_locale->getTag() . DS . $name . '.csv', 'r');
 		if ($fp === false) {
 			throw new Exception('Can`t open locale file');
 		}
 
 		while (($data = fgetcsv($fp)) !== false) {
-			$this->tables[$name][$data[0]] = $data[1];
+			$this->_tables[$name][$data[0]] = $data[1];
 		}
 
 		fclose($fp);

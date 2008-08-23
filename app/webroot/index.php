@@ -19,8 +19,7 @@ define('DS', DIRECTORY_SEPARATOR);
 // define paths
 define('WEBROOT', dirname(__FILE__) . DS);
 define('APP', dirname(WEBROOT) . DS);
- 
-define('ROX', dirname(APP).DS.'rox' . DS);
+define('ROX', dirname(APP) . DS . 'rox' . DS);
 
 define('CONFIG', APP . 'config' . DS);
 define('MODELS', APP . 'models' . DS);
@@ -32,32 +31,31 @@ define('HELPERS', APP . 'helpers' . DS);
 define('WWW', dirname(dirname(dirname($_SERVER['PHP_SELF']))));
 
 // include configuration files
-include(CONFIG . 'main.php');
-include(CONFIG . 'database.php');
+require CONFIG . 'main.php';
+require CONFIG . 'database.php';
 
 // set error reporting level
-error_reporting(ROX_DEBUG ? E_ALL : 0);
+error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // include core files
-include(ROX . 'exception_handler.php');
-set_exception_handler(array('RoxExceptionHandler', 'handle'));
+require ROX . 'Exception' . DS . 'Handler.php';
+set_exception_handler(array('Exception_Handler', 'handle'));
 
-include(ROX . 'object.php');
-include(ROX . 'rox.php');
-include(ROX . 'validator.php');
-include(ROX . 'registry.php');
-include(ROX . 'dispatcher.php');
-include(ROX . 'datasource.php');
-include(ROX . 'router.php');
-include(ROX . 'model.php');      // M
-include(ROX . 'view.php');       // V
-include(ROX . 'controller.php'); // C
-include(ROX . 'constants.php');
+require ROX . 'Object.php';
+require ROX . 'Rox.php';
+require ROX . 'Validator.php';
+require ROX . 'Registry.php';
+require ROX . 'Dispatcher.php';
+require ROX . 'DataSource.php';
+require ROX . 'Router.php';
+require ROX . 'Model.php';      // M
+require ROX . 'View.php';       // V
+require ROX . 'Controller.php'; // C
+require ROX . 'Constants.php';
 
-include(APP . 'base' . DS . 'app_model.php');
-include(APP . 'base' . DS . 'app_controller.php');
-
-include(CONFIG . 'init.php');
+require APP . 'base' . DS . 'app_model.php';
+require APP . 'base' . DS . 'app_controller.php';
+require CONFIG . 'init.php';
 
 $DataSource = DataSource::getInstance();
 $DataSource->connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
