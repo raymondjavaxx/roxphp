@@ -23,138 +23,138 @@
  */
 class Model extends Object {
 
-  /**
-   * Object name
-   *
-   * @var string
-   */   	
-	public $name = '';
+	/**
+	 * Model name
+	 *
+	 * @var string
+	 */   	
+	protected $_name = '';
 
-  /**
-   * Table name
-   *
-   * @var string
-   */
-	protected $table = '';
+	/**
+	 * Table name
+	 *
+	 * @var string
+	 */
+	protected $_table = '';
 
-  /**
-   * Primary key
-   *
-   * @var string
-   */
-	protected $primaryKey = 'id';
+	/**
+	 * Primary key
+	 *
+	 * @var string
+	 */
+	protected $_primaryKey = 'id';
 
-  /**
-   * Object ID
-   *
-   * @var mixed
-   */
-	protected $id = null;
+	/**
+	 * Object ID
+	 *
+	 * @var mixed
+	 */
+	protected $_id = null;
 
-  /**
-   * Object data
-   *
-   * @var array
-   */
-	protected $data = array();
+	/**
+	 * Object data
+	 *
+	 * @var array
+	 */
+	protected $_data = array();
 
-  /**
-   * Field map
-   *
-   * @var array
-   */
-	protected $fieldMap = array(
+	/**
+	 * Field map
+	 *
+	 * @var array
+	 */
+	protected $_fieldMap = array(
 		'id' => DATATYPE_INTEGER
 	);
 
-  /**
-   * ID setter
-   *
-   * @param mixed $id 
-   */
+	/**
+	 * ID setter
+	 *
+	 * @param mixed $id 
+	 */
 	public function setId($id) {
-		$this->id = $id;
+		$this->_id = $id;
 	}
 
-  /**
-   * ID getter
-   *
-   * @return mixed $id 
-   */
+	/**
+	 * ID getter
+	 *
+	 * @return mixed $id 
+	 */
 	public function getId() {
-		return $this->id;
+		return $this->_id;
 	}
-
-  /**
-   * Set data
-   *
-   * @param string|array $what
-   * @param mixed $value 
-   */
+	
+	/**
+	 * Set data
+	 *
+	 * @param string|array $what
+	 * @param mixed $value 
+	 */
 	public function setData($what, $value = null) {
 		if (is_array($what)) {
-			$this->data = $what;
+			$this->_data = $what;
 		} else {
-			$this->data[$what] = $value;
+			$this->_data[$what] = $value;
 		}
 	}
 
-  /**
-   * Adds data without replacing the existing data 
-   *
-   * @param array $data
-   */
+	/**
+	 * Adds data without replacing the existing data 
+	 *
+	 * @param array $data
+	 */
 	public function addData($data) {
-		foreach($data as $f => $v) {
+		foreach ($data as $f => $v) {
 			$this->setData($f, $v);
 		}
 	}
 
-  /**
-   * Get data
-   *
-   * @param string $what
-   * @return mixed
-   */
+	/**
+	 * Get data
+	 *
+	 * @param string $what
+	 * @return mixed
+	 */
 	public function getData($what = null) {
 		if (empty($what)) {
-			return $this->data;
+			return $this->_data;
 		}
 
-		if (array_key_exists($what, $this->data)) {
-			return $this->data[$what];
+		if (array_key_exists($what, $this->_data)) {
+			return $this->_data[$what];
 		}
 
 		return null;
 	}
 
-  /**
-   * Resets the model data and ID
-   *
-   * @param mixed $data
-   */
+	/**
+	 * Resets the model data and ID
+	 *
+	 * @param mixed $data
+	 */
 	public function create($data) {
 		$this->setId(null);
 		$this->setData($data);
 		return $this;
 	}
 
-  /**
-   * Model::save()
-   *
-   * @return boolean
-   */
+	/**
+	 * Model::save()
+	 *
+	 * @return boolean
+	 */
 	public function save() {
 		$data = $this->getData();
 		if (empty($data)) {
 			return false;
 		}
 
-		unset($data[$this->primaryKey]);
+		unset($data[$this->_primaryKey]);
 
 		$DataSource = DataSource::getInstance();
 
-		if (empty($this->id) || !$this->exists($this->id)) {
+		if (empty($this->_id) || !$this->exists($this->_id)) {
 			foreach($data as $f => $v) {
 				$data[$f] = $this->smartQuote($f, $v);
 			}
@@ -164,7 +164,7 @@ class Model extends Object {
 
 			$sql = sprintf(
 				"INSERT INTO `%s` (%s) VALUES (%s)",
-				$this->table,
+				$this->_table,
 				$fields,
 				$values
 			);
@@ -172,7 +172,7 @@ class Model extends Object {
 			$DataSource->execute($sql);
 			if ($DataSource->affectedRows() == 1) {
 				$this->setId($DataSource->lastInsertedID());
-				$this->afterSave(true);
+				$this->_afterSave(true);
 				return true;
 			}
 		} else {
@@ -183,14 +183,14 @@ class Model extends Object {
 
 			$sql = sprintf(
 				"UPDATE `%s` SET %s WHERE `%s` = %s",
-				$this->table,
+				$this->_table,
 				implode(', ', $updateData),
-				$this->primaryKey,
-				$this->smartQuote($this->primaryKey, $this->id)
+				$this->_primaryKey,
+				$this->smartQuote($this->_primaryKey, $this->_id)
 			);
 
 			if ($DataSource->execute($sql) !== FALSE) {
-				$this->afterSave(false);
+				$this->_afterSave(false);
 				return true;
 			}
 		}
@@ -198,42 +198,42 @@ class Model extends Object {
 		return false;
 	}
 
-  /**
-   * Returns true if a record exists
-   *
-   * @param mixed $id
-   * @return boolean
-   */
+	/**
+	 * Returns true if a record exists
+	 *
+	 * @param mixed $id
+	 * @return boolean
+	 */
 	public function exists($id) {
 		$sql = sprintf(
 			"SELECT COUNT(*) AS `count` FROM `%s` WHERE `%s` = %s LIMIT 1",
-			$this->table,
-			$this->primaryKey,
-			$this->smartQuote($this->primaryKey, $id)
+			$this->_table,
+			$this->_primaryKey,
+			$this->smartQuote($this->_primaryKey, $id)
 		);
 
 		$result = DataSource::getInstance()->query($sql);
 		return $result[0]['count'] == 1;
 	}
 
-  /**
-   * Model::findCount()
-   *
-   * @param mixed $conditions
-   * @return integer
-   */
+	/**
+	 * Model::findCount()
+	 *
+	 * @param mixed $conditions
+	 * @return integer
+	 */
 	public function findCount($conditions = array()) {
 		$result = $this->find('COUNT(*) AS `count`', $conditions);
 		return (integer)$result['count'];
 	}
 
-  /**
-   * Load object by ID
-   *
-   * @param mixed $id
-   * @param array $fields
-   * @return boolean
-   */
+	/**
+	 * Load object by ID
+	 *
+	 * @param mixed $id
+	 * @param array $fields
+	 * @return boolean
+	 */
 	public function read($id, $fields = null) {
 		if (empty($fields)) {
 			$fields = '*';
@@ -244,9 +244,9 @@ class Model extends Object {
 		$sql = sprintf(
 			"SELECT %s FROM `%s` WHERE `%s` = %s",
 			$fields,
-			$this->table,
-			$this->primaryKey,
-			$this->smartQuote($this->primaryKey, $id)
+			$this->_table,
+			$this->_primaryKey,
+			$this->smartQuote($this->_primaryKey, $id)
 		);
 
 		$result = DataSource::getInstance()->query($sql);
@@ -260,15 +260,15 @@ class Model extends Object {
 		return true;
 	}
 
-  /**
-   * Model::findAll()
-   *
-   * @param mixed $fields
-   * @param mixed $conditions
-   * @param string $order
-   * @param mixed $limit   
-   * @return array
-   */
+	/**
+	 * Model::findAll()
+	 *
+	 * @param mixed $fields
+	 * @param mixed $conditions
+	 * @param string $order
+	 * @param mixed $limit   
+	 * @return array
+	 */
 	public function findAll($fields = null, $conditions = array(), $order = null, $limit = null) {
 		if (empty($fields)) {
 			$fields = '*';
@@ -276,7 +276,7 @@ class Model extends Object {
 			$fields = '`' . implode('`, `', $fields) . '`';
 		}
 
-		$sql = sprintf("SELECT %s FROM `%s` WHERE", $fields, $this->table);
+		$sql = sprintf("SELECT %s FROM `%s` WHERE", $fields, $this->_table);
 
 		if (empty($conditions)) {
 			$conditions = array('1 = 1');
@@ -309,14 +309,14 @@ class Model extends Object {
 		return $DataSource->query($sql);
 	}
 
-  /**
-   * Model::find()
-   *
-   * @param mixed $fields
-   * @param mixed $conditions
-   * @param string $order
-   * @return array
-   */
+	/**
+	 * Model::find()
+	 *
+	 * @param mixed $fields
+	 * @param mixed $conditions
+	 * @param string $order
+	 * @return array
+	 */
 	public function find($fields = null, $conditions = array(), $order = null) {
 		$result = $this->findAll($fields, $conditions, $order, '1');
 		if (empty($result)) {
@@ -326,15 +326,15 @@ class Model extends Object {
 		return $result[0];
 	}
 
-  /**
-   * Deletes a record
-   *
-   * @param integer $id
-   * @return boolean
-   */
+	/**
+	 * Deletes a record
+	 *
+	 * @param integer $id
+	 * @return boolean
+	 */
 	public function delete($id = null) {
 		if (empty($id)) {
-			$id = $this->id;
+			$id = $this->_id;
 		}
 
 		if (empty($id)) {
@@ -343,9 +343,9 @@ class Model extends Object {
 
 		$sql = sprintf(
 			"DELETE FROM `%s` WHERE `%s` = %s",
-			$this->table,
-			$this->primaryKey,
-			$this->smartQuote($this->primaryKey, $id)
+			$this->_table,
+			$this->_primaryKey,
+			$this->smartQuote($this->_primaryKey, $id)
 		);
 
 		$DataSource = DataSource::getInstance();
@@ -355,24 +355,24 @@ class Model extends Object {
 
 		// trigger callback
 		if ($deleted) {
-			$this->afterDelete();
+			$this->_afterDelete();
 		}
 
 		return $deleted;
 	}
 
-  /**
-   * Quotes and escapes values to be used in SQL queries  
-   *
-   * @param string $field
-   * @param mixed $value
-   * @return mixed
-   */
+	/**
+	 * Quotes and escapes values to be used in SQL queries  
+	 *
+	 * @param string $field
+	 * @param mixed $value
+	 * @return mixed
+	 */
 	public function smartQuote($field, $value) {
 		$type = DATATYPE_STRING;
 
-		if (isset($this->fieldMap[$field])) {
-			$type = $this->fieldMap[$field];
+		if (isset($this->_fieldMap[$field])) {
+			$type = $this->_fieldMap[$field];
 		}
 
 		switch ($type) {
@@ -399,13 +399,12 @@ class Model extends Object {
 	 *
 	 * @param boolean $created
 	 */
-	protected function afterSave($created) {
+	protected function _afterSave($created) {
 	}
 
 	/**
 	 * After delete callback
-	 *
 	 */
-	protected function afterDelete() {
+	protected function _afterDelete() {
 	}
 }

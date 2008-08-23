@@ -45,7 +45,7 @@ class Rox {
 	 * @param string $name
 	 */
 	public static function loadModel($name) {
-		require_once(MODELS . strtolower($name) . '.php');
+		require_once MODELS . $name . '.php';
 	}
 
 	/**
