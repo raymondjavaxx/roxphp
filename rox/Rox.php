@@ -23,7 +23,7 @@
  */
 class Rox {
 
-	private static $helperInstances = array();
+	private static $_helperInstances = array();
 
 	/**
 	 * Returns instance of a model
@@ -55,13 +55,13 @@ class Rox {
 	 * @return object
 	 */
 	public static function getHelper($name) {
-		if (!isset(self::$helperInstances[$name])) {
-			Rox::loadHelper($name);
+		if (!isset(self::$_helperInstances[$name])) {
 			$className = $name . 'Helper';
-			self::$helperInstances[$name] = new $className();
+			Rox::loadHelper($className);
+			self::$_helperInstances[$name] = new $className();
 		}
 
-		return self::$helperInstances[$name];
+		return self::$_helperInstances[$name];
 	}
 
 	/**
@@ -70,6 +70,6 @@ class Rox {
 	 * @param string $name
 	 */
 	public static function loadHelper($name) {
-		require_once(HELPERS . strtolower($name) . '.php');
+		require_once HELPERS . $name . '.php';
 	}
 }
