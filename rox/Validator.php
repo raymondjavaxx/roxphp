@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Validator extends Object {
+class Validator {
 
 	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum))$/i';
 
@@ -90,5 +90,35 @@ class Validator extends Object {
 	public static function between($subject, $min, $max) {
 		$len = strlen($subject);
 		return (($len > $min) && ($len < $max));
+	}
+
+	/**
+	 * Verifies a number using the Luhn algorithm
+	 *
+	 * @link http://en.wikipedia.org/wiki/Luhn_algorithm
+	 * @link http://www.pat2pdf.org/pat2pdf/foo.pl?number=2950048
+	 * @param string $number
+	 * @return boolean
+	 */
+	public static function luhn($number) {
+		$digits = array_reverse(str_split($number));
+		$totalDigits = count($digits);
+
+		$sum = 0;
+		$alternate = false;
+		for ($i=0; $i<$totalDigits; $i++) {
+			$digit = $digits[$i];
+			if ($alternate) {
+				$digit = $digit * 2;
+				if ($digit > 9) {
+					$digit = $digit - 9;
+				}
+			}
+
+			$sum += $digit;
+			$alternate = !$alternate;
+		}
+
+		return ($sum % 10 == 0);
 	}
 }
