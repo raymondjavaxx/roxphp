@@ -121,4 +121,42 @@ class Validator {
 
 		return ($sum % 10 == 0);
 	}
+
+	/**
+	 * Validates a credit card number
+	 *
+	 * If you want to restrict the credit card type you can pass it as the
+	 * seccond argument:
+	 *
+	 * Validator::creditCard(..., 'VISA')
+	 * Validator::creditCard(..., array('VISA', 'AMEX'))
+	 *
+	 * @param string $number
+	 * @param string|array $type
+	 * @return boolean
+	 */
+	public static function creditCard($number, $type = null) {
+		$ccTypesRegEx = array(
+			'MASTERCARD' => '/^5[1-5][0-9]{14}$/',
+			'VISA'       => '/^4[0-9]{12}([0-9]{3})?$/',
+			'AMEX'       => '/^3[4|7][0-9]{13}$/',
+			'DISCOVER'   => '/^(?:6011|644[0-9]|65[0-9]{2})[0-9]{12}$/'
+		);
+
+		if (is_string($type)) {
+			$type = array($type);
+		}
+
+		if (is_array($type)) {
+			$ccTypesRegEx = array_intersect_key($ccTypesRegEx, array_flip($type));
+		}
+
+		foreach ($ccTypesRegEx as $type => $regEx) {
+			if (self::regexMatch($regEx, $number)) {
+				return self::luhn($number);
+			}
+		}
+
+		return false;
+	}
 }
