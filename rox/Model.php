@@ -150,6 +150,12 @@ class Model extends Object {
 			return false;
 		}
 
+		foreach ($data as $k => $v) {
+			if (!array_key_exists($k, $this->_fieldMap)) {
+				unset($data[$k]);
+			}
+		}
+
 		unset($data[$this->_primaryKey]);
 
 		$DataSource = DataSource::getInstance();
