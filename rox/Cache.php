@@ -17,7 +17,7 @@
 /**
  * @see Cache_Adapter_Abstract
  */
-require_once(ROX . 'cache' . DS . 'adapter' . DS . 'abstract.php');
+require_once(ROX . 'Cache' . DS . 'Adapter' . DS . 'Abstract.php');
 
 /**
  * Cache
