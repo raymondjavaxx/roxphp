@@ -17,7 +17,7 @@
 /**
  * @see Request
  */
-require_once ROX . 'request.php';
+require_once ROX . 'Request.php';
 
 /**
  * Dispatcher
