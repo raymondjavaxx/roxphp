@@ -59,11 +59,11 @@ class Cache {
 	protected static function loadAdapter($name) {
 		switch ($name) {
 			case self::ADAPTER_MEMCACHE:
-				require(ROX . 'cache' . DS . 'adapter' . DS . 'memcache.php');
+				require(ROX . 'Cache' . DS . 'Adapter' . DS . 'Memcache.php');
 			break;
 
 			case self::ADAPTER_FILE:
-				require(ROX . 'cache' . DS . 'adapter' . DS . 'file.php');
+				require(ROX . 'Cache' . DS . 'Adapter' . DS . 'File.php');
 			break;
 
 			default: throw new Exception('Invalid Cache adapter');
