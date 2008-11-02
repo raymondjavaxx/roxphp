@@ -42,6 +42,7 @@ class Dispatcher {
 
 		if ( method_exists('Controller', $parsedUrl['action']) ||
 			!method_exists($Controller, $parsedUrl['action']) ||
+			strpos($parsedUrl['action'], '__') === 0 ||
 			!is_callable(array($Controller, $parsedUrl['action']))) {
 			throw new Exception('Action does not exist or is not dispatchable', 404);
 		}
