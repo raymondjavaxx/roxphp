@@ -67,6 +67,8 @@ class Model extends Object {
 		'id' => DATATYPE_INTEGER
 	);
 
+	protected $_modifiedFields = array();
+
 	/**
 	 * ID setter
 	 *
@@ -84,7 +86,29 @@ class Model extends Object {
 	public function getId() {
 		return $this->_id;
 	}
-	
+
+	/**
+	 * Model::_flagFieldAsModified()
+	 *
+	 * @param mixed $field
+	 * @return void
+	 */
+	protected function _flagFieldAsModified($field) {
+		if (!in_array($field, $this->_modifiedFields) &&
+			array_key_exists($field, $this->_fieldMap)) {
+			$this->_modifiedFields[] = $field;
+		}
+	}
+
+	/**
+	 * Model::_resetModifiedFields()
+	 *
+	 * @return void
+	 */
+	protected function _resetModifiedFields() {
+		$this->_modifiedFields = array();
+	}
+
 	/**
 	 * Set data
 	 *
@@ -96,6 +120,7 @@ class Model extends Object {
 			$this->_data = $what;
 		} else {
 			$this->_data[$what] = $value;
+			$this->_flagFieldAsModified($what);
 		}
 	}
 
@@ -134,6 +159,7 @@ class Model extends Object {
 	 * @param mixed $data
 	 */
 	public function create($data) {
+		$this->_resetModifiedFields();
 		$this->setId(null);
 		$this->setData($data);
 		return $this;
@@ -151,7 +177,7 @@ class Model extends Object {
 		}
 
 		foreach ($data as $k => $v) {
-			if (!array_key_exists($k, $this->_fieldMap)) {
+			if (!in_array($k, $this->_modifiedFields)) {
 				unset($data[$k]);
 			}
 		}
@@ -177,6 +203,7 @@ class Model extends Object {
 
 			$DataSource->execute($sql);
 			if ($DataSource->affectedRows() == 1) {
+				$this->_resetModifiedFields();
 				$this->setId($DataSource->lastInsertedID());
 				$this->_afterSave(true);
 				return true;
@@ -195,7 +222,8 @@ class Model extends Object {
 				$this->smartQuote($this->_primaryKey, $this->_id)
 			);
 
-			if ($DataSource->execute($sql) !== FALSE) {
+			if ($DataSource->execute($sql) !== false) {
+				$this->_resetModifiedFields();
 				$this->_afterSave(false);
 				return true;
 			}
