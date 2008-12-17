@@ -11,10 +11,11 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
-
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'rox_app');
+ConnectionManager::setConfig('default', array(
+	'host'     => '127.0.0.1',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'rox_app'
+));

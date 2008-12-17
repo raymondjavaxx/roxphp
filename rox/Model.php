@@ -21,21 +21,14 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Model extends Object {
-
-	/**
-	 * Model name
-	 *
-	 * @var string
-	 */   	
-	protected $_name = '';
+class Model {
 
 	/**
 	 * Table name
 	 *
 	 * @var string
 	 */
-	protected $_table = '';
+	protected $_table;
 
 	/**
 	 * Primary key
@@ -45,11 +38,19 @@ class Model extends Object {
 	protected $_primaryKey = 'id';
 
 	/**
+	 * The name of DataSource used by this model
+	 *
+	 * @see ConnectionManager::getDataSource()
+	 * @var string
+	 */
+	protected $_dataSourceName = 'default';
+
+	/**
 	 * Object ID
 	 *
 	 * @var mixed
 	 */
-	protected $_id = null;
+	protected $_id;
 
 	/**
 	 * Object data
@@ -67,6 +68,11 @@ class Model extends Object {
 		'id' => DATATYPE_INTEGER
 	);
 
+	/**
+	 * Array of modified fields
+	 *
+	 * @var array
+	 */
 	protected $_modifiedFields = array();
 
 	/**
@@ -101,11 +107,11 @@ class Model extends Object {
 	}
 
 	/**
-	 * Model::_resetModifiedFields()
+	 * Model::_resetModifiedFieldsFlags()
 	 *
 	 * @return void
 	 */
-	protected function _resetModifiedFields() {
+	protected function _resetModifiedFieldsFlags() {
 		$this->_modifiedFields = array();
 	}
 
@@ -118,6 +124,7 @@ class Model extends Object {
 	public function setData($what, $value = null) {
 		if (is_array($what)) {
 			$this->_data = $what;
+			//array_walk(array_keys($what), array($this, '_flagFieldAsModified'));
 		} else {
 			$this->_data[$what] = $value;
 			$this->_flagFieldAsModified($what);
@@ -159,7 +166,7 @@ class Model extends Object {
 	 * @param mixed $data
 	 */
 	public function create($data) {
-		$this->_resetModifiedFields();
+		$this->_resetModifiedFieldsFlags();
 		$this->setId(null);
 		$this->setData($data);
 		return $this;
@@ -184,7 +191,7 @@ class Model extends Object {
 
 		unset($data[$this->_primaryKey]);
 
-		$DataSource = DataSource::getInstance();
+		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
 
 		if (empty($this->_id) || !$this->exists($this->_id)) {
 			foreach($data as $f => $v) {
@@ -203,7 +210,7 @@ class Model extends Object {
 
 			$DataSource->execute($sql);
 			if ($DataSource->affectedRows() == 1) {
-				$this->_resetModifiedFields();
+				$this->_resetModifiedFieldsFlags();
 				$this->setId($DataSource->lastInsertedID());
 				$this->_afterSave(true);
 				return true;
@@ -223,7 +230,7 @@ class Model extends Object {
 			);
 
 			if ($DataSource->execute($sql) !== false) {
-				$this->_resetModifiedFields();
+				$this->_resetModifiedFieldsFlags();
 				$this->_afterSave(false);
 				return true;
 			}
@@ -246,7 +253,7 @@ class Model extends Object {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$result = DataSource::getInstance()->query($sql);
+		$result = ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
 		return $result[0]['count'] == 1;
 	}
 
@@ -283,7 +290,7 @@ class Model extends Object {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$result = DataSource::getInstance()->query($sql);
+		$result = ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
 		if (empty($result)) {
 			return false;
 		}
@@ -339,7 +346,7 @@ class Model extends Object {
 			$sql .= ' LIMIT ' . $limit;
 		}
 
-		$DataSource = DataSource::getInstance();
+		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
 		return $DataSource->query($sql);
 	}
 
@@ -382,7 +389,7 @@ class Model extends Object {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$DataSource = DataSource::getInstance();
+		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
 		$DataSource->execute($sql);
 
 		$deleted = $DataSource->affectedRows() > 0;
@@ -403,8 +410,11 @@ class Model extends Object {
 	 * @return mixed
 	 */
 	public function smartQuote($field, $value) {
-		$type = DATATYPE_STRING;
+		if (null === $value) {
+			return 'NULL';
+		}
 
+		$type = DATATYPE_STRING;
 		if (isset($this->_fieldMap[$field])) {
 			$type = $this->_fieldMap[$field];
 		}
@@ -420,7 +430,7 @@ class Model extends Object {
 			case DATATYPE_DATE:
 			case DATATYPE_DATETIME:
 			case DATATYPE_BINARY:
-				return "'" . DataSource::getInstance()->escape($value) . "'";
+				return "'" . ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
 		}
 	}
 
