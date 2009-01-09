@@ -124,7 +124,8 @@ class Model {
 	public function setData($what, $value = null) {
 		if (is_array($what)) {
 			$this->_data = $what;
-			//array_walk(array_keys($what), array($this, '_flagFieldAsModified'));
+			$fields = array_keys($what);
+			array_walk($fields, array($this, '_flagFieldAsModified'));
 		} else {
 			$this->_data[$what] = $value;
 			$this->_flagFieldAsModified($what);
