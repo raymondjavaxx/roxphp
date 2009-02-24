@@ -46,13 +46,6 @@ class Model {
 	protected $_dataSourceName = 'default';
 
 	/**
-	 * Object ID
-	 *
-	 * @var mixed
-	 */
-	protected $_id;
-
-	/**
 	 * Object data
 	 *
 	 * @var array
@@ -76,12 +69,31 @@ class Model {
 	protected $_modifiedFields = array();
 
 	/**
+	 * Used to check if record is record is new
+	 *
+	 * @var boolean
+	 */
+	protected $_newRecord = true;
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $fields
+	 * @return void
+	 */
+	public function __construct(array $fields = null) {
+		if (null !== $fields) {
+			$this->setData($fields);
+		}
+	}
+
+	/**
 	 * ID setter
 	 *
 	 * @param mixed $id 
 	 */
 	public function setId($id) {
-		$this->_id = $id;
+		$this->setData($this->_primaryKey, $id);
 	}
 
 	/**
@@ -90,7 +102,7 @@ class Model {
 	 * @return mixed $id 
 	 */
 	public function getId() {
-		return $this->_id;
+		return $this->getData($this->_primaryKey);
 	}
 
 	/**
@@ -162,15 +174,16 @@ class Model {
 	}
 
 	/**
-	 * Resets the model data and ID
+	 * Creates an object and saves it to the database.
 	 *
 	 * @param mixed $data
+	 * @return object
 	 */
 	public function create($data) {
-		$this->_resetModifiedFieldsFlags();
-		$this->setId(null);
-		$this->setData($data);
-		return $this;
+		$className = get_class($this);
+		$object = new $className($data);
+		$object->save();
+		return $object;
 	}
 
 	/**
@@ -179,6 +192,8 @@ class Model {
 	 * @return boolean
 	 */
 	public function save() {
+		$this->_beforeSave();
+
 		$data = $this->getData();
 		if (empty($data)) {
 			return false;
@@ -192,16 +207,15 @@ class Model {
 
 		unset($data[$this->_primaryKey]);
 
-		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
 
-		if (empty($this->_id) || !$this->exists($this->_id)) {
-			foreach($data as $f => $v) {
+		if ($this->_newRecord) {
+			foreach ($data as $f => $v) {
 				$data[$f] = $this->smartQuote($f, $v);
 			}
 
 			$fields = '`' . implode('`, `', array_keys($data)) . '`';
 			$values = implode(', ', array_values($data));
-
 			$sql = sprintf(
 				"INSERT INTO `%s` (%s) VALUES (%s)",
 				$this->_table,
@@ -209,16 +223,17 @@ class Model {
 				$values
 			);
 
-			$DataSource->execute($sql);
-			if ($DataSource->affectedRows() == 1) {
+			$dataSource->execute($sql);
+			if ($dataSource->affectedRows() == 1) {
+				$this->setId($dataSource->lastInsertedID());
 				$this->_resetModifiedFieldsFlags();
-				$this->setId($DataSource->lastInsertedID());
+				$this->_newRecord = false;
 				$this->_afterSave(true);
 				return true;
 			}
 		} else {
 			$updateData = array();
-			foreach($data as $f => $v) {
+			foreach ($data as $f => $v) {
 				$updateData[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
 			}
 
@@ -227,10 +242,10 @@ class Model {
 				$this->_table,
 				implode(', ', $updateData),
 				$this->_primaryKey,
-				$this->smartQuote($this->_primaryKey, $this->_id)
+				$this->smartQuote($this->_primaryKey, $this->getId())
 			);
 
-			if ($DataSource->execute($sql) !== false) {
+			if ($dataSource->execute($sql) !== false) {
 				$this->_resetModifiedFieldsFlags();
 				$this->_afterSave(false);
 				return true;
@@ -298,6 +313,7 @@ class Model {
 
 		$this->setId($id);
 		$this->setData($result[0]);
+		$this->_newRecord = false;
 
 		return true;
 	}
@@ -318,25 +334,24 @@ class Model {
 			$fields = '`' . implode('`, `', $fields) . '`';
 		}
 
-		$sql = sprintf("SELECT %s FROM `%s` WHERE", $fields, $this->_table);
+		$sql = sprintf('SELECT %s FROM `%s`', $fields, $this->_table);
 
-		if (empty($conditions)) {
-			$conditions = array('1 = 1');
-		}
-
-		if (is_string($conditions)) {
-			$sql .= ' ' . $conditions;
-		} else {
-			$_conditions = array();
-			foreach($conditions as $f => $v) {
-				if (is_int($f)) {
-					$_conditions[] = ' ' . $v;
-				} else {
-					$_conditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
+		if (!empty($conditions)) {
+			$sql .= ' WHERE ';
+			if (is_string($conditions)) {
+				$sql .= $conditions;
+			} else {
+				$normalizedConditions = array();
+				foreach ($conditions as $f => $v) {
+					if (is_int($f)) {
+						$normalizedConditions[] = ' ' . $v;
+					} else {
+						$normalizedConditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
+					}
 				}
-			}
 
-			$sql .= implode(' AND ', $_conditions);
+				$sql .= implode(' AND ', $normalizedConditions);
+			}
 		}
 
 		if (!empty($order)) {
@@ -347,8 +362,8 @@ class Model {
 			$sql .= ' LIMIT ' . $limit;
 		}
 
-		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
-		return $DataSource->query($sql);
+		$result = $this->findBySql($sql);
+		return $result;
 	}
 
 	/**
@@ -357,15 +372,47 @@ class Model {
 	 * @param mixed $fields
 	 * @param mixed $conditions
 	 * @param string $order
-	 * @return array
+	 * @return object
 	 */
 	public function find($fields = null, $conditions = array(), $order = null) {
-		$result = $this->findAll($fields, $conditions, $order, '1');
-		if (empty($result)) {
-			return array();
+		$results = $this->findAll($fields, $conditions, $order, '1');
+		return reset($results);
+	}
+
+	/**
+	 * Model::findLast()
+	 * 
+	 * @param array|string $conditions
+	 * @param array|string $fields
+	 * @return object
+	 */
+	public function findLast($conditions = null, $fields = null) {
+		$order = $this->_primaryKey . ' DESC';
+		$results = $this->findAll($fields, $conditions, $order, '1');
+		return reset($results);
+	}
+
+	/**
+	 * Finds records by SQL
+	 * 
+	 * @param string $sql
+	 * @return array
+	 */
+	public function findBySql($sql) {
+		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$rows = $dataSource->query($sql);
+
+		$className = get_class($this);
+
+		$results = array();
+		foreach ($rows as $row) {
+			$object = new $className();
+			$object->_data = $row;
+			$object->_newRecord = false;
+			$results[] = $object;
 		}
 
-		return $result[0];
+		return $results;
 	}
 
 	/**
@@ -376,7 +423,7 @@ class Model {
 	 */
 	public function delete($id = null) {
 		if (empty($id)) {
-			$id = $this->_id;
+			$id = $this->getId();
 		}
 
 		if (empty($id)) {
@@ -390,10 +437,10 @@ class Model {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$DataSource = ConnectionManager::getDataSource($this->_dataSourceName);
-		$DataSource->execute($sql);
+		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource->execute($sql);
 
-		$deleted = $DataSource->affectedRows() > 0;
+		$deleted = $dataSource->affectedRows() > 0;
 
 		// trigger callback
 		if ($deleted) {
@@ -438,6 +485,14 @@ class Model {
 	// ---------------------------------------------
 	//  Callbacks
 	// ---------------------------------------------
+
+	/**
+	 * Model::_beforeSave()
+	 *
+	 * @return void
+	 */
+	protected function _beforeSave() {
+	}
 
 	/**
 	 * After save callback
