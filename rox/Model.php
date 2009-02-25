@@ -61,6 +61,8 @@ class Model {
 		'id' => DATATYPE_INTEGER
 	);
 
+	protected $_protectedFields = array('id');
+
 	/**
 	 * Array of modified fields
 	 *
@@ -135,23 +137,18 @@ class Model {
 	 */
 	public function setData($what, $value = null) {
 		if (is_array($what)) {
-			$this->_data = $what;
-			$fields = array_keys($what);
-			array_walk($fields, array($this, '_flagFieldAsModified'));
+			foreach ($what as $k => $v) {
+				if (in_array($k, $this->_protectedFields)) {
+					unset($what[$k]);
+				}
+			}
+
+			$this->_data = array_merge($this->_data, $what);
+			$fieldNames = array_keys($what);
+			array_walk($fieldNames, array($this, '_flagFieldAsModified'));
 		} else {
 			$this->_data[$what] = $value;
 			$this->_flagFieldAsModified($what);
-		}
-	}
-
-	/**
-	 * Adds data without replacing the existing data 
-	 *
-	 * @param array $data
-	 */
-	public function addData($data) {
-		foreach ($data as $f => $v) {
-			$this->setData($f, $v);
 		}
 	}
 

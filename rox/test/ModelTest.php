@@ -13,7 +13,6 @@ ConnectionManager::setConfig('default', array(
 ));
 
 class User extends Model {
-	protected $_name = 'User';
 	protected $_table = 'users';
 	protected $_fieldMap = array(
 		'id' => DATATYPE_INTEGER,
@@ -21,7 +20,10 @@ class User extends Model {
 		'last_name' => DATATYPE_STRING,
 		'email' => DATATYPE_STRING,
 		'password' => DATATYPE_STRING,
+		'role' => DATATYPE_STRING
 	);
+
+	protected $_protectedFields = array('role');
 
 	/**
 	 * User::_beforeSave()
@@ -50,6 +52,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$sql.= "`last_name` VARCHAR( 255 ) NOT NULL ,";
 		$sql.= "`email` VARCHAR( 255 ) NOT NULL ,";
 		$sql.= "`password` VARCHAR( 255 ) NOT NULL ,";
+		$sql.= "`role` VARCHAR( 255 ) NULL ,";
 		$sql.= "PRIMARY KEY ( `id` )";
 		$sql.= ") ENGINE = InnoDB";
 
@@ -148,5 +151,25 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			'email'      => 'jose@example.com'
 		));
 		$this->assertTrue(is_numeric($jose->getId()));
+	}
+
+	/**
+	 * ModelTest::testProtectedFields()
+	 * 
+	 * @return void
+	 */
+	public function testProtectedFields() {
+		$data = array(
+			'first_name' => 'Jane',
+			'last_name'  => 'Doe',
+			'email'      => 'jane@example.com',
+			'role'       => 'Admin'
+		);
+
+		$user = new User($data);
+		$this->assertEquals(null, $user->getData('role'));
+
+		$user->setData('role', 'Admin');
+		$this->assertEquals('Admin', $user->getData('role'));
 	}
 }
