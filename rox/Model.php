@@ -273,12 +273,17 @@ class Model {
 	/**
 	 * Model::findCount()
 	 *
-	 * @param mixed $conditions
+	 * @param array|string $conditions
 	 * @return integer
 	 */
 	public function findCount($conditions = array()) {
-		$result = $this->find('COUNT(*) AS `count`', $conditions);
-		return (integer)$result['count'];
+		$sql = sprintf('SELECT COUNT(*) AS `count` FROM `%s`', $this->_table);
+		$sql.= $this->_buildConditionsSQL($conditions);
+
+		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$result = $dataSource->query($sql);
+
+		return (integer)$result[0]['count'];
 	}
 
 	/**
@@ -332,24 +337,7 @@ class Model {
 		}
 
 		$sql = sprintf('SELECT %s FROM `%s`', $fields, $this->_table);
-
-		if (!empty($conditions)) {
-			$sql .= ' WHERE ';
-			if (is_string($conditions)) {
-				$sql .= $conditions;
-			} else {
-				$normalizedConditions = array();
-				foreach ($conditions as $f => $v) {
-					if (is_int($f)) {
-						$normalizedConditions[] = ' ' . $v;
-					} else {
-						$normalizedConditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
-					}
-				}
-
-				$sql .= implode(' AND ', $normalizedConditions);
-			}
-		}
+		$sql.= $this->_buildConditionsSQL($conditions);
 
 		if (!empty($order)) {
 			$sql .= ' ORDER BY ' . $order;
@@ -438,8 +426,6 @@ class Model {
 		$dataSource->execute($sql);
 
 		$deleted = $dataSource->affectedRows() > 0;
-
-		// trigger callback
 		if ($deleted) {
 			$this->_afterDelete();
 		}
@@ -477,6 +463,35 @@ class Model {
 			case DATATYPE_BINARY:
 				return "'" . ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
 		}
+	}
+
+	/**
+	 * Model::_buildConditionsSQL()
+	 * 
+	 * @param mixed $conditions
+	 * @return string
+	 */
+	protected function _buildConditionsSQL($conditions) {
+		if (empty($conditions)) {
+			return null;
+		}
+
+		if (is_string($conditions)) {
+			$sql = ' WHERE ' . $conditions;
+			return $sql;
+		}
+
+		$normalizedConditions = array();
+		foreach ($conditions as $f => $v) {
+			if (is_int($f)) {
+				$normalizedConditions[] = ' ' . $v;
+			} else {
+				$normalizedConditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
+			}
+		}
+
+		$sql = ' WHERE ' . implode(' AND ', $normalizedConditions);
+		return $sql;
 	}
 
 	// ---------------------------------------------

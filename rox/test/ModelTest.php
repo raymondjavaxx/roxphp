@@ -172,4 +172,22 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$user->setData('role', 'Admin');
 		$this->assertEquals('Admin', $user->getData('role'));
 	}
+
+	public function testFindCount() {
+		$user = new User;
+		$total = $user->findCount();
+
+		$data = array(
+			'first_name' => 'Jane',
+			'last_name'  => 'Doe',
+			'email'      => 'jane@example.com',
+			'role'       => 'Admin'
+		);
+
+		$user->create($data);
+		$result = $user->findCount();
+		$expected = $total+1;
+
+		$this->assertEquals($expected, $result);
+	}
 }
