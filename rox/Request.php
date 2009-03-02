@@ -77,9 +77,8 @@ class Request {
 		return $this->getServer('REQUEST_METHOD');
 	}
 
-
 	/**
-	 * Request::isPost()
+	 * Return TRUE if the HTTP request method is POST
 	 * 
 	 * @return boolean
 	 */
@@ -88,12 +87,30 @@ class Request {
 	}
 
 	/**
-	 * Request::isGet()
+	 * Return TRUE if the HTTP request method is GET
 	 * 
 	 * @return boolean
 	 */
 	public function isGet() {
 		return $this->getMethod() == 'GET';
+	}
+
+	/**
+	 * Return TRUE if the HTTP request method is PUT
+	 *
+	 * @return boolean
+	 */
+	public function isPut() {
+		return $this->getMethod() == 'PUT';
+	}
+
+	/**
+	 * Return TRUE if the HTTP request method is DELETE
+	 *
+	 * @return boolean
+	 */
+	public function isDelete() {
+		return $this->getMethod() == 'DELETE';
 	}
 
 	/**
@@ -123,4 +140,5 @@ class Request {
 	public function isIPhone() {
 		return preg_match('/iP[hone|od]/', $this->getServer('HTTP_USER_AGENT', ''));
 	}
+
 }
