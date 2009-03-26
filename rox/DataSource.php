@@ -153,9 +153,14 @@ class DataSource extends Object {
 	 *
 	 * @param string $sql
 	 * @return resource
+	 * @throws Exception
 	 */
 	public function execute($sql) {
-		return mysql_query($sql, $this->_link);
+		$result = mysql_query($sql, $this->_link);
+		if (false === $result) {
+			throw new Exception(mysql_error($this->_link), mysql_errno($this->_link));
+		}
+		return $result;
 	}
 
 	/**
