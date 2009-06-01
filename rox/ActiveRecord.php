@@ -339,6 +339,33 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Rox_ActiveRecord::paginate()
+	 * 
+	 * @param array $options
+	 * @return Rox_ActiveRecord_PaginationResult
+	 */
+	public function paginate($options = array()) {
+		$defaultOptions = array(
+			'per_page'   => 10,
+			'page'       => 1,
+			'conditions' => array(),
+			'order'      => null,
+			'fields'     => null
+		);
+
+		$options = array_merge($defaultOptions, $options);
+
+		$total = $this->findCount($options['conditions']);
+		$pages = (integer)ceil($total / $options['per_page']);
+		$page = min(max(intval($options['page']), 1), $pages);
+		$limit = sprintf('%d, %d', ($page - 1) * $options['per_page'], $options['per_page']);
+
+		$items = $this->findAll($options['fields'], $options['conditions'], $options['order'], $limit);
+		$result = new Rox_ActiveRecord_PaginationResult($items, $pages, $page);
+		return $result;
+	}
+
+	/**
 	 * Rox_ActiveRecord_Abstract::find()
 	 *
 	 * @param mixed $fields
