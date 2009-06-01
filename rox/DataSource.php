@@ -26,9 +26,19 @@ class DataSource extends Object {
 	const DBMS_DATE_FORMAT     = 'Y-m-d';
 	const DBMS_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
+	/**
+	 * DB Link Identifier
+	 * 
+	 * @var resource
+	 */
 	protected $_link = null;
 
-	protected $result = null;
+	/**
+	 * Last result
+	 *
+	 * @var resource
+	 */
+	protected $_result = null;
 
 	/**
 	 * Default connection settings
@@ -36,7 +46,7 @@ class DataSource extends Object {
 	 * @var array
 	 */
 	protected $_settings = array(
-		'host'     => 'localhost',
+		'host'     => '127.0.0.1',
 		'username' => 'root',
 		'password' => '',
 		'database' => ''
@@ -53,7 +63,7 @@ class DataSource extends Object {
 	}
 
 	/**
-	 * Connects to database server and selects the database
+	 * Connects to database server
 	 *
 	 * @return void
 	 * @throws Exception
@@ -107,6 +117,51 @@ class DataSource extends Object {
 	 */
 	public function describe($table) {
 		return $this->query('DESCRIBE ' . $table);
+	}
+
+	/**
+	 * DataSource::generateFieldMapFromTable()
+	 * 
+	 * @param string $table
+	 * @return array
+	 */
+	public function generateFieldMapFromTable($table) {
+		static $mapCache = array();
+		if (!isset($mapCache[$table])) {
+			$mapCache[$table] = $this->_generateFieldMapFromTable($table);
+		}
+
+		return $mapCache[$table];
+	}
+
+	/**
+	 * DataSource::_generateFieldMapFromTable()
+	 * 
+	 * @param string $table
+	 * @return array
+	 */
+	protected function _generateFieldMapFromTable($table) {
+		$fieldMap = array();
+
+		$columns = $this->describe($table);
+		foreach ($columns as $col) {
+			$type = strtolower($col['Type']);
+			$name = $col['Field'];
+
+			if ($type == 'tinyint(1)') {
+				$type = 'boolean';
+			} else if (strpos($col['Type'], 'int') !== false) {
+				$type = 'integer';
+			} else if (strpos($col['Type'], 'char') !== false || $col['Type'] == 'text') {
+				$type = 'string';
+			} else if($type == 'blob') {
+				$type = 'binary';
+			}
+
+			$fieldMap[$name] = $type;
+		}
+
+		return $fieldMap;
 	}
 
 	/**

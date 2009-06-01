@@ -48,9 +48,11 @@ require ROX . 'Dispatcher.php';
 require ROX . 'ConnectionManager.php';
 require ROX . 'DataSource.php';
 require ROX . 'Router.php';
-require ROX . 'Model.php';      // M
-require ROX . 'View.php';       // V
-require ROX . 'Controller.php'; // C
+require ROX . 'Inflector.php';
+require ROX . 'ActiveRecord.php'; // M
+require ROX . 'View.php';         // V
+require ROX . 'Controller.php';   // C
+require ROX . 'Model.php';
 require ROX . 'Constants.php';
 
 require APP . 'base' . DS . 'app_model.php';
