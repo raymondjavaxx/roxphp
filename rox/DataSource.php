@@ -2,7 +2,7 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -15,13 +15,13 @@
  */
 
 /**
- * DataSource
+ * Rox_DataSource
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class DataSource extends Object {
+class Rox_DataSource extends Object {
 
 	const DBMS_DATE_FORMAT     = 'Y-m-d';
 	const DBMS_DATETIME_FORMAT = 'Y-m-d H:i:s';
@@ -110,7 +110,7 @@ class DataSource extends Object {
 	}
 
 	/**
-	 * DataSource::describe()
+	 * Rox_DataSource::describe()
 	 *
 	 * @param mixed $table
 	 * @return array
@@ -120,7 +120,7 @@ class DataSource extends Object {
 	}
 
 	/**
-	 * DataSource::generateFieldMapFromTable()
+	 * Rox_DataSource::generateFieldMapFromTable()
 	 * 
 	 * @param string $table
 	 * @return array
@@ -135,7 +135,7 @@ class DataSource extends Object {
 	}
 
 	/**
-	 * DataSource::_generateFieldMapFromTable()
+	 * Rox_DataSource::_generateFieldMapFromTable()
 	 * 
 	 * @param string $table
 	 * @return array
@@ -246,7 +246,7 @@ class DataSource extends Object {
 	}
 
 	/**
-	 * DataSource::lastInsertedID()
+	 * Rox_DataSource::lastInsertedID()
 	 *
 	 * @return mixed
 	 */

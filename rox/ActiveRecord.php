@@ -40,7 +40,7 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * The name of DataSource used by this Rox_ActiveRecord_Abstract
 	 *
-	 * @see ConnectionManager::getDataSource()
+	 * @see Rox_ConnectionManager::getDataSource()
 	 * @var string
 	 */
 	protected $_dataSourceName = 'default';
@@ -196,7 +196,7 @@ abstract class Rox_ActiveRecord {
 	 */
 	protected function _fieldMap() {
 		if (null === $this->_fieldMap) {
-			$db = ConnectionManager::getDataSource($this->_dataSourceName);
+			$db = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 			$this->_fieldMap = $db->generateFieldMapFromTable($this->_table);
 		}
 
@@ -225,7 +225,7 @@ abstract class Rox_ActiveRecord {
 
 		unset($data[$this->_primaryKey]);
 
-		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 
 		if ($this->_newRecord) {
 			foreach ($data as $f => $v) {
@@ -287,7 +287,7 @@ abstract class Rox_ActiveRecord {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$result = ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
+		$result = Rox_ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
 		return $result[0]['count'] == 1;
 	}
 
@@ -301,7 +301,7 @@ abstract class Rox_ActiveRecord {
 		$sql = sprintf('SELECT COUNT(*) AS `count` FROM `%s`', $this->_table);
 		$sql.= $this->_buildConditionsSQL($conditions);
 
-		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 		$result = $dataSource->query($sql);
 
 		return (integer)$result[0]['count'];
@@ -402,7 +402,7 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	public function findBySql($sql) {
-		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 		$rows = $dataSource->query($sql);
 
 		$className = get_class($this);
@@ -440,7 +440,7 @@ abstract class Rox_ActiveRecord {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$dataSource = ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 		$dataSource->execute($sql);
 
 		$deleted = $dataSource->affectedRows() > 0;
@@ -481,7 +481,7 @@ abstract class Rox_ActiveRecord {
 			case DATATYPE_DATE:
 			case DATATYPE_DATETIME:
 			case DATATYPE_BINARY:
-				return "'" . ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
+				return "'" . Rox_ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
 		}
 	}
 

@@ -2,7 +2,7 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -18,10 +18,10 @@
  * ConnectionManager
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class ConnectionManager {
+class Rox_ConnectionManager {
 
 	/**
 	 * DataSource instances
@@ -73,7 +73,7 @@ class ConnectionManager {
 			throw new Exception('Configuration entry not found for ' . $name);
 		}
 
-		$dataSource = new DataSource(self::$_configs[$name]);
+		$dataSource = new Rox_DataSource(self::$_configs[$name]);
 		$dataSource->connect();
 
 		self::$_dataSources[$name] = $dataSource;
