@@ -52,12 +52,12 @@ require ROX . 'Inflector.php';
 require ROX . 'ActiveRecord.php'; // M
 require ROX . 'View.php';         // V
 require ROX . 'Controller.php';   // C
+require CONTROLLERS . 'ApplicationController.php';
 require ROX . 'Model.php';
 require ROX . 'ActiveRecord/PaginationResult.php';
 require ROX . 'Constants.php';
 
 require APP . 'base' . DS . 'app_model.php';
-require APP . 'base' . DS . 'app_controller.php';
 
 require CONFIG . 'database.php';
 require CONFIG . 'init.php';

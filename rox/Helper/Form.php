@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -21,23 +21,23 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class FormHelper extends Object {
+class Rox_Helper_Form {
 
-	private $currentModel = null;
+	private $_currentModel = null;
 
-	private $data = array();
+	private $_data = array();
 
   /**
-   * FormHelper::__construct()
+   * Rox_Helper_Form::__construct()
    *
    * @param array $data
    */
-	public function __construct(&$data = array()) {
-		$this->data = $data;
+	public function __construct() {
+		$this->_data = $_POST;
 	}
 
   /**
-   * FormHelper::create()
+   * Rox_Helper_Form::create()
    *
    * @param string $model
    * @param string $action
@@ -45,7 +45,7 @@ class FormHelper extends Object {
    * @return string
    */
 	public function create($model, $action, $method = 'post') {
-		$this->currentModel = $model;
+		$this->_currentModel = $model;
 		$formTag = sprintf(
 			'<form action="%s" method="%s">',
 			Router::url($action),
@@ -55,16 +55,16 @@ class FormHelper extends Object {
 	}
 
   /**
-   * FormHelper::input()
+   * Rox_Helper_Form::input()
    *
    * @param string $name
    * @return string
    */
 	public function input($name, $type = null, $value = null, $label = null) {
-		$fieldName = 'd[' . $this->currentModel . '][' . $name . ']';
+		$fieldName = 'd[' . $this->_currentModel . '][' . $name . ']';
 
-		if (is_null($value) && isset($this->data[$this->currentModel][$name])) {
-			$value = $this->data[$this->currentModel][$name];
+		if (is_null($value) && isset($this->_data[$this->_currentModel][$name])) {
+			$value = $this->_data[$this->_currentModel][$name];
 		}
 
 		$output = $this->label(empty($label) ? ucwords($name) : $label);
@@ -72,7 +72,7 @@ class FormHelper extends Object {
 			'<input type="%s" name="%s" id="%s" value="%s" />',
 			$type,
 			$fieldName,
-			$this->currentModel . '_' . $name . '_input',
+			$this->_currentModel . '_' . $name . '_input',
 			htmlspecialchars($value)
 		);
 
@@ -80,7 +80,7 @@ class FormHelper extends Object {
 	}
 
   /**
-   * FormHelper::submit()
+   * Rox_Helper_Form::submit()
    *
    * @param string $text
    * @return string
@@ -90,7 +90,7 @@ class FormHelper extends Object {
 	}
 
   /**
-   * FormHelper::label()
+   * Rox_Helper_Form::label()
    *
    * @param string $text
    * @return string
@@ -100,7 +100,7 @@ class FormHelper extends Object {
 	}
 
   /**
-   * FormHelper::end()
+   * Rox_Helper_Form::end()
    *
    * @return string
    */

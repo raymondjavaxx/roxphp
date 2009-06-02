@@ -3,11 +3,18 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Error</title>
-	<?php echo $html->css('rox'); ?>
+	<style type="text/css" media="screen">
+		.exception {
+			color: #7E2217;
+			background-color: #FDFAA4;
+			border: 1px solid #444;
+			padding: 8px;
+		}
+	</style>
 </head>
 <body>
 	<div id="header">
-		<p><?php echo $html->image('rox_logo.png', 'RoxPHP'); ?></p>
+		<img src="<?php echo Router::url('/img/rox_logo.png') ?>" alt="RoxPHP" />
 	</div>
 	<div id="container">
 		<?php echo $rox_layout_content; ?>

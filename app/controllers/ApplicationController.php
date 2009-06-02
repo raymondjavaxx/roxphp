@@ -2,24 +2,24 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
- * AppController
+ * ApplicationController
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class AppController extends Controller {
+abstract class ApplicationController extends Rox_Controller {
 }

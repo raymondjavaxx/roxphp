@@ -191,4 +191,25 @@ class Rox_Inflector {
 		$cache[$modelClassName] = $table;
 		return $table;
 	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @param string $text 
+	 * @return string
+	 */
+	public static function camelize($text) {
+		return str_replace(' ', '', ucwords(str_replace('_', ' ', $text)));
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @param string $text 
+	 * @return string
+	 */
+	public static function lowerCamelize($text) {
+		$text = self::camelize($text);
+		return (string)strtolower(substr($text, 0, 1)) . substr($text, 1);
+	}
 }

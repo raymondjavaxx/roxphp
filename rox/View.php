@@ -44,13 +44,6 @@ class View {
 	 * @return string
 	 */
 	public function render($path, $name, $layout = 'default') {
-		//load basic helpers
-		require(ROX . 'helpers' . DS . 'html.php');
-		require(ROX . 'helpers' . DS . 'form.php');
-
-		$html = new HtmlHelper;
-		$form = new FormHelper;
-
 		extract($this->_vars, EXTR_SKIP);
 
 		ob_start();

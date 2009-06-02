@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Controller {
+class Rox_Controller {
 
 	/**
 	 * Controller name
@@ -56,7 +56,14 @@ class Controller {
 	 *
 	 * @var array
 	 */
-	protected $_models = array();
+	public $models = array();
+
+	/**
+	 * undocumented variable
+	 *
+	 * @var array
+	 */
+	public $helpers = array('Html', 'Form');
 
 	/**
 	 * Posted data
@@ -87,8 +94,12 @@ class Controller {
 			$this->_name = str_replace('Controller', '', get_class($this));
 		}
 
-		foreach($this->_models as $model) {
-			$this->{$model} = Rox::getModel($model);
+		$vars = get_class_vars('ApplicationController');
+		$this->helpers = array_merge($vars["helpers"], $this->helpers);
+		$this->models  = array_merge($vars['models'], $this->models);
+
+		foreach ($this->models as $model) {
+			Rox::loadModel($model);
 		}
 	}
 
@@ -96,6 +107,11 @@ class Controller {
 	 * Renders the current action
 	 */
 	public function render() {
+		foreach ($this->helpers as $helper) {
+			$helperName = Rox_Inflector::lowerCamelize($helper);
+			$this->set($helperName, Rox::getHelper($helperName));
+		}
+
 		$this->set('rox_page_title', $this->_pageTitle);
 		$View = new View($this->_viewVars);
 		echo $View->render(strtolower($this->_name), $this->_action, $this->_layout);
