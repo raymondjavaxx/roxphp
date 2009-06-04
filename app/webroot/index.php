@@ -62,5 +62,5 @@ require APP . 'base' . DS . 'app_model.php';
 require CONFIG . 'database.php';
 require CONFIG . 'init.php';
 
-$Dispatcher = new Dispatcher;
-$Dispatcher->dispatch(isset($_GET['route']) ? $_GET['route'] : ROX_DEFAULT_ROUTE);
+$dispatcher = new Rox_Dispatcher;
+$dispatcher->dispatch(isset($_GET['route']) ? $_GET['route'] : ROX_DEFAULT_ROUTE);

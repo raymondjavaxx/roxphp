@@ -26,7 +26,7 @@ class PagesController extends ApplicationController {
 	/**
 	 * Renders the homepage
 	 */
-	public function home() {
+	public function homeAction() {
 		// just render it!
 	}
 }

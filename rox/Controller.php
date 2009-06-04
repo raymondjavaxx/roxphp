@@ -66,13 +66,6 @@ class Rox_Controller {
 	public $helpers = array('Html', 'Form');
 
 	/**
-	 * Posted data
-	 *
-	 * @var array  
-	 */
-	protected $_data = array();
-
-	/**
 	 * Request object
 	 *
 	 * @var Request
@@ -107,38 +100,18 @@ class Rox_Controller {
 	 * Renders the current action
 	 */
 	public function render() {
+		$this->set('rox_page_title', $this->_pageTitle);
+
 		foreach ($this->helpers as $helper) {
 			$helperName = Rox_Inflector::lowerCamelize($helper);
 			$this->set($helperName, Rox::getHelper($helperName));
 		}
 
-		$this->set('rox_page_title', $this->_pageTitle);
-		$View = new View($this->_viewVars);
-		echo $View->render(strtolower($this->_name), $this->_action, $this->_layout);
-	}
+		$viewPath = Rox_Inflector::underscore($this->_name);
+		$viewName = str_replace('_action', '', Rox_Inflector::underscore($this->_action));
 
-	/**
-	 * Data setter
-	 *
-	 * @param array $data 
-	 */
-	public function setData($data) {
-		$this->_data = $data;
-	}
-
-	/**
-	 * Controller::getData()
-	 *
-	 * @param string $model
-	 * @param string $field
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function getData($model, $field, $default = null) {
-		if (isset($this->_data[$model][$field])) {
-			return $this->_data[$model][$field];
-		}
-		return $default;
+		$view = new Rox_View($this->_viewVars);
+		echo $view->render($viewPath, $viewName, $this->_layout);
 	}
 
 	/**
