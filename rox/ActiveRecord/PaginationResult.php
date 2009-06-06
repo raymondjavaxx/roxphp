@@ -9,7 +9,7 @@
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -38,17 +38,35 @@ class Rox_ActiveRecord_PaginationResult extends ArrayObject {
 	protected $_currentPage;
 
 	/**
-	 * Rox_ActiveRecord_PaginationResult::__construct()
+	 * Next page number
+	 *
+	 * @var integer
+	 */
+	protected $_nextPage;
+
+	/**
+	 * Previous page number
+	 *
+	 * @var integer
+	 */
+	protected $_previousPage;
+
+	/**
+	 * Constructor
 	 * 
 	 * @param array $array
 	 * @param integer $pages
 	 * @param integer $currentPage
+	 * @param integer $nextPage
+	 * @param integer $previousPage
 	 * @return void
 	 */
-	public function __construct($array, $pages, $currentPage) {
+	public function __construct($array, $pages, $currentPage, $nextPage, $previousPage) {
 		parent::__construct($array);
 		$this->_pages = $pages;
 		$this->_currentPage = $currentPage;
+		$this->_nextPage = $nextPage;
+		$this->_previousPage = $previousPage;
 	}
 
 	/**
@@ -67,5 +85,23 @@ class Rox_ActiveRecord_PaginationResult extends ArrayObject {
 	 */
 	public function getCurrentPage() {
 		return $this->_currentPage;
+	}
+
+	/**
+	 * Returns the next page number.
+	 *
+	 * @return integer
+	 */
+	public function getNextPage() {
+		return $this->_nextPage;
+	}
+
+	/**
+	 * Returns the previous page numner.
+	 *
+	 * @return integer
+	 */
+	public function getPreviousPage() {
+		return $this->_previousPage;
 	}
 }

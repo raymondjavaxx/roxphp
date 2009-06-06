@@ -357,11 +357,14 @@ abstract class Rox_ActiveRecord {
 
 		$total = $this->findCount($options['conditions']);
 		$pages = (integer)ceil($total / $options['per_page']);
-		$page = min(max(intval($options['page']), 1), $pages);
-		$limit = sprintf('%d, %d', ($page - 1) * $options['per_page'], $options['per_page']);
+		$currentPage = min(max(intval($options['page']), 1), $pages);
+		$limit = sprintf('%d, %d', ($currentPage - 1) * $options['per_page'], $options['per_page']);
+		$nextPage = min($pages, $currentPage + 1);
+		$previousPage = max(1, $currentPage - 1);
 
 		$items = $this->findAll($options['fields'], $options['conditions'], $options['order'], $limit);
-		$result = new Rox_ActiveRecord_PaginationResult($items, $pages, $page);
+		$result = new Rox_ActiveRecord_PaginationResult($items, $pages, $currentPage,
+			$nextPage, $previousPage);
 		return $result;
 	}
 
