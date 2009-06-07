@@ -115,9 +115,9 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_flagFieldAsModified()
+	 * Flags a given field as "modified"
 	 *
-	 * @param mixed $field
+	 * @param string $field
 	 * @return void
 	 */
 	protected function _flagFieldAsModified($field) {
@@ -127,7 +127,7 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_resetModifiedFieldsFlags()
+	 * Resets the modified fields list
 	 *
 	 * @return void
 	 */
@@ -228,6 +228,10 @@ abstract class Rox_ActiveRecord {
 		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 
 		if ($this->_newRecord) {
+			if ($this->hasField('created_at') && !isset($data['created_at'])) {
+				$data['created_at'] = date('Y-m-d H:i:s');
+			}
+
 			foreach ($data as $f => $v) {
 				$data[$f] = $this->smartQuote($f, $v);
 			}
@@ -250,6 +254,10 @@ abstract class Rox_ActiveRecord {
 				return true;
 			}
 		} else {
+			if ($this->hasField('updated_at') && !isset($data['updated_at'])) {
+				$data['updated_at'] = date('Y-m-d H:i:s');
+			}
+
 			$updateData = array();
 			foreach ($data as $f => $v) {
 				$updateData[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
@@ -486,6 +494,16 @@ abstract class Rox_ActiveRecord {
 			case DATATYPE_BINARY:
 				return "'" . Rox_ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
 		}
+	}
+
+	/**
+	 * Checks if a field exists
+	 *
+	 * @param string $field
+	 * @return boolean
+	 */
+	public function hasField($field) {
+		return array_key_exists($field, $this->_fieldMap());
 	}
 
 	/**
