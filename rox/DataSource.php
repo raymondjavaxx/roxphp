@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Rox_DataSource extends Object {
+class Rox_DataSource {
 
 	const DBMS_DATE_FORMAT     = 'Y-m-d';
 	const DBMS_DATETIME_FORMAT = 'Y-m-d H:i:s';

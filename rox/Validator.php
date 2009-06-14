@@ -21,12 +21,12 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Validator {
+class Rox_Validator {
 
 	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum))$/i';
 
 	/**
-	 * Validator::regexMatch()
+	 * Rox_Validator::regexMatch()
 	 *
 	 * @param string $pattern
 	 * @param string $subject
@@ -37,17 +37,17 @@ class Validator {
 	}
 
 	/**
-	 * Validator::email()
+	 * Rox_Validator::email()
 	 *
 	 * @param string $subject
 	 * @return boolean
 	 */
 	public static function email($subject) {
-		return Validator::regexMatch(Validator::VALID_EMAIL_PATTERN, $subject);
+		return self::regexMatch(self::VALID_EMAIL_PATTERN, $subject);
 	}
 
 	/**
-	 * Validator::minLength()
+	 * Rox_Validator::minLength()
 	 *
 	 * @param string $subject
 	 * @param integer $min
@@ -58,7 +58,7 @@ class Validator {
 	}
 
 	/**
-	 * Validator::maxLength()
+	 * Rox_Validator::maxLength()
 	 *
 	 * @param string $subject
 	 * @param integer $max
@@ -69,7 +69,7 @@ class Validator {
 	}
 
 	/**
-	 * Validator::notEmpty()
+	 * Rox_Validator::notEmpty()
 	 *
 	 * @param string $subject
 	 * @return boolean
@@ -80,7 +80,7 @@ class Validator {
 	}
 
 	/**
-	 * Validator::between()
+	 * Rox_Validator::between()
 	 *
 	 * @param string $subject
 	 * @param integer $min
@@ -128,8 +128,8 @@ class Validator {
 	 * If you want to restrict the credit card type you can pass it as the
 	 * seccond argument:
 	 *
-	 * Validator::creditCard(..., 'VISA')
-	 * Validator::creditCard(..., array('VISA', 'AMEX'))
+	 * Rox_Validator::creditCard(..., 'VISA')
+	 * Rox_Validator::creditCard(..., array('VISA', 'AMEX'))
 	 *
 	 * @param string $number
 	 * @param string|array $type
