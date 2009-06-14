@@ -2,7 +2,7 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -21,12 +21,13 @@ define('WEBROOT', dirname(__FILE__) . DS);
 define('APP', dirname(WEBROOT) . DS);
 define('ROX', dirname(APP) . DS . 'rox' . DS);
 
-define('CONFIG', APP . 'config' . DS);
-define('MODELS', APP . 'models' . DS);
-define('VIEWS', APP . 'views' . DS);
-define('LAYOUTS', VIEWS . 'layouts' . DS);
-define('CONTROLLERS', APP . 'controllers' . DS);
-define('HELPERS', APP . 'helpers' . DS);
+define('CONFIG', APP.'config'.DS);
+define('MODELS', APP.'models'.DS);
+define('VIEWS', APP.'views'.DS);
+define('LAYOUTS', VIEWS.'layouts'.DS);
+define('CONTROLLERS', APP.'controllers'.DS);
+define('HELPERS', APP.'helpers'.DS);
+define('MAILERS', APP.'mailers'.DS);
 
 define('WWW', dirname(dirname(dirname($_SERVER['PHP_SELF']))));
 
@@ -52,12 +53,12 @@ require ROX . 'Inflector.php';
 require ROX . 'ActiveRecord.php'; // M
 require ROX . 'View.php';         // V
 require ROX . 'Controller.php';   // C
-require CONTROLLERS . 'ApplicationController.php';
 require ROX . 'Model.php';
 require ROX . 'ActiveRecord/PaginationResult.php';
 require ROX . 'Constants.php';
+require ROX . 'Mailer.php';
 
-require APP . 'base' . DS . 'app_model.php';
+require CONTROLLERS . 'ApplicationController.php';
 
 require CONFIG . 'database.php';
 require CONFIG . 'init.php';
