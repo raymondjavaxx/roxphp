@@ -23,16 +23,23 @@
  */
 class Rox_Helper_Pagination {
 
+	/**
+	 * Default options
+	 *
+	 * @var array
+	 */
 	protected $_options = array(
 		'class'          => 'pagination',
 		'previous_label' => '&laquo; Previous',
-		'next_label'     => 'Next &raquo;'
+		'next_label'     => 'Next &raquo;',
+		'max_items'      => 8
 	);
 
 	/**
-	 * undocumented function
+	 * Generates the pagination nav
 	 * 
 	 * @param Rox_ActiveRecord_PaginationResult $collection
+	 * @param array $options
 	 * @return string
 	 */
 	public function links(Rox_ActiveRecord_PaginationResult $collection, $options = array()) {
@@ -46,8 +53,21 @@ class Rox_Helper_Pagination {
 				$options['previous_label']);
 		}
 
-		for ($i =1; $i<=$collection->getPages(); $i++) {
+		$start = max(1, $collection->getCurrentPage() - floor($options['max_items'] / 2));
+		$end   = min($collection->getPages(), $options['max_items'] + $start - 1);
+
+		if ($start > 1) {
+			$output[] = $this->_linkOrSpan(1, $currentPage);
+			$output[] = '<span>...</span>';
+		}
+
+		for ($i = $start; $i<=$end; $i++) {
 			$output[] = $this->_linkOrSpan($i, $currentPage);
+		}
+
+		if ($end < $collection->getPages()) {
+			$output[] = '<span>...</span>';
+			$output[] = $this->_linkOrSpan($collection->getPages(), $currentPage);
 		}
 
 		if ($collection->getNextPage() != $currentPage) {
