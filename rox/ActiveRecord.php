@@ -177,6 +177,28 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Method overloading
+	 *
+	 * @param string $method method name
+	 * @param array $args arguments
+	 * @return mixed
+	 * @link http://us.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+	 */
+	public function __call($method, $args) {
+		switch (substr($method, 0, 3)) {
+			case 'get':
+				$key = Rox_Inflector::underscore(substr($method, 3));
+				return $this->getData($key, isset($args[0]) ? $args[0] : null);
+
+			case 'set':
+				$key = Rox_Inflector::underscore(substr($method, 3));
+				return $this->setData($key, isset($args[0]) ? $args[0] : null);
+		}
+
+		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
+	}
+
+	/**
 	 * Creates an object and save it to the database.
 	 *
 	 * @param mixed $data
