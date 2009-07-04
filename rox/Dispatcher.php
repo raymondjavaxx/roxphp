@@ -77,7 +77,7 @@ class Rox_Dispatcher {
 	 * @throws Exception
 	 */
 	protected function _parseUrl($url) {
-		$parts = explode('/', $url);
+		$parts = explode('/', trim($url, '/'));
 
 		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
 			throw new Exception('Ilegal controller name', 404);

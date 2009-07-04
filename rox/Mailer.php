@@ -15,7 +15,7 @@
  */
 
 /**
- * Locale
+ * Rox_Mailer
  *
  * @package Rox
  * @copyright Copyright (c) 2008 - 2009 Ramon Torres
