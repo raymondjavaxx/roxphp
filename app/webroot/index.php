@@ -39,7 +39,7 @@ error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // include core files
 require ROX . 'Exception' . DS . 'Handler.php';
-set_exception_handler(array('Exception_Handler', 'handle'));
+set_exception_handler(array('Rox_Exception_Handler', 'handle'));
 
 require ROX . 'Object.php';
 require ROX . 'Rox.php';

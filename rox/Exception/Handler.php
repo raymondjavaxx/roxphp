@@ -15,39 +15,40 @@
  */
 
 /**
- * Exception_Handler
+ * Exception Handler
  *
  * @package Rox
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Exception_Handler {
+class Rox_Exception_Handler {
 
 	/**
-	 * Rox_Exception_Handler::handleException()
+	 * Exception handler
 	 *
-	 * @param Exception $Exception
+	 * @param Exception $exception
 	 */
-	public static function handle($Exception) {
-		self::_render($Exception);
+	public static function handle($exception) {
+		ob_end_clean();
+		self::_render($exception);
 		exit;
 	}
 
 	/**
-	 * Renders the exception
+	 * Renders the error page associated with the exception code
 	 * 
-	 * @param Exception $Exception   
+	 * @param Exception $exception   
 	 */
-	private static function _render(&$Exception) {
+	private static function _render($exception) {
 		header("HTTP/1.0 500 Internal Server Error");
 
-		$viewName = (string)$Exception->getCode();
+		$viewName = (string)$exception->getCode();
 
 		if (!file_exists(VIEWS . 'errors' . DS . $viewName . '.tpl')) {
 			$viewName = 'unknown';
 		}
 
-		$View = new Rox_View(array('exception' => $Exception));
-		echo $View->render('errors', $viewName, 'exception');
+		$view = new Rox_View(array('exception' => $exception));
+		echo $view->render('errors', $viewName, 'exception');
 	}
 }
