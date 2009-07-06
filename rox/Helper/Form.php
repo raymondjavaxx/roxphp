@@ -27,6 +27,8 @@ class Rox_Helper_Form {
 
 	protected $_data;
 
+	protected $_validationErrors = array();
+
 	/**
 	 * Constructor
 	 */
@@ -53,9 +55,15 @@ class Rox_Helper_Form {
 			$modelClass = get_class($model);
 			$modelName = Rox_Inflector::underscore($modelClass);
 			$controller = Rox_Inflector::pluralize($modelName);
-			$action = '/'.$controller.'/edit/'.$model->getId();
+
+			if ($model->getId() === null) {
+				$action = '/'.$controller.'/add';
+			} else {
+				$action = '/'.$controller.'/edit/'.$model->getId();
+			}
 
 			$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
+			$this->_validationErrors[$modelName] = $model->getValidationErrors();
 
 			return $this->create($modelName, $action);
 		}
@@ -121,6 +129,11 @@ class Rox_Helper_Form {
 				$elementId,
 				htmlspecialchars($options['value'])
 			);
+		}
+
+		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
+			$output .= sprintf('<div class="error">%s</div>',
+				htmlspecialchars($this->_validationErrors[$this->_currentModel][$name]));
 		}
 
 		return sprintf('<div class="input">%s</div>', $output);

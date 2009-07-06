@@ -81,6 +81,13 @@ abstract class Rox_ActiveRecord {
 	protected $_newRecord = true;
 
 	/**
+	 * undocumented variable
+	 *
+	 * @var string
+	 */
+	protected $_validationErrors = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $fields
@@ -199,6 +206,34 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Runs the validation callbacks
+	 *
+	 * @return boolean
+	 */
+	public function valid() {
+		$this->_validationErrors = array();
+
+		$this->_validate();
+
+		if ($this->_newRecord) {
+			$this->_validateOnCreate();
+		} else {
+			$this->_validateOnUpdate();
+		}
+
+		return count($this->_validationErrors) == 0;
+	}
+
+	/**
+	 * Returns the validation errors
+	 *
+	 * @return array
+	 */
+	public function getValidationErrors() {
+		return $this->_validationErrors;
+	}
+
+	/**
 	 * Creates an object and save it to the database.
 	 *
 	 * @param mixed $data
@@ -212,25 +247,15 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_fieldMap()
-	 * 
-	 * @return array
-	 */
-	protected function _fieldMap() {
-		if (null === $this->_fieldMap) {
-			$db = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
-			$this->_fieldMap = $db->generateFieldMapFromTable($this->_table);
-		}
-
-		return $this->_fieldMap;
-	}
-
-	/**
-	 * Rox_ActiveRecord_Abstract::save()
+	 * Saves the model
 	 *
 	 * @return boolean
 	 */
 	public function save() {
+		if (!$this->valid()) {
+			return false;
+		}
+
 		$this->_beforeSave();
 
 		$data = $this->getData();
@@ -526,6 +551,20 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Rox_ActiveRecord_Abstract::_fieldMap()
+	 * 
+	 * @return array
+	 */
+	protected function _fieldMap() {
+		if (null === $this->_fieldMap) {
+			$db = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+			$this->_fieldMap = $db->generateFieldMapFromTable($this->_table);
+		}
+
+		return $this->_fieldMap;	
+	}
+
+	/**
 	 * Checks if a field exists
 	 *
 	 * @param string $field
@@ -565,11 +604,39 @@ abstract class Rox_ActiveRecord {
 	}
 
 	// ---------------------------------------------
+	//  Validation callbacks
+	// ---------------------------------------------
+
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
+	protected function _validate() {
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
+	protected function _validateOnCreate() {
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
+	protected function _validateOnUpdate() {
+	}
+
+	// ---------------------------------------------
 	//  Callbacks
 	// ---------------------------------------------
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_beforeSave()
+	 * Before save callback
 	 *
 	 * @return void
 	 */
@@ -580,12 +647,15 @@ abstract class Rox_ActiveRecord {
 	 * After save callback
 	 *
 	 * @param boolean $created
+	 * @return void
 	 */
 	protected function _afterSave($created) {
 	}
 
 	/**
 	 * After delete callback
+	 *
+	 * @return void
 	 */
 	protected function _afterDelete() {
 	}
