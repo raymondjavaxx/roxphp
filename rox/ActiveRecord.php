@@ -9,7 +9,7 @@
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -81,11 +81,11 @@ abstract class Rox_ActiveRecord {
 	protected $_newRecord = true;
 
 	/**
-	 * undocumented variable
+	 * Validation errors
 	 *
-	 * @var string
+	 * @var Rox_ActiveRecord_ErrorCollection
 	 */
-	protected $_validationErrors = array();
+	protected $_errors;
 
 	/**
 	 * Constructor
@@ -211,7 +211,11 @@ abstract class Rox_ActiveRecord {
 	 * @return boolean
 	 */
 	public function valid() {
-		$this->_validationErrors = array();
+		if ($this->_errors === null) {
+			$this->_errors = new Rox_ActiveRecord_ErrorCollection($this->_data);
+		} else {
+			$this->_errors->clear();
+		}
 
 		$this->_validate();
 
@@ -221,7 +225,7 @@ abstract class Rox_ActiveRecord {
 			$this->_validateOnUpdate();
 		}
 
-		return count($this->_validationErrors) == 0;
+		return count($this->_errors) == 0;
 	}
 
 	/**
@@ -230,7 +234,11 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	public function getValidationErrors() {
-		return $this->_validationErrors;
+		if ($this->_errors == null) {
+			return array();
+		}
+
+		return $this->_errors->toArray();
 	}
 
 	/**

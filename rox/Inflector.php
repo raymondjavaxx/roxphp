@@ -212,4 +212,13 @@ class Rox_Inflector {
 		$text = self::camelize($text);
 		return (string)strtolower(substr($text, 0, 1)) . substr($text, 1);
 	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @param string $text 
+	 */
+	public static function humanize($text) {
+		return ucwords(str_replace('_', ' ', $text));
+	}
 }

@@ -9,7 +9,7 @@
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -55,6 +55,7 @@ require ROX . 'View.php';         // V
 require ROX . 'Controller.php';   // C
 require ROX . 'Model.php';
 require ROX . 'ActiveRecord/PaginationResult.php';
+require ROX . 'ActiveRecord/ErrorCollection.php';
 require ROX . 'Constants.php';
 require ROX . 'Mailer.php';
 
