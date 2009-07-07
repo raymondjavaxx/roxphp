@@ -96,7 +96,7 @@ class Rox_ActiveRecord_ErrorCollection implements Countable {
 	 * @return void
 	 */
 	public function addOnEmpty($field, $message = "This field can't be left blank") {
-		if (empty($this->_data[$field])) {
+		if (empty($this->_data[$field]) || trim($this->_data[$field]) == '') {
 			$this->add($field, $message);
 		}
 	}
