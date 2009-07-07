@@ -146,7 +146,7 @@ abstract class Rox_ActiveRecord {
 	 * Set data
 	 *
 	 * @param string|array $field
-	 * @param mixed $value 
+	 * @param mixed $value
 	 */
 	public function setData($field, $value = null) {
 		if (is_array($field)) {
@@ -189,6 +189,7 @@ abstract class Rox_ActiveRecord {
 	 * @param string $method method name
 	 * @param array $args arguments
 	 * @return mixed
+	 * @throws Exception
 	 * @link http://us.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
 	 */
 	public function __call($method, $args) {
@@ -609,6 +610,46 @@ abstract class Rox_ActiveRecord {
 
 		$sql = ' WHERE ' . implode(' AND ', $normalizedConditions);
 		return $sql;
+	}
+
+	// ---------------------------------------------
+	//  Validation methods
+	// ---------------------------------------------
+
+	/**
+	 * Validates that specified fields are not empty
+	 *
+	 * @param string|array $fieldNames 
+	 * @param string $message 
+	 * @return void
+	 */
+	public function _validatesPresenceOf($fieldNames, $message = "can't be blank") {
+		if (!is_array($fieldNames)) {
+			$fieldNames = array($fieldNames);
+		}
+
+		foreach ($fieldNames as $fieldName) {
+			$this->_errors->addOnEmpty($fieldName, $message);
+		}
+	}
+
+	/**
+	 * Validates the acceptance of agreements checkboxes
+	 *
+	 * @param string|array $fieldNames 
+	 * @param string $message 
+	 * @return void
+	 */
+	public function _validatesAcceptanceOf($fieldNames, $message = 'must be accepted') {
+		if (!is_array($fieldNames)) {
+			$fieldNames = array($fieldNames);
+		}
+
+		foreach ($fieldNames as $fieldName) {
+			if ($this->getData($fieldName) != '1') {
+				$this->_errors->add($fieldName, $message);
+			}
+		}
 	}
 
 	// ---------------------------------------------
