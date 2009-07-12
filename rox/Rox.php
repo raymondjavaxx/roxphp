@@ -75,7 +75,7 @@ class Rox {
 	protected static function _loadHelper($name) {
 		$name = Rox_Inflector::camelize($name);
 
-		$file = APP.'helpers'.DS.$name.'.php';
+		$file = APP.'helpers'.DS.$name.'Helper.php';
 		if (file_exists($file)) {
 			require_once $file;
 			return $name.'Helper';
