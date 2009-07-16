@@ -556,6 +556,9 @@ abstract class Rox_ActiveRecord {
 			case DATATYPE_DATETIME:
 			case DATATYPE_BINARY:
 				return "'" . Rox_ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
+
+			case DATATYPE_FLOAT:
+				return (float)$value;
 		}
 	}
 

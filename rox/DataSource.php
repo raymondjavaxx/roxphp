@@ -154,6 +154,8 @@ class Rox_DataSource {
 				$type = 'integer';
 			} else if (strpos($col['Type'], 'char') !== false || $col['Type'] == 'text') {
 				$type = 'string';
+			} else if(preg_match('/^decimal|float|double/', $col['Type']) === 1) {
+				$type = 'float';
 			} else if($type == 'blob') {
 				$type = 'binary';
 			}
