@@ -15,11 +15,6 @@
  */
 
 /**
- * @see Request
- */
-require_once ROX . 'Request.php';
-
-/**
  * Dispatcher
  *
  * @package Rox
@@ -40,14 +35,14 @@ class Rox_Dispatcher {
 		$this->_loadController($parsedUrl['controller']);
 		$controller = new $parsedUrl['controller'];
 
-		if ( method_exists('Controller', $parsedUrl['action']) ||
+		if ( method_exists('Rox_Controller', $parsedUrl['action']) ||
 			!method_exists($controller, $parsedUrl['action']) ||
 			strpos($parsedUrl['action'], '__') === 0 ||
 			!is_callable(array($controller, $parsedUrl['action']))) {
 			throw new Exception('Action does not exist or is not dispatchable', 404);
 		}
 
-		$controller->setRequest(new Request);
+		$controller->setRequest(new Rox_Request);
 		$controller->setAction($parsedUrl['action']);
 
 		call_user_func_array(array($controller, $parsedUrl['action']), $parsedUrl['params']);

@@ -81,7 +81,7 @@ class Rox_Helper_Form {
 	 */
 	public function create($model, $action, $method = 'post') {
 		$this->_currentModel = Rox_Inflector::underscore($model);
-		$formTag = sprintf('<form action="%s" method="%s">', Router::url($action), $method);
+		$formTag = sprintf('<form action="%s" method="%s">', Rox_Router::url($action), $method);
 		return $formTag;
 	}
 
@@ -152,12 +152,37 @@ class Rox_Helper_Form {
 	}
 
 	/**
+	 * undocumented function
+	 *
+	 * @param string $name 
+	 * @param array $options 
+	 * @return string
+	 */
+	public function hidden($name, $options = array()) {
+		$options['type'] = 'hidden';
+
+		if (!isset($options['name'])) {
+			$options['name'] = $this->_makeFieldName($name);
+		}
+
+		if (!isset($options['id'])) {
+			$options['id'] = $this->_makeFieldId($name);
+		}
+	
+		if (!isset($options['value'])) {
+			$options['value'] = $this->_valueForField($name);
+		}
+
+		return $this->_makeSelfClosingTag('input', $options);
+	}
+
+	/**
 	 * Generates a submit form element
 	 *
 	 * @param string $text
 	 * @return string
 	 */
-	public function submit($text = 'Submit') {
+	public function submit($text = 'Submit', $options = array()) {
 		return sprintf('<div class="submit"><input type="submit" name="submit" value="%s" /></div>', $text);
 	}
 
@@ -178,5 +203,31 @@ class Rox_Helper_Form {
 	 */
 	public function end() {
 		return '</form>';
+	}
+
+	protected function _valueForField($name) {
+		return isset($this->_data[$this->_currentModel][$name])
+			? $this->_data[$this->_currentModel][$name] : null;
+	}
+
+	protected function _makeFieldId($name) {
+		return str_replace('_', '-', $this->_currentModel . '-' . $name . '-input');
+	}
+
+	protected function _makeFieldName($name) {
+		return $this->_currentModel.'['.$name.']';
+	}
+
+	protected function _makeSelfClosingTag($name, $attributes = array()) {
+		return sprintf('<%s%s/>', $name, $this->_makeAttributes($attributes));
+	}
+
+	protected function _makeAttributes($attributes) {
+		$output = array();
+		foreach ($attributes as $k => $v) {
+			$output[] = $k . '="' . $v . '"';
+		}
+
+		return ' ' . implode(' ', $output);
 	}
 }

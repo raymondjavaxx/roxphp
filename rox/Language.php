@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Language {
+class Rox_Language {
 
 	/**
 	 * Locale instance
@@ -45,8 +45,8 @@ class Language {
 	 */
 	public function init($locale = null) {
 		if (is_null($locale)) {
-			$locale = new Locale;
-		} else if (!($locale instanceof Locale)) {
+			$locale = new Rox_Locale;
+		} else if (!($locale instanceof Rox_Locale)) {
 			throw new Exception('Param must be instance of Locale');
 		}
 
@@ -61,7 +61,7 @@ class Language {
 	public static function getInstance() {
 		static $instance;
 		if (!is_object($instance)) {
-			$instance = new Language;
+			$instance = new Rox_Language;
 		}
 
 		return $instance;
@@ -90,7 +90,7 @@ class Language {
 	 * @return string
 	 */
 	public static function _($text, $table = 'messages') {
-		return Language::getInstance()->translateText($text, $table);
+		return self::getInstance()->translateText($text, $table);
 	}
 
 	/**

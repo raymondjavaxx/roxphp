@@ -15,9 +15,9 @@
  */
 
 /**
- * @see Cache_Adapter_Abstract
+ * @see Rox_Cache_Adapter_Abstract
  */
-require_once(ROX . 'Cache' . DS . 'Adapter' . DS . 'Abstract.php');
+require_once(ROX.'Cache'.DS.'Adapter'.DS.'Abstract.php');
 
 /**
  * Cache
@@ -26,17 +26,17 @@ require_once(ROX . 'Cache' . DS . 'Adapter' . DS . 'Abstract.php');
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Cache {
+class Rox_Cache {
 
-	const ADAPTER_FILE = 'Cache_Adapter_File';
-	const ADAPTER_MEMCACHE = 'Cache_Adapter_Memcache';
+	const ADAPTER_FILE     = 'Rox_Cache_Adapter_File';
+	const ADAPTER_MEMCACHE = 'Rox_Cache_Adapter_Memcache';
 
 	/**
 	 * Cache adapter instance
 	 *
 	 * @var Cache_Adapter_Abstract
 	 */
-	private static $adapter;
+	private static $_adapter;
 
 	/**
 	 * Initializes the cache
@@ -45,33 +45,34 @@ class Cache {
 	 * @param array $options
 	 * @return void
 	 */
-	public static function init($adapter, array $options) {
-		self::loadAdapter($adapter);
-		self::$adapter = new $adapter($options);
+	public static function init($adapter, array $options = array()) {
+		self::_loadAdapter($adapter);
+		self::$_adapter = new $adapter($options);
 	}
 
 	/**
-	 * Load cache adapter class
+	 * Loads cache adapter class
 	 * 
 	 * @param string $name
 	 * @throws Exception
 	 */
-	protected static function loadAdapter($name) {
+	protected static function _loadAdapter($name) {
 		switch ($name) {
 			case self::ADAPTER_MEMCACHE:
-				require(ROX . 'Cache' . DS . 'Adapter' . DS . 'Memcache.php');
+				require ROX.'Cache'.DS.'Adapter'.DS.'Memcache.php';
 			break;
 
 			case self::ADAPTER_FILE:
-				require(ROX . 'Cache' . DS . 'Adapter' . DS . 'File.php');
+				require ROX.'Cache'.DS.'Adapter'.DS.'File.php';
 			break;
 
-			default: throw new Exception('Invalid Cache adapter');
+			default:
+				throw new Exception('Invalid Cache adapter');
 		}
 	}
 
 	/**
-	 * Cache::write()
+	 * Rox_Cache::write()
 	 * 
 	 * @param mixed $key
 	 * @param mixed $data
@@ -79,26 +80,26 @@ class Cache {
 	 * @return mixed
 	 */
 	public static function write($key, $data, $expires) {
-		return self::$adapter->write($key, $data, $expires);
+		return self::$_adapter->write($key, $data, $expires);
 	}
 
 	/**
-	 * Cache::read()
+	 * Rox_Cache::read()
 	 * 
 	 * @param mixed $key
 	 * @return boolean
 	 */
 	public static function read($key) {
-		return self::$adapter->read($key);
+		return self::$_adapter->read($key);
 	}
 
 	/**
-	 * Cache::delete()
+	 * Rox_Cache::delete()
 	 * 
 	 * @param mixed $key
 	 * @return boolean
 	 */
 	public static function delete($key) {
-		return self::$adapter->delete($key);
+		return self::$_adapter->delete($key);
 	}
 }

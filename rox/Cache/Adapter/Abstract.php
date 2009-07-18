@@ -2,29 +2,29 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
 
 /**
- * Cache_Adapter_Abstract
+ * Rox_Cache_Adapter_Abstract
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-abstract class Cache_Adapter_Abstract {
+abstract class Rox_Cache_Adapter_Abstract {
 
 	/**
-	 * Cache_Adapter_Abstract::__construct()
+	 * Rox_Cache_Adapter_Abstract::__construct()
 	 * 
 	 * @param array $options
 	 * @return void
@@ -32,7 +32,7 @@ abstract class Cache_Adapter_Abstract {
 	abstract public function __construct($options);
 
 	/**
-	 * Cache_Adapter_Abstract::write()
+	 * Rox_Cache_Adapter_Abstract::write()
 	 * 
 	 * @param string $key
 	 * @param mixed $data
@@ -42,7 +42,7 @@ abstract class Cache_Adapter_Abstract {
 	abstract public function write($key, &$data, $expires);
 
 	/**
-	 * Cache_Adapter_Abstract::read()
+	 * Rox_Cache_Adapter_Abstract::read()
 	 * 
 	 * @param string $key
 	 * @return mixed
@@ -50,7 +50,7 @@ abstract class Cache_Adapter_Abstract {
 	abstract public function read($key);
 
 	/**
-	 * Cache_Adapter_Abstract::delete()
+	 * Rox_Cache_Adapter_Abstract::delete()
 	 * 
 	 * @param string $key
 	 * @return boolean

@@ -1,3 +1,51 @@
+body {
+	background:#efefef;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+}
+
+img {
+	border:0;
+}
+
+h1 {
+	color:#06f;
+	font-size:1.5em;
+	margin:0 0 20px 0;
+}
+
+#container {
+	background:#fffffe;
+	width:960px;
+	padding:10px;
+}
+
+table {
+	width:100%;
+	border:2px solid #c2cff1;
+	border-spacing:0;
+	background:#f0f6fe;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	margin:0 0 10px;
+}
+
+table td {
+	padding:4px;
+}
+
+table td.money {
+	text-align:right;
+}
+
+table th {
+	color:#06c;
+	background:#dde;
+	padding:4px;
+	text-align:left;
+}
+
 form .input {
 	margin-bottom: 1em;
 }
@@ -7,8 +55,22 @@ form .input label {
 }
 
 .exception {
-	color: #7E2217;
-	background-color: #FDFAA4;
+	color: #7e2217;
+	background-color: #fdfaa4;
 	border: 1px solid #444;
 	padding: 8px;
+}
+
+.pagination {
+	margin:0 0 10px;
+}
+
+.pagination span,
+.pagination a {
+	padding:1px 6px;
+}
+
+.pagination span.current {
+	color:#fff;
+	background:#06f;
 }

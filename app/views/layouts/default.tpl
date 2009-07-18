@@ -7,7 +7,10 @@
 </head>
 <body>
 	<div id="header">
-		<p><?php echo $html->image('rox_logo.png', 'RoxPHP'); ?></p>
+		<p>
+			<a href="<?php echo Rox_Router::url('/'); ?>">
+			<?php echo $html->image('rox_logo.png', 'RoxPHP'); ?></a>
+		</p>
 	</div>
 	<div id="container">
 		<?php echo $rox_layout_content; ?>

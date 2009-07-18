@@ -9,7 +9,7 @@
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */

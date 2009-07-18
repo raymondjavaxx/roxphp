@@ -152,12 +152,12 @@ class Rox_Controller {
 	}
 
 	/**
-	 * Controller::setRequest()
+	 * Sets the request object
 	 * 
-	 * @param Request $request
+	 * @param Rox_Request $request
 	 * @return void
 	 */
-	public function setRequest(Request $request) {
+	public function setRequest(Rox_Request $request) {
 		$this->_request = $request;
 	}
 
@@ -177,7 +177,7 @@ class Rox_Controller {
 	 */
 	protected function redirect($url) {
 		header('HTTP/1.1 301');
-		header('Location: ' . Router::url($url));
+		header('Location: ' . Rox_Router::url($url));
 		exit;
 	}
 
@@ -190,7 +190,7 @@ class Rox_Controller {
 		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
 			$referer = $_SERVER['HTTP_REFERER'];
 		} else {
-			$referer = Router::url($default);
+			$referer = Rox_Router::url($default);
 		}
 
 		header('HTTP/1.1 301');

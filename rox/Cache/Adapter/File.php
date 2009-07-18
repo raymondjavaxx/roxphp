@@ -2,33 +2,33 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
 
 /**
- * Cache_Adapter_File
+ * Rox_Cache_Adapter_File
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Cache_Adapter_File extends Cache_Adapter_Abstract {
+class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 
 	/**
 	 * Path where to save cache files
 	 *
 	 * @var string
 	 */
-	protected $cacheDir;
+	protected $_cacheDir;
 
 	/**
 	 * Class constructor
@@ -37,9 +37,9 @@ class Cache_Adapter_File extends Cache_Adapter_Abstract {
 	 */
 	public function __construct($options) {
 		if (isset($options['cache_dir'])) {
-			$this->setCacheDir($options['cache_dir']);
+			$this->_setCacheDir($options['cache_dir']);
 		} else {
-			$this->setCacheDir(APP . 'tmp' . DS . 'cache' . DS);
+			$this->_setCacheDir(APP.'tmp'.DS.'cache'.DS);
 		}
 	}
 
@@ -50,21 +50,12 @@ class Cache_Adapter_File extends Cache_Adapter_Abstract {
 	 * @param mixed $data
 	 * @param mixed $expires
 	 */
-	protected function setCacheDir($cacheDir) {
+	protected function _setCacheDir($cacheDir) {
 		if (!is_dir($cacheDir)) {
 			throw new Exception('Cache directory does not exists');
 		}
 
-		$this->cacheDir = $cacheDir;
-	}
-
-	/**
-	 * Cache_Adapter_File::getCacheDir()
-	 *
-	 * @return string
-	 */
-	protected function getCacheDir() {
-		return $this->cacheDir;
+		$this->_cacheDir = $cacheDir;
 	}
 
 	/**
@@ -83,7 +74,7 @@ class Cache_Adapter_File extends Cache_Adapter_Abstract {
 
 		$serializedData = serialize($data);
 
-		$fp = fopen($this->getCacheDir() . 'cache_' . sha1($key) . '.txt', 'w');
+		$fp = fopen($this->_cacheDir . 'cache_' . sha1($key) . '.txt', 'w');
 		flock($fp, LOCK_EX);
 		fwrite($fp, $expires . "\n");
 		fwrite($fp, $serializedData);
@@ -98,7 +89,7 @@ class Cache_Adapter_File extends Cache_Adapter_Abstract {
 	 * @return mixed
 	 */
 	public function read($key) {
-		$fp = @fopen($this->getCacheDir() . 'cache_' . sha1($key) . '.txt', 'r');
+		$fp = @fopen($this->_cacheDir . 'cache_' . sha1($key) . '.txt', 'r');
 		if ($fp === false) {
 			return false;
 		}
@@ -129,6 +120,6 @@ class Cache_Adapter_File extends Cache_Adapter_Abstract {
 	 * @return boolean
 	 */
 	public function delete($key) {
-		return @unlink($this->getCacheDir() . 'cache_' . sha1($key) . '.txt');
+		return @unlink($this->_cacheDir . 'cache_' . sha1($key) . '.txt');
 	}
 }

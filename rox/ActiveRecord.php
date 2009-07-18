@@ -104,7 +104,7 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * ID setter
+	 * Sets the record ID
 	 *
 	 * @param mixed $id 
 	 */
@@ -113,7 +113,7 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * ID getter
+	 * Returns the record ID
 	 *
 	 * @return mixed $id 
 	 */
@@ -448,7 +448,7 @@ abstract class Rox_ActiveRecord {
 	 * @return object
 	 */
 	public function find($conditions = array(), $fields = null, $order = null) {
-		if (is_numeric($conditions)) {
+		if (!is_array($conditions)) {
 			$conditions = array('id' => $conditions);
 		}
 

@@ -32,7 +32,7 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function image($path, $alt = '', $attributes = array()) {
-		$result = sprintf('<img src="%s" alt="%s"%s />', Router::url('/img/' . $path), $alt,
+		$result = sprintf('<img src="%s" alt="%s"%s />', Rox_Router::url('/img/' . $path), $alt,
 			self::_makeAttributes($attributes));
 		return $result;
 	}
@@ -56,7 +56,7 @@ class Rox_Helper_Html {
 	 */
 	public function css($file, $media = 'all') {
 		$output = sprintf('<link rel="stylesheet" type="text/css" href="%s" media="%s" />',
-			Router::url('/css/' . $file . '.css'), $media);
+			Rox_Router::url('/css/' . $file . '.css'), $media);
 		return $output;
 	}
 

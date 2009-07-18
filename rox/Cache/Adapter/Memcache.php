@@ -2,33 +2,33 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
 
 /**
- * Cache_Adapter_Memcache
+ * Rox_Cache_Adapter_Memcache
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
+class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 
 	/**
 	 * Memcache hosts and ports
 	 *
 	 * @var array
 	 */
-	protected $servers = array('localhost' => 11211);
+	protected $_servers = array('localhost' => 11211);
 
 	/**
 	 * Memcache instance
@@ -44,33 +44,24 @@ class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
 	 */
 	public function __construct($options) {
 		if (isset($options['servers'])) {
-			$this->setServers($options['servers']);
+			$this->_servers = $options['servers'];
 		}
 
 		$this->Memcache = new Memcache;
-		$this->connect();
+		$this->_connect();
 	}
 
 	/**
-	 * Cache_Adapter_Memcache::setServers()
-	 *
-	 * @param mixed $servers
+	 * Rox_Cache_Adapter_Memcache::connect()
 	 */
-	protected function setServers($servers) {
-		$this->servers = $servers;
-	}
-
-	/**
-	 * Cache_Adapter_Memcache::connect()
-	 */
-	protected function connect() {
-		foreach($this->servers as $host => $port) {
+	protected function _connect() {
+		foreach ($this->_servers as $host => $port) {
 			$this->Memcache->addServer($host, $port);
 		}
 	}
 
 	/**
-	 * Cache_Adapter_Memcache::write()
+	 * Rox_Cache_Adapter_Memcache::write()
 	 *
 	 * @param string $key
 	 * @param mixed $data
@@ -88,7 +79,7 @@ class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
 	}
 
 	/**
-	 * Cache_Adapter_Memcache::read()
+	 * Rox_Cache_Adapter_Memcache::read()
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -98,7 +89,7 @@ class Cache_Adapter_Memcache extends Cache_Adapter_Abstract {
 	}
 
 	/**
-	 * Cache_Adapter_Memcache::delete()
+	 * Rox_Cache_Adapter_Memcache::delete()
 	 *
 	 * @param mixed $key
 	 * @return boolean

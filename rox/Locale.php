@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2008 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Locale {
+class Rox_Locale {
 
 	/**
 	 * Locale tag

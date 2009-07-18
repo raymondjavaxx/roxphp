@@ -4,6 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Error</title>
 	<style type="text/css" media="screen">
+		img {
+			border:0;
+		}
+
 		.exception {
 			color: #7E2217;
 			background-color: #FDFAA4;
@@ -14,7 +18,10 @@
 </head>
 <body>
 	<div id="header">
-		<img src="<?php echo Router::url('/img/rox_logo.png') ?>" alt="RoxPHP" />
+		<p>
+			<a href="<?php echo Rox_Router::url('/'); ?>">
+			<img src="<?php echo Rox_Router::url('/img/rox_logo.png'); ?>" alt="RoxPHP" /></a>
+		</p>
 	</div>
 	<div id="container">
 		<?php echo $rox_layout_content; ?>
