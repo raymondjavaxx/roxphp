@@ -68,7 +68,7 @@ class Rox_Helper_Html {
 	 */
 	public function javascript($file) {
 		$output = sprintf('<script type="text/javascript" src="%s"></script>',
-			Router::url('/js/' . $file . '.js'));
+			Rox_Router::url('/js/' . $file . '.js'));
 		return $output;
 	}
 
@@ -81,7 +81,7 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function link($text, $path, $attributes = array()) {
-		$output = sprintf('<a href="%s"%s>%s</a>', Router::url($path),
+		$output = sprintf('<a href="%s"%s>%s</a>', Rox_Router::url($path),
 			self::_makeAttributes($attributes), $text);
 		return $output;
 	}
