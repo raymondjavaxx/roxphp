@@ -189,7 +189,8 @@ class Rox_Helper_Form {
 		$options = array_merge(array(
 			'value' => null,
 			'label' => null,
-			'attributes' => array()
+			'attributes' => array(),
+			'multiple'  => false
 		), $options);
 
 		if ($options['label'] === null) {
@@ -202,17 +203,27 @@ class Rox_Helper_Form {
 
 		if (!isset($options['attributes']['name'])) {
 			$options['attributes']['name'] = $this->_makeFieldName($name);
+			if ($options['multiple']) {
+				$options['attributes']['name'] .= '[]';
+			}
 		}
 
 		if (!isset($options['attributes']['id'])) {
 			$options['attributes']['id'] = $this->_makeFieldId($name);
 		}
 
+		if ($options['multiple']) {
+			$options['attributes']['multiple'] = 'multiple';
+		}
+
 		$output = array();
 		$output[] = $this->label($options['label'], $options['attributes']['id']);
 		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
 		foreach ($optionTags as $value => $label) {
-			if ($value == $options['value']) {
+			$isSelected = ($value == $options['value']) ||
+				($options['multiple'] && is_array($options['value']) && in_array($value, $options['value']));
+
+			if ($isSelected) {
 				$output[] = sprintf('<option selected="selected" value="%s">%s</option>', $value, $label);
 			} else {
 				$output[] = sprintf('<option value="%s">%s</option>',
