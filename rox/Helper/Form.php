@@ -2,23 +2,23 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (C) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
 
 /**
- * HtmlHelper
+ * Form Helper
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
 class Rox_Helper_Form {
@@ -154,35 +154,88 @@ class Rox_Helper_Form {
 	/**
 	 * undocumented function
 	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function hidden($name, $attributes = array()) {
+		$attributes['type'] = 'hidden';
+
+		if (!isset($attributes['name'])) {
+			$attributes['name'] = $this->_makeFieldName($name);
+		}
+
+		if (!isset($attributes['id'])) {
+			$attributes['id'] = $this->_makeFieldId($name);
+		}
+	
+		if (!isset($attributes['value'])) {
+			$attributes['value'] = $this->_valueForField($name);
+		}
+
+		return $this->_makeSelfClosingTag('input', $attributes);
+	}
+
+
+	/**
+	 * undocumented function
+	 *
 	 * @param string $name 
+	 * @param array $optionTags 
 	 * @param array $options 
 	 * @return string
 	 */
-	public function hidden($name, $options = array()) {
-		$options['type'] = 'hidden';
+	public function select($name, $optionTags, $options = array()) {
+		$options = array_merge(array(
+			'value' => null,
+			'label' => null,
+			'attributes' => array()
+		), $options);
 
-		if (!isset($options['name'])) {
-			$options['name'] = $this->_makeFieldName($name);
+		if ($options['label'] === null) {
+			$options['label'] = ucwords(str_replace('_', ' ', $name));
 		}
 
-		if (!isset($options['id'])) {
-			$options['id'] = $this->_makeFieldId($name);
-		}
-	
-		if (!isset($options['value'])) {
-			$options['value'] = $this->_valueForField($name);
+		if ($options['value'] === null && isset($this->_data[$this->_currentModel][$name])) {
+			$options['value'] = $this->_data[$this->_currentModel][$name];
 		}
 
-		return $this->_makeSelfClosingTag('input', $options);
+		if (!isset($options['attributes']['name'])) {
+			$options['attributes']['name'] = $this->_makeFieldName($name);
+		}
+
+		if (!isset($options['attributes']['id'])) {
+			$options['attributes']['id'] = $this->_makeFieldId($name);
+		}
+
+		$output = array();
+		$output[] = $this->label($options['label'], $options['attributes']['id']);
+		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
+		foreach ($optionTags as $value => $label) {
+			if ($value == $options['value']) {
+				$output[] = sprintf('<option selected="selected" value="%s">%s</option>', $value, $label);
+			} else {
+				$output[] = sprintf('<option value="%s">%s</option>',
+					htmlspecialchars($value), htmlspecialchars($label));
+			}
+		}
+		$output[] = '</select>';
+
+		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
+			$output[] = sprintf('<div class="error">%s</div>',
+				htmlspecialchars($this->_validationErrors[$this->_currentModel][$name]));
+		}
+
+		return sprintf('<div class="input select">%s</div>', implode('', $output));
 	}
 
 	/**
-	 * Generates a submit form element
+	 * Generates a submit form element wrapped in a div element
 	 *
 	 * @param string $text
 	 * @return string
 	 */
-	public function submit($text = 'Submit', $options = array()) {
+	public function submit($text = 'Submit') {
 		return sprintf('<div class="submit"><input type="submit" name="submit" value="%s" /></div>', $text);
 	}
 
