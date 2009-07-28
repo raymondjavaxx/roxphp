@@ -30,7 +30,7 @@ class Rox_Dispatcher {
 	 * @throws Exception
 	 */
 	public function dispatch($url = null) {
-		$parsedUrl = $this->_parseUrl(strtolower($url));
+		$parsedUrl = Rox_Router::parseUrl($url);
 
 		$this->_loadController($parsedUrl['controller']);
 		$controller = new $parsedUrl['controller'];
@@ -62,28 +62,5 @@ class Rox_Dispatcher {
 		}
 
 		require_once $fileName;
-	}
-
-	/**
-	 * Rox_Dispatcher::_parseUrl()
-	 * 
-	 * @param string $url
-	 * @return array
-	 * @throws Exception
-	 */
-	protected function _parseUrl($url) {
-		$parts = explode('/', trim($url, '/'));
-
-		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
-			throw new Exception('Ilegal controller name', 404);
-		}
-
-		$result = array(
-			'controller' => Rox_Inflector::camelize($parts[0]).'Controller',
-			'action'     => isset($parts[1]) ? Rox_Inflector::lowerCamelize($parts[1]).'Action' : 'indexAction',
-			'params'     => array_slice($parts, 2)
-		);
-
-		return $result;		
 	}
 }

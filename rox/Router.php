@@ -51,4 +51,31 @@ class Rox_Router {
 
 		return $baseUrl;
 	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @param string $url
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function parseUrl($url) {
+		$parts = explode('/', trim($url, '/'));
+
+		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
+			throw new Exception('Illegal controller name', 404);
+		}
+
+		if (isset($parts[1]) && preg_match('/^[a-z_]+$/', $parts[1]) != 1) {
+			throw new Exception('Illegal action name', 404);
+		}
+
+		$result = array(
+			'controller' => Rox_Inflector::camelize($parts[0]).'Controller',
+			'action'     => isset($parts[1]) ? Rox_Inflector::lowerCamelize($parts[1]).'Action' : 'indexAction',
+			'params'     => array_slice($parts, 2)
+		);
+
+		return $result;	
+	}
 }
