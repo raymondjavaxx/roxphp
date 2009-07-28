@@ -24,6 +24,24 @@
 class Rox_Router {
 
 	/**
+	 * Routing config
+	 *
+	 * @var array
+	 */
+	protected static $_config = array(
+		'prefixes' => array('admin')
+	);
+
+	/**
+	 * Sets the configuration for the routing
+	 *
+	 * @param array $config 
+	 */
+	public static function setConfig(array $config) {
+		self::$_config = array_merge(self::$_config, $config);
+	}
+
+	/**
 	 * Rox_Router::url()
 	 *
 	 * @param string $path
@@ -62,18 +80,32 @@ class Rox_Router {
 	public static function parseUrl($url) {
 		$parts = explode('/', trim($url, '/'));
 
+		$actionPrefix = null;
+		if (in_array($parts[0], self::$_config['prefixes'])) {
+			$actionPrefix = array_shift($parts);
+		}
+
 		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
 			throw new Exception('Illegal controller name', 404);
 		}
 
-		if (isset($parts[1]) && preg_match('/^[a-z_]+$/', $parts[1]) != 1) {
-			throw new Exception('Illegal action name', 404);
+		$action = 'index';
+		if (isset($parts[1])) {
+			if (preg_match('/^[a-z_]+$/', $parts[1]) != 1) {
+				throw new Exception('Illegal action name', 404);
+			}
+			$action = $parts[1];
+		}
+
+		if ($actionPrefix !== null) {
+			$action = $actionPrefix . '_' . $action;
 		}
 
 		$result = array(
 			'controller' => Rox_Inflector::camelize($parts[0]).'Controller',
-			'action'     => isset($parts[1]) ? Rox_Inflector::lowerCamelize($parts[1]).'Action' : 'indexAction',
-			'params'     => array_slice($parts, 2)
+			'action'     => Rox_Inflector::lowerCamelize($action).'Action',
+			'params'     => array_slice($parts, 2),
+			'prefix'     => $actionPrefix
 		);
 
 		return $result;	
