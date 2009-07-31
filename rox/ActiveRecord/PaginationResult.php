@@ -9,7 +9,7 @@
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -18,7 +18,7 @@
  * Pagination Result
  *
  * @package Rox
- * @copyright Copyright (c) 2008 - 2009 Ramon Torres
+ * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
 class Rox_ActiveRecord_PaginationResult extends ArrayObject {
@@ -52,6 +52,13 @@ class Rox_ActiveRecord_PaginationResult extends ArrayObject {
 	protected $_previousPage;
 
 	/**
+	 * Total of entries
+	 *
+	 * @var string
+	 */
+	protected $_totalEntries;
+
+	/**
 	 * Constructor
 	 * 
 	 * @param array $array
@@ -59,14 +66,16 @@ class Rox_ActiveRecord_PaginationResult extends ArrayObject {
 	 * @param integer $currentPage
 	 * @param integer $nextPage
 	 * @param integer $previousPage
+	 * @param integer $totalEntries
 	 * @return void
 	 */
-	public function __construct($array, $pages, $currentPage, $nextPage, $previousPage) {
+	public function __construct($array, $pages, $currentPage, $nextPage, $previousPage, $totalEntries) {
 		parent::__construct($array);
 		$this->_pages = $pages;
 		$this->_currentPage = $currentPage;
 		$this->_nextPage = $nextPage;
 		$this->_previousPage = $previousPage;
+		$this->_totalEntries = $totalEntries;
 	}
 
 	/**
@@ -103,5 +112,15 @@ class Rox_ActiveRecord_PaginationResult extends ArrayObject {
 	 */
 	public function getPreviousPage() {
 		return $this->_previousPage;
+	}
+
+	/**
+	 * Returns the total of entries
+	 *
+	 * @return integer
+	 * @author ramon
+	 */
+	public function getTotalEntries() {
+		return $this->_totalEntries;
 	}
 }

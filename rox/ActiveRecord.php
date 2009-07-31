@@ -372,30 +372,34 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::findAll()
+	 * Rox_ActiveRecord::findAll()
 	 *
-	 * @param mixed $fields
-	 * @param mixed $conditions
-	 * @param string $order
-	 * @param mixed $limit   
+	 * @param array|string $conditions
+	 * @param array $options  
 	 * @return array
 	 */
-	public function findAll($fields = null, $conditions = array(), $order = null, $limit = null) {
-		if (empty($fields)) {
-			$fields = '*';
-		} else if (is_array($fields)) {
-			$fields = '`' . implode('`, `', $fields) . '`';
+	public function findAll($conditions = array(), $options = array()) {
+		$options = array_merge(array(
+			'fields' => null,
+			'order'  => null,
+			'limit'  => null
+		), $options);
+
+		if ($options['fields'] === null) {
+			$options['fields'] = '*';
+		} else if (is_array($options['fields'])) {
+			$options['fields'] = '`' . implode('`, `', $options['fields']) . '`';
 		}
 
-		$sql = sprintf('SELECT %s FROM `%s`', $fields, $this->_table);
+		$sql = sprintf('SELECT %s FROM `%s`', $options['fields'], $this->_table);
 		$sql.= $this->_buildConditionsSQL($conditions);
 
-		if (!empty($order)) {
-			$sql .= ' ORDER BY ' . $order;
+		if (!empty($options['order'])) {
+			$sql .= ' ORDER BY ' . $options['order'];
 		}
 
-		if (!empty($limit)) {
-			$sql .= ' LIMIT ' . $limit;
+		if (!empty($options['limit'])) {
+			$sql .= ' LIMIT ' . $options['limit'];
 		}
 
 		$result = $this->findBySql($sql);
@@ -428,32 +432,48 @@ abstract class Rox_ActiveRecord {
 			$pages = (integer)ceil($total / $options['per_page']);
 			$currentPage = min(max(intval($options['page']), 1), $pages);
 			$limit = sprintf('%d, %d', ($currentPage - 1) * $options['per_page'], $options['per_page']);
-			$items = $this->findAll($options['fields'], $options['conditions'], $options['order'], $limit);
+			$items = $this->findAll($options['conditions'], array(
+				'fields' => $options['fields'],
+				'order'  => $options['order'],
+				'limit'  => $limit
+			));
 		}
 
 		$nextPage = min($pages, $currentPage + 1);
 		$previousPage = max(1, $currentPage - 1);
 
 		$result = new Rox_ActiveRecord_PaginationResult($items, $pages, $currentPage,
-			$nextPage, $previousPage);
+			$nextPage, $previousPage, $total);
 		return $result;
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::find()
+	 * Rox_ActiveRecord::find()
 	 *
 	 * @param mixed $fields
-	 * @param mixed $conditions
-	 * @param string $order
+	 * @param array $options
 	 * @return object
+	 * @throws Rox_ActiveRecord_RecordNotFound
 	 */
-	public function find($conditions = array(), $fields = null, $order = null) {
+	public function find($conditions = array(), $options = array()) {
+		$checkResult = false;
+
+		$options = array_merge(array(
+			'fields' => null,
+			'order' => null
+		), $options, array('limit' => 1));
+
 		if (!is_array($conditions)) {
-			$conditions = array('id' => $conditions);
+			$conditions = array($this->_primaryKey => $conditions);
+			$checkResult = true;
 		}
 
-		$results = $this->findAll($fields, $conditions, $order, '1');
-		return reset($results);
+		$result = reset($this->findAll($conditions, $options));
+		if ($checkResult && !$result) {
+			throw new Rox_ActiveRecord_RecordNotFound;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -464,8 +484,13 @@ abstract class Rox_ActiveRecord {
 	 * @return object
 	 */
 	public function findLast($conditions = null, $fields = null) {
-		$order = $this->_primaryKey . ' DESC';
-		$results = $this->findAll($fields, $conditions, $order, '1');
+		$options = array(
+			'fields' => $fields,
+			'order' => '`'.$this->_primaryKey.'` DESC',
+			'limit' => 1
+		);
+
+		$results = $this->findAll($conditions, $options);
 		return reset($results);
 	}
 
