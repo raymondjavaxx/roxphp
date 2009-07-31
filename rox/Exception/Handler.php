@@ -29,7 +29,10 @@ class Rox_Exception_Handler {
 	 * @param Exception $exception
 	 */
 	public static function handle($exception) {
-		ob_end_clean();
+		if (ob_get_level() > 0) {
+			ob_end_clean();
+		}
+
 		self::_render($exception);
 		exit;
 	}
