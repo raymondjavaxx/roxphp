@@ -468,7 +468,8 @@ abstract class Rox_ActiveRecord {
 			$checkResult = true;
 		}
 
-		$result = reset($this->findAll($conditions, $options));
+		$result = $this->findAll($conditions, $options);
+		$result = reset($result);
 		if ($checkResult && !$result) {
 			throw new Rox_ActiveRecord_RecordNotFound;
 		}

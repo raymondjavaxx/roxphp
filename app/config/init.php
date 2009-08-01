@@ -14,6 +14,9 @@
  * @version $Id$
  */
 
+session_name('ROXAPP');
+session_start();
+
 /**
  * Load and init the Cache class
  */

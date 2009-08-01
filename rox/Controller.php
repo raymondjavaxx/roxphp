@@ -125,6 +125,19 @@ class Rox_Controller {
 	}
 
 	/**
+	 * undocumented function
+	 *
+	 * @param string $type 
+	 * @param string $message 
+	 */
+	public function flash($type, $message) {
+		if (!isset($_SESSION['flash'])) {
+			$_SESSION['flash'] = array();
+		}
+		$_SESSION['flash'][$type] = $message;
+	}
+
+	/**
 	 * Page title setter
 	 *
 	 * @param $title

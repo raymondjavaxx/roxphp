@@ -54,4 +54,18 @@ class Rox_View {
 		include LAYOUTS.$layout.'.tpl';
 		return ob_get_clean();
 	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return array
+	 */
+	public function getFlashMessages() {
+		$messages = array();
+		if (isset($_SESSION['flash'])) {
+			$messages = $_SESSION['flash'];
+			unset($_SESSION['flash']);
+		}
+		return $messages;
+	}
 }

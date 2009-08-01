@@ -74,3 +74,26 @@ form .input label {
 	color:#fff;
 	background:#06f;
 }
+
+/** flash messages **/
+.flash-message {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding:10px;
+}
+
+.success-flash-message,
+.notice-flash-message {
+	color: #4f8a10;
+	background-color: #dff2bf;
+}
+
+.warning-flash-message {
+	color: #9f6000;
+	background-color: #feefb3;
+}
+
+.error-flash-message {
+	color: #d8000c;
+	background-color: #ffbaba;
+}

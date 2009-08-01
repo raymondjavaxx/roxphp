@@ -13,6 +13,11 @@
 		</p>
 	</div>
 	<div id="container">
+		<?php foreach ($this->getFlashMessages() as $type => $message) : ?>
+			<div class="flash-message <?php echo $type ?>-flash-message">
+				<?php echo htmlspecialchars($message); ?>
+			</div>
+		<?php endforeach; ?>
 		<?php echo $rox_layout_content; ?>
 	</div>
 	<div class="footer">

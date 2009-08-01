@@ -44,31 +44,33 @@ class Rox_Helper_Form {
 	 * @return string
 	 */
 	public function forModel($model, $options = array()) {
+		$options = array_merge(array('action' => null), $options);
+
 		if (is_string($model)) {
-			$controller = Rox_Inflector::underscore($model);
-			$controller = Rox_Inflector::pluralize($controller);
-			$action = '/'.$controller.'/add';
-			return $this->create($model, $action);
-		}
-
-		if (is_object($model) && ($model instanceof  Rox_ActiveRecord)) {
-			$modelClass = get_class($model);
-			$modelName = Rox_Inflector::underscore($modelClass);
-			$controller = Rox_Inflector::pluralize($modelName);
-
-			if ($model->getId() === null) {
-				$action = '/'.$controller.'/add';
-			} else {
-				$action = '/'.$controller.'/edit/'.$model->getId();
+			if ($options['action'] === null) {
+				$controller = Rox_Inflector::underscore($model);
+				$controller = Rox_Inflector::pluralize($controller);
+				$options['action'] = '/'.$controller.'/add';
 			}
-
-			$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
-			$this->_validationErrors[$modelName] = $model->getValidationErrors();
-
-			return $this->create($modelName, $action);
+			return $this->create($model, $options['action']);
 		}
 
-		throw new Exception('Invalid model param');
+		if (!is_object($model) || !($model instanceof  Rox_ActiveRecord)) {
+			throw new Exception('Invalid model param');
+		}
+
+		$modelClass = get_class($model);
+		$modelName = Rox_Inflector::underscore($modelClass);
+		if ($options['action'] === null) {
+			$controller = Rox_Inflector::pluralize($modelName);
+			$options['action'] = ($model->getId() === null) ? '/'.$controller.'/add' :
+				'/'.$controller.'/edit/'.$model->getId();
+		}
+
+		$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
+		$this->_validationErrors[$modelName] = $model->getValidationErrors();
+
+		return $this->create($modelName, $options['action']);
 	}
 
 	/**
