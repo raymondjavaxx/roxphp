@@ -203,6 +203,11 @@ abstract class Rox_ActiveRecord {
 				return $this->setData($key, isset($args[0]) ? $args[0] : null);
 		}
 
+		if (strpos($method, 'findBy') === 0) {
+			$key = Rox_Inflector::underscore(substr($method, 6));
+			return $this->find(array($key => $args[0]));
+		}
+
 		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
 	}
 
