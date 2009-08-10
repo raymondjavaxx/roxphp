@@ -77,6 +77,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 		$fp = fopen($this->_cacheDir . 'cache_' . sha1($key) . '.txt', 'w');
 		flock($fp, LOCK_EX);
 		fwrite($fp, $expires . "\n");
+		fwrite($fp, strlen($serializedData) . "\n");
 		fwrite($fp, $serializedData);
 		flock($fp, LOCK_UN);
 		fclose($fp);
@@ -95,8 +96,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 		}
 
 		flock($fp, LOCK_EX);
-		$expires = fgets($fp, 20);
-		settype($expires, 'integer');
+		$expires = (integer)fgets($fp, 20);
 		if ($expires < time()) {
 			flock($fp, LOCK_UN);
 			fclose($fp);
@@ -104,7 +104,8 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 			return FALSE;
 		}
 
-		$data = fread($fp, 8000);
+		$len = (integer)fgets($fp, 20);
+		$data = fread($fp, $len);
 
 		flock($fp, LOCK_UN);
 		fclose($fp);
