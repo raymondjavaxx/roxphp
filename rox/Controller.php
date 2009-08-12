@@ -97,6 +97,22 @@ class Rox_Controller {
 	}
 
 	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
+	public function beforeFilter() {
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
+	public function afterFilter() {
+	}
+
+	/**
 	 * Renders the current action
 	 */
 	public function render() {

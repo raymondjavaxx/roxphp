@@ -45,8 +45,10 @@ class Rox_Dispatcher {
 		$controller->setRequest(new Rox_Request);
 		$controller->setAction($parsedUrl['action']);
 
+		$controller->beforeFilter();
 		call_user_func_array(array($controller, $parsedUrl['action']), $parsedUrl['params']);
 		$controller->render();
+		$controller->afterFilter();
 	}
 
 	/**
