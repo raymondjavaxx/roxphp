@@ -70,7 +70,7 @@ class Rox_Helper_Form {
 		$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
 		$this->_validationErrors[$modelName] = $model->getValidationErrors();
 
-		return $this->create($modelName, $options['action']);
+		return $this->create($modelName, $options['action'], $options);
 	}
 
 	/**
@@ -78,12 +78,17 @@ class Rox_Helper_Form {
 	 *
 	 * @param string $model
 	 * @param string $action
-	 * @param string $method
+	 * @param array $attributes
 	 * @return string
 	 */
-	public function create($model, $action, $method = 'post') {
+	public function create($model, $action, $attributes = array()) {
+		$attributes['action'] = Rox_Router::url($action);
+		$attributes = array_merge(array(
+			'method' => 'post',
+		), $attributes);
+
 		$this->_currentModel = Rox_Inflector::underscore($model);
-		$formTag = sprintf('<form action="%s" method="%s">', Rox_Router::url($action), $method);
+		$formTag = sprintf('<form%s>', $this->_makeAttributes($attributes));
 		return $formTag;
 	}
 
