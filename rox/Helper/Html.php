@@ -42,10 +42,11 @@ class Rox_Helper_Html {
 	 *
 	 * @param string $path
 	 * @param string $alt
+	 * @param array $attributes
 	 * @return string
 	 */
 	public function img($path, $alt = '', $attributes = array()) {
-		return $this->image($path, $alt);
+		return $this->image($path, $alt, $attributes);
 	}
 
 	/**

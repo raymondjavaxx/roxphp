@@ -23,10 +23,25 @@
  */
 class Rox_Helper_Form {
 
+	/**
+	 * Holds the name of the current model
+	 *
+	 * @var string
+	 */
 	protected $_currentModel;
 
+	/**
+	 * undocumented variable
+	 *
+	 * @var array
+	 */
 	protected $_data;
 
+	/**
+	 * Validation errors
+	 *
+	 * @var array
+	 */
 	protected $_validationErrors = array();
 
 	/**
@@ -74,7 +89,7 @@ class Rox_Helper_Form {
 	}
 
 	/**
-	 * Rox_Helper_Form::create()
+	 * Creates a form opening tag
 	 *
 	 * @param string $model
 	 * @param string $action
@@ -100,89 +115,146 @@ class Rox_Helper_Form {
 	 * @return string
 	 */
 	public function input($name, $options = array()) {
-		$defaultOptions = array(
-			'type'  => 'text',
-			'label' => null,
-			'value' => null
-		);
-
-		$options = array_merge($defaultOptions, $options);
+		$options = array_merge(array('type'  => 'text', 'label' => null, 'value' => null), $options);
 
 		if ($options['label'] === null) {
 			$options['label'] = ucwords(str_replace('_', ' ', $name));
 		}
 
-		if ($options['value'] === null && isset($this->_data[$this->_currentModel][$name])) {
-			$options['value'] = $this->_data[$this->_currentModel][$name];
-		}
+		$attributes = $this->_normalizeAttributes($name, array('value' => $options['value']));
 
-		$elementName = $this->_currentModel . '[' . $name . ']';
-		$elementId = str_replace('_', '-', $this->_currentModel . '-' . $name . '-input');
+		$output = array();
 
-		$output = $this->label($options['label'], $elementId);
+		switch ($options['type']) {
+			case 'text':
+				$output[] = $this->label($options['label'], $attributes['id']);
+				$output[] = $this->text($name, $attributes);
+				break;
 
-		if ($options['type'] == 'textarea') {
-			$output .= sprintf(
-				'<textarea name="%s" id="%s">%s</textarea>',
-				$elementName,
-				$elementId,
-				htmlspecialchars($options['value'])
-			);
-		} else {
-			$output .= sprintf(
-				'<input type="%s" name="%s" id="%s" value="%s" />',
-				$options['type'],
-				$elementName,
-				$elementId,
-				htmlspecialchars($options['value'])
-			);
+			case 'password':
+				$output[] = $this->label($options['label'], $attributes['id']);
+				$output[] = $this->password($name, $attributes);
+				break;
+
+			case 'file':
+				$output[] = $this->label($options['label'], $attributes['id']);
+				$output[] = $this->file($name, $attributes);
+				break;
+
+			case 'select':
+				$output[] = $this->label($options['label'], $attributes['id']);
+				$selectOptions = isset($options['options']) ? $options['options'] : array();
+				unset($options['options']);
+				$output[] = $this->select($name, $selectOptions, $options);
+				break;
+
+			case 'textarea':
+				$output[] = $this->label($options['label'], $attributes['id']);
+				$output[] = $this->textarea($name, $attributes);
+				break;
+
+			case 'checkbox':
+				$output[] = $this->checkbox($name, $attributes);
+				$output[] = $this->label($options['label'], $attributes['id']);
+				break;
+
+			default:
+				throw new Exception("Unknown type '{$options['type']}'");
+				break;
 		}
 
 		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
-			$output .= sprintf('<div class="error">%s</div>',
+			$output[] = sprintf('<div class="error">%s</div>',
 				htmlspecialchars($this->_validationErrors[$this->_currentModel][$name]));
 		}
 
-		return sprintf('<div class="input">%s</div>', $output);
+		return sprintf('<div class="input %s-input">%s</div>', $options['type'], implode('', $output));
+	}
+
+	/**
+	 * Creates a text input field
+	 *
+	 * @param string $attributes
+	 * @return void
+	 */
+	public function text($name, $attributes = array()) {
+		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'text'));
+		return $this->_makeSelfClosingTag('input', $attributes);
+	}
+
+	/**
+	 * Creates a password input field
+	 *
+	 * @param string $name 
+	 * @param array $attributes 
+	 * @return string
+	 */
+	public function password($name, $attributes = array()) {
+		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'password'));
+		return $this->_makeSelfClosingTag('input', $attributes);
+	}
+
+	/**
+	 * Generates a file input field
+	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @return string
+	 */
+	public function file($name, $attributes = array()) {
+		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'file'));
+		return $this->_makeSelfClosingTag('input', $attributes);
 	}
 
 	/**
 	 * Generates a textarea form element
 	 *
 	 * @param string $name 
-	 * @param array $options 
+	 * @param array $attributes 
 	 * @return string
 	 */
-	public function textarea($name, $options = array()) {
-		$options = array_merge($options, array('type' => 'textarea'));
-		return $this->input($name, $options);
+	public function textarea($name, $attributes = array()) {
+		$attributes = $this->_normalizeAttributes($name, $attributes);
+		$value = $attributes['value'];
+		unset($attributes['value']);
+
+		$output = sprintf('<textarea%s>%s</textarea>',
+			$this->_makeAttributes($attributes), htmlspecialchars($value));
+
+		return $output;
 	}
 
 	/**
-	 * undocumented function
+	 * Renders a hidden input field
 	 *
 	 * @param string $name
 	 * @param array $attributes
 	 * @return string
 	 */
 	public function hidden($name, $attributes = array()) {
-		$attributes['type'] = 'hidden';
-
-		if (!isset($attributes['name'])) {
-			$attributes['name'] = $this->_makeFieldName($name);
-		}
-
-		if (!isset($attributes['id'])) {
-			$attributes['id'] = $this->_makeFieldId($name);
-		}
-	
-		if (!isset($attributes['value'])) {
-			$attributes['value'] = $this->_valueForField($name);
-		}
-
+		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'hidden'));
 		return $this->_makeSelfClosingTag('input', $attributes);
 	}
 
+	public function checkbox($name, $attributes = array()) {
+		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'checkbox'));
+		if ($attributes['value']) {
+			$attributes['checked'] = 'checked';
+		}
+
+		$attributes['value'] = 1;
+
+		$output = array();
+		$output[] = $this->_makeSelfClosingTag('input', array(
+			//'id'    => $attributes['id'] . '_',
+			'name'  => $attributes['name'],
+			'value' => 0,
+			'type'  => 'hidden'
+		));
+
+		$output[] = $this->_makeSelfClosingTag('input', $attributes);
+		return implode('', $output);
+	}
 
 	/**
 	 * undocumented function
@@ -195,17 +267,12 @@ class Rox_Helper_Form {
 	public function select($name, $optionTags, $options = array()) {
 		$options = array_merge(array(
 			'value' => null,
-			'label' => null,
 			'attributes' => array(),
 			'multiple'  => false
 		), $options);
 
-		if ($options['label'] === null) {
-			$options['label'] = ucwords(str_replace('_', ' ', $name));
-		}
-
-		if ($options['value'] === null && isset($this->_data[$this->_currentModel][$name])) {
-			$options['value'] = $this->_data[$this->_currentModel][$name];
+		if ($options['value'] === null) {
+			$options['value'] = $this->_valueForField($name);
 		}
 
 		if (!isset($options['attributes']['name'])) {
@@ -224,12 +291,10 @@ class Rox_Helper_Form {
 		}
 
 		$output = array();
-		$output[] = $this->label($options['label'], $options['attributes']['id']);
 		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
 		foreach ($optionTags as $value => $label) {
 			$isSelected = ($value == $options['value']) ||
 				($options['multiple'] && is_array($options['value']) && in_array($value, $options['value']));
-
 			if ($isSelected) {
 				$output[] = sprintf('<option selected="selected" value="%s">%s</option>', $value, $label);
 			} else {
@@ -239,12 +304,25 @@ class Rox_Helper_Form {
 		}
 		$output[] = '</select>';
 
-		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
-			$output[] = sprintf('<div class="error">%s</div>',
-				htmlspecialchars($this->_validationErrors[$this->_currentModel][$name]));
+		return implode('', $output);
+	}
+
+
+	protected function _normalizeAttributes($fieldName, $attributes, $forcedAttributes = array()) {
+		$attributes = array_merge($attributes, $forcedAttributes);
+		if (!isset($attributes['name'])) {
+			$attributes['name'] = $this->_makeFieldName($fieldName);
 		}
 
-		return sprintf('<div class="input select">%s</div>', implode('', $output));
+		if (!isset($attributes['id'])) {
+			$attributes['id'] = $this->_makeFieldId($fieldName);
+		}
+	
+		if (!isset($attributes['value'])) {
+			$attributes['value'] = $this->_valueForField($fieldName);
+		}
+
+		return $attributes;
 	}
 
 	/**
