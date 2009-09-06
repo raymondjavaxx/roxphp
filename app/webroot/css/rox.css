@@ -46,14 +46,6 @@ table th {
 	text-align:left;
 }
 
-form .input {
-	margin-bottom: 1em;
-}
-
-form .input label {
-	display: block;
-}
-
 .exception {
 	color: #7e2217;
 	background-color: #fdfaa4;
@@ -96,4 +88,43 @@ form .input label {
 .error-flash-message {
 	color: #d8000c;
 	background-color: #ffbaba;
+}
+
+/** Forms **/
+form .text-input label,
+form .file-input label,
+form .textarea-input label,
+form .password-input label,
+form .select-input label {
+	font-size:15px;
+}
+
+form .input .error {
+	-moz-border-radius:4px;
+	width:300px;
+	background-color:#FFCFCF;
+	border-color:#E5A3A3;
+	color:#D8000C;
+	padding:3px 10px;
+	margin:3px 0 0 0;
+}
+
+form .text-input input,
+form .password-input input,
+form .textarea-input input {
+	font-size:16px;
+	padding:3px;
+	font-weight:bold;
+}
+
+form .input {
+	margin-bottom: 1em;
+}
+
+form .input label {
+	display: block;
+}
+
+form .checkbox-input label {
+	display:inline;
 }
