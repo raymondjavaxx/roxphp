@@ -115,13 +115,23 @@ class Rox_Helper_Form {
 	 * @return string
 	 */
 	public function input($name, $options = array()) {
-		$options = array_merge(array('type'  => 'text', 'label' => null, 'value' => null), $options);
+		$defaultOptions = array(
+			'type'  => 'text',
+			'label' => null,
+			'value' => null,
+			'attributes' => array()
+		);
+
+		$options = array_merge($defaultOptions, $options);
+		if (!isset($options['attributes']['value'])) {
+			$options['attributes']['value'] = $options['value'];
+		}
+
+		$attributes = $this->_normalizeAttributes($name, $options['attributes']);
 
 		if ($options['label'] === null) {
 			$options['label'] = ucwords(str_replace('_', ' ', $name));
 		}
-
-		$attributes = $this->_normalizeAttributes($name, array('value' => $options['value']));
 
 		$output = array();
 
@@ -203,6 +213,7 @@ class Rox_Helper_Form {
 	 */
 	public function file($name, $attributes = array()) {
 		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'file'));
+		unset($attributes['value']);
 		return $this->_makeSelfClosingTag('input', $attributes);
 	}
 
