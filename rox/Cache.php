@@ -2,28 +2,23 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (c) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
 
 /**
- * @see Rox_Cache_Adapter_Abstract
- */
-require_once(ROX.'Cache'.DS.'Adapter'.DS.'Abstract.php');
-
-/**
  * Cache
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
 class Rox_Cache {
@@ -46,29 +41,8 @@ class Rox_Cache {
 	 * @return void
 	 */
 	public static function init($adapter, array $options = array()) {
-		self::_loadAdapter($adapter);
+		Rox_Loader::loadClass($adapter);
 		self::$_adapter = new $adapter($options);
-	}
-
-	/**
-	 * Loads cache adapter class
-	 * 
-	 * @param string $name
-	 * @throws Exception
-	 */
-	protected static function _loadAdapter($name) {
-		switch ($name) {
-			case self::ADAPTER_MEMCACHE:
-				require ROX.'Cache'.DS.'Adapter'.DS.'Memcache.php';
-			break;
-
-			case self::ADAPTER_FILE:
-				require ROX.'Cache'.DS.'Adapter'.DS.'File.php';
-			break;
-
-			default:
-				throw new Exception('Invalid Cache adapter');
-		}
 	}
 
 	/**

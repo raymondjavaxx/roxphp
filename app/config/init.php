@@ -17,9 +17,7 @@
 session_name('ROXAPP');
 session_start();
 
-/**
- * Load and init the Cache class
+/*
+ * Init the cache class
  */
-require_once(ROX . 'Cache.php');
-
 Rox_Cache::init(Rox_Cache::ADAPTER_FILE);
