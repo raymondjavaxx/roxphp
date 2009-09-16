@@ -15,7 +15,7 @@
  */
 
 /**
- * Rox_Cache_Adapter_File
+ * Filesystem based cache adapter
  *
  * @package Rox
  * @copyright Copyright (C) 2008 - 2009 Ramon Torres
@@ -31,7 +31,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	protected $_cacheDir;
 
 	/**
-	 * Class constructor
+	 * Constructor
 	 *
 	 * @param array $options
 	 */
@@ -44,26 +44,26 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	}
 
 	/**
-	 * Cache_Adapter_File::setCacheDir()
+	 * Sets the cache directory
 	 *
-	 * @param string $key
-	 * @param mixed $data
-	 * @param mixed $expires
+	 * @param string $path
+	 * @return void
 	 */
-	protected function _setCacheDir($cacheDir) {
-		if (!is_dir($cacheDir)) {
+	protected function _setCacheDir($path) {
+		if (!is_dir($path)) {
 			throw new Exception('Cache directory does not exists');
 		}
 
-		$this->_cacheDir = $cacheDir;
+		$this->_cacheDir = $path;
 	}
 
 	/**
-	 * Cache_Adapter_File::write()
-	 *
-	 * @param string $key
-	 * @param mixed $data
-	 * @param mixed $expires
+	 * Saves data to the cache
+	 * 
+	 * @param string $key  The cache key
+	 * @param mixed $data  Data to be saved
+	 * @param integer|string $expires  Expiration time in seconds or strtotime() friendly format
+	 * @return boolean
 	 */
 	public function write($key, &$data, $expires) {
 		if (is_string($expires)) {
@@ -84,9 +84,9 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	}
 
 	/**
-	 * Cache_Adapter_File::read()
-	 *
-	 * @param string $key
+	 * Retrieves cached data for a given key
+	 * 
+	 * @param string $key  The cache key
 	 * @return mixed
 	 */
 	public function read($key) {
@@ -115,9 +115,9 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	}
 
 	/**
-	 * Cache_Adapter_File::delete()
-	 *
-	 * @param string $key
+	 * Deletes a cache entry
+	 * 
+	 * @param string $key  The cache key
 	 * @return boolean
 	 */
 	public function delete($key) {

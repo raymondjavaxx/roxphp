@@ -15,7 +15,7 @@
  */
 
 /**
- * Cache
+ * Cache static class
  *
  * @package Rox
  * @copyright Copyright (c) 2008 - 2009 Ramon Torres
@@ -34,7 +34,7 @@ class Rox_Cache {
 	private static $_adapter;
 
 	/**
-	 * Initializes the cache
+	 * Initializes the cache.
 	 * 
 	 * @param string $adapter
 	 * @param array $options
@@ -46,31 +46,31 @@ class Rox_Cache {
 	}
 
 	/**
-	 * Rox_Cache::write()
+	 * Saves data to the cache
 	 * 
-	 * @param mixed $key
-	 * @param mixed $data
-	 * @param mixed $expires
-	 * @return mixed
+	 * @param string $key  The cache key
+	 * @param mixed $data  Data to be saved
+	 * @param integer|string $expires  Expiration time in seconds or strtotime() friendly format
+	 * @return boolean
 	 */
 	public static function write($key, $data, $expires) {
 		return self::$_adapter->write($key, $data, $expires);
 	}
 
 	/**
-	 * Rox_Cache::read()
+	 * Retrieves cached data for a given key
 	 * 
-	 * @param mixed $key
-	 * @return boolean
+	 * @param string $key The cache key
+	 * @return mixed
 	 */
 	public static function read($key) {
 		return self::$_adapter->read($key);
 	}
 
 	/**
-	 * Rox_Cache::delete()
+	 * Deletes a cache entry
 	 * 
-	 * @param mixed $key
+	 * @param string $key The cache key
 	 * @return boolean
 	 */
 	public static function delete($key) {

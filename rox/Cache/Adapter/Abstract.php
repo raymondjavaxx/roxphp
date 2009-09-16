@@ -2,7 +2,7 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 - 2009 Ramon Torres
+ * Copyright (c) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
@@ -15,7 +15,7 @@
  */
 
 /**
- * Rox_Cache_Adapter_Abstract
+ * Abstract class for cache adapters
  *
  * @package Rox
  * @copyright Copyright (c) 2008 - 2009 Ramon Torres
@@ -24,7 +24,7 @@
 abstract class Rox_Cache_Adapter_Abstract {
 
 	/**
-	 * Rox_Cache_Adapter_Abstract::__construct()
+	 * Constructor
 	 * 
 	 * @param array $options
 	 * @return void
@@ -32,27 +32,27 @@ abstract class Rox_Cache_Adapter_Abstract {
 	abstract public function __construct($options);
 
 	/**
-	 * Rox_Cache_Adapter_Abstract::write()
+	 * Saves data to the cache
 	 * 
-	 * @param string $key
-	 * @param mixed $data
-	 * @param string|integer $expires
+	 * @param string $key  The cache key
+	 * @param mixed $data  Data to be saved
+	 * @param integer|string $expires  Expiration time in seconds or strtotime() friendly format
 	 * @return boolean
 	 */
 	abstract public function write($key, &$data, $expires);
 
 	/**
-	 * Rox_Cache_Adapter_Abstract::read()
+	 * Retrieves cached data for a given key
 	 * 
-	 * @param string $key
+	 * @param string $key  The cache key
 	 * @return mixed
 	 */
 	abstract public function read($key);
 
 	/**
-	 * Rox_Cache_Adapter_Abstract::delete()
+	 * Deletes a cache entry
 	 * 
-	 * @param string $key
+	 * @param string $key  The cache key
 	 * @return boolean
 	 */
 	abstract public function delete($key);

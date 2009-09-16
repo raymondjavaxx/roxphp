@@ -15,7 +15,7 @@
  */
 
 /**
- * Rox_Cache_Adapter_Memcache
+ * Memcache cache adapter
  *
  * @package Rox
  * @copyright Copyright (C) 2008 - 2009 Ramon Torres
@@ -35,37 +35,43 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 	 *
 	 * @var Memcache
 	 */
-	protected $Memcache;
+	protected $_memcache;
 
 	/**
 	 * Constructor
 	 *
-	 * @param mixed $options
+	 * @param array $options
 	 */
 	public function __construct($options) {
 		if (isset($options['servers'])) {
 			$this->_servers = $options['servers'];
 		}
 
-		$this->Memcache = new Memcache;
-		$this->_connect();
+		$this->_initialize();
 	}
 
 	/**
-	 * Rox_Cache_Adapter_Memcache::connect()
+	 * Initializes the Memcache object
+	 *
+	 * @return void
 	 */
-	protected function _connect() {
+	protected function _initialize() {
+		if (!class_exists('Memcache', false)) {
+			throw new Exception('This cache adapter requires the php_memcache extension');
+		}
+
+		$this->_memcache = new Memcache;
 		foreach ($this->_servers as $host => $port) {
-			$this->Memcache->addServer($host, $port);
+			$this->_memcache->addServer($host, $port);
 		}
 	}
 
 	/**
-	 * Rox_Cache_Adapter_Memcache::write()
-	 *
-	 * @param string $key
-	 * @param mixed $data
-	 * @param mixed $expires
+	 * Saves data to the cache
+	 * 
+	 * @param string $key  The cache key
+	 * @param mixed $data  Data to be saved
+	 * @param integer|string $expires  Expiration time in seconds or strtotime() friendly format
 	 * @return boolean
 	 */
 	public function write($key, &$data, $expires) {
@@ -75,26 +81,26 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 			$expires = time()+$expires;
 		}
 
-		return $this->Memcache->set($key, $data, 0, $expires);
+		return $this->_memcache->set($key, $data, 0, $expires);
 	}
 
 	/**
-	 * Rox_Cache_Adapter_Memcache::read()
-	 *
-	 * @param string $key
+	 * Retrieves cached data for a given key
+	 * 
+	 * @param string $key The cache key
 	 * @return mixed
 	 */
 	public function read($key) {
-		return $this->Memcache->get($key);
+		return $this->_memcache->get($key);
 	}
 
 	/**
-	 * Rox_Cache_Adapter_Memcache::delete()
-	 *
-	 * @param mixed $key
+	 * Deletes a cache entry
+	 * 
+	 * @param string $key The cache key
 	 * @return boolean
 	 */
 	public function delete($key) {
-		return $this->Memcache->delete($key);
+		return $this->_memcache->delete($key);
 	}
 }
