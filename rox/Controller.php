@@ -52,13 +52,6 @@ class Rox_Controller {
 	protected $_action = '';
 
 	/**
-	 * List of models to load automatically
-	 *
-	 * @var array
-	 */
-	public $models = array();
-
-	/**
 	 * undocumented variable
 	 *
 	 * @var array
@@ -68,9 +61,9 @@ class Rox_Controller {
 	/**
 	 * Request object
 	 *
-	 * @var Request
+	 * @var Rox_Request
 	 */
-	protected $_request;
+	public $request;
 
 	/**
 	 * View variables
@@ -82,18 +75,23 @@ class Rox_Controller {
 	/**
 	 * Class constructor
 	 */
-	public function __construct() {
+	public function __construct($config = array()) {
+		$defaults = array(
+			'request' => null
+		);
+
+		$config += $defaults;
+
+		if (!empty($config['request'])) {
+			$this->request = $config['request'];
+		}
+
 		if (is_null($this->_name)) {
 			$this->_name = str_replace('Controller', '', get_class($this));
 		}
 
 		$vars = get_class_vars('ApplicationController');
 		$this->helpers = array_merge($vars["helpers"], $this->helpers);
-		$this->models  = array_merge($vars['models'], $this->models);
-
-		foreach ($this->models as $model) {
-			Rox::loadModel($model);
-		}
 	}
 
 	/**
@@ -133,17 +131,22 @@ class Rox_Controller {
 	/**
 	 * Sets a view variable
 	 *
-	 * @param string $varName
+	 * @param string|array $varName
 	 * @param mixed $value
 	 */
 	public function set($varName, $value = null) {
+		if (is_array($varName)) {
+			$this->_viewVars += $varName;
+			return;
+		}
+
 		$this->_viewVars[$varName] = $value;
 	}
 
 	/**
 	 * undocumented function
 	 *
-	 * @param string $type 
+	 * @param string $type
 	 * @param string $message 
 	 */
 	public function flash($type, $message) {
@@ -178,25 +181,6 @@ class Rox_Controller {
 	 */
 	public function setLayout($layout) {
 		$this->_layout = $layout;
-	}
-
-	/**
-	 * Sets the request object
-	 * 
-	 * @param Rox_Request $request
-	 * @return void
-	 */
-	public function setRequest(Rox_Request $request) {
-		$this->_request = $request;
-	}
-
-	/**
-	 * Controller::getRequest()
-	 * 
-	 * @return Request
-	 */
-	public function getRequest() {
-		return $this->_request;
 	}
 
 	/**

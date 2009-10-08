@@ -33,7 +33,10 @@ class Rox_Dispatcher {
 		$parsedUrl = Rox_Router::parseUrl($url);
 
 		$this->_loadController($parsedUrl['controller']);
-		$controller = new $parsedUrl['controller'];
+
+		$controller = new $parsedUrl['controller'](array(
+			'request' => new Rox_Request()
+		));
 
 		if ( method_exists('Rox_Controller', $parsedUrl['action']) ||
 			!method_exists($controller, $parsedUrl['action']) ||
@@ -42,7 +45,6 @@ class Rox_Dispatcher {
 			throw new Exception('Action does not exist or is not dispatchable', 404);
 		}
 
-		$controller->setRequest(new Rox_Request);
 		$controller->setAction($parsedUrl['action']);
 
 		$controller->beforeFilter();
