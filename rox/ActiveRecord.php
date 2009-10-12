@@ -345,16 +345,17 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Returns true if a record exists
 	 *
-	 * @param mixed $id
+	 * @param mixed $idOrConditions
 	 * @return boolean
 	 */
-	public function exists($id) {
-		$sql = sprintf(
-			"SELECT COUNT(*) AS `count` FROM `%s` WHERE `%s` = %s LIMIT 1",
-			$this->_table,
-			$this->_primaryKey,
-			$this->smartQuote($this->_primaryKey, $id)
-		);
+	public function exists($idOrConditions = array()) {
+		if (!is_array($idOrConditions)) {
+			$idOrConditions = array($this->_primaryKey => $idOrConditions);
+		}
+
+		$sql = sprintf("SELECT COUNT(*) AS `count` FROM `%s`", $this->_table);
+		$sql.= $this->_buildConditionsSQL($idOrConditions);
+		$sql.= ' LIMIT 1';
 
 		$result = Rox_ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
 		return $result[0]['count'] == 1;
