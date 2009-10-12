@@ -538,6 +538,8 @@ abstract class Rox_ActiveRecord {
 			return false;
 		}
 
+		$this->_beforeDelete();
+
 		$sql = sprintf(
 			"DELETE FROM `%s` WHERE `%s` = %s",
 			$this->_table,
@@ -554,6 +556,19 @@ abstract class Rox_ActiveRecord {
 		}
 
 		return $deleted;
+	}
+
+	/**
+	 * Finds and deletes all records that match $conditions
+	 *
+	 * @param array|string $conditions 
+	 * @return void
+	 */
+	public function deleteAll($conditions = array()) {
+		$records = $this->findAll($conditions);
+		foreach ($records as $record) {
+			$record->delete();
+		}
 	}
 
 	/**
@@ -733,6 +748,14 @@ abstract class Rox_ActiveRecord {
 	 * @return void
 	 */
 	protected function _afterSave($created) {
+	}
+
+	/**
+	 * Before delete callback
+	 *
+	 * @return void
+	 */
+	protected function _beforeDelete() {
 	}
 
 	/**
