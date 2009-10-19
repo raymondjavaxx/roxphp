@@ -35,10 +35,10 @@ class Rox_Controller {
 	 *
 	 * @var string
 	 */
-	protected $layout = 'default';
+	public $layout = 'default';
 
 	/**
-	 * undocumented variable
+	 * List of helpers to be automatically loaded when rendering
 	 *
 	 * @var array
 	 */
@@ -66,7 +66,10 @@ class Rox_Controller {
 	protected $_viewVars = array();
 
 	/**
-	 * Class constructor
+	 * Constructor
+	 *
+	 * @param array $config
+	 * @return void
 	 */
 	public function __construct($config = array()) {
 		$defaults = array(
@@ -81,22 +84,6 @@ class Rox_Controller {
 
 		$vars = get_class_vars('ApplicationController');
 		$this->helpers = array_merge($vars["helpers"], $this->helpers);
-	}
-
-	/**
-	 * undocumented function
-	 *
-	 * @return void
-	 */
-	public function beforeFilter() {
-	}
-
-	/**
-	 * undocumented function
-	 *
-	 * @return void
-	 */
-	public function afterFilter() {
 	}
 
 	/**
@@ -146,16 +133,7 @@ class Rox_Controller {
 	}
 
 	/**
-	 * Page title setter
-	 *
-	 * @param $title
-	 */
-	public function setPageTitle($title) {
-		$this->_pageTitle = $title;
-	}
-
-	/**
-	 * Send redirect headers and exit
+	 * Sends redirect headers and exit
 	 *
 	 * @param string $url
 	 */
@@ -180,5 +158,25 @@ class Rox_Controller {
 		header('HTTP/1.1 301');
 		header('Location: ' . $referer);
 		exit;
+	}
+
+	// ------------------------------------------------
+	//  Callbacks
+	// ------------------------------------------------
+
+	/**
+	 * Before-filter callback
+	 *
+	 * @return void
+	 */
+	public function beforeFilter() {
+	}
+
+	/**
+	 * After-filter callback
+	 *
+	 * @return void
+	 */
+	public function afterFilter() {
 	}
 }
