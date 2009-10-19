@@ -50,9 +50,10 @@ class Rox_Helper_Html {
 	}
 
 	/**
-	 * HtmlHelper::css()
+	 * Creates a link element for importing external CSS files.
 	 *
-	 * @param mixed $file
+	 * @param string $file  Name of the file
+	 * @param string $media
 	 * @return string
 	 */
 	public function css($file, $media = 'all') {
@@ -74,7 +75,7 @@ class Rox_Helper_Html {
 	}
 
 	/**
-	 * undocumented function
+	 * Creates an HTML link.
 	 *
 	 * @param string $text 
 	 * @param string $path 
@@ -85,6 +86,111 @@ class Rox_Helper_Html {
 		$output = sprintf('<a href="%s"%s>%s</a>', Rox_Router::url($path),
 			self::_makeAttributes($attributes), $text);
 		return $output;
+	}
+
+	/**
+	 * Creates an HTML link that points to the "view" path of a record.
+	 *
+	 * @param string $text 
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function viewLink($text, Rox_ActiveRecord $object) {
+		return $this->link($text, $this->viewPath($object));
+	}
+
+	/**
+	 * Creates an HTML link that points to the "edit" path of a record.
+	 *
+	 * @param string $text 
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function editLink($text, Rox_ActiveRecord $object) {
+		return $this->link($text, $this->editPath($object));
+	}
+
+	/**
+	 * Creates an HTML link for deleting a record.
+	 *
+	 * @param string $text 
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function deleteLink($text, Rox_ActiveRecord $object) {
+		return $this->link($text, $this->deletePath($object), array('class' => 'delete'));
+	}
+
+	/**
+	 * Returns the URL for viewing a record.
+	 *
+	 * If a record of class Account is passed
+	 * the returned url is: [...]/accounts/view/[Record ID]
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @param string $absolute 
+	 * @return string
+	 */
+	public function viewUrl(Rox_ActiveRecord $object, $absolute = false) {
+		return Rox_Router::url($this->viewPath($object), $absolute);
+	}
+
+	/**
+	 * Returns the URL for editing a record.
+	 *
+	 * If a record of class Account is passed
+	 * the returned url is: [...]/accounts/edit/[Record ID]
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @param string $absolute 
+	 * @return string
+	 */
+	public function editUrl(Rox_ActiveRecord $object, $absolute = false) {
+		return Rox_Router::url($this->editPath($object), $absolute);
+	}
+
+	/**
+	 * Returns the URL for deleting a record.
+	 *
+	 * If a record of class Account is passed
+	 * the returned url is: [...]/accounts/delete/[Record ID]
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @param string $absolute 
+	 * @return string
+	 */
+	public function delteUrl(Rox_ActiveRecord $object, $absolute = false) {
+		return Rox_Router::url($this->deletePath($object), $absolute);
+	}
+
+	/**
+	 * Returns the path for viewing a record.
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function viewPath($object) {
+		return "/" . self::_controllerFromActiveRecord($object) . "/view/" . $object->getId();
+	}
+
+	/**
+	 * Returns the path for editing a record.
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function editPath($object) {
+		return "/" . self::_controllerFromActiveRecord($object) . "/edit/" . $object->getId();
+	}
+
+	/**
+	 * Returns the path for deleting a record.
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	public function deletePath($object) {
+		return "/" . self::_controllerFromActiveRecord($object) . "/delete/" . $object->getId();
 	}
 
 	/**
@@ -99,5 +205,20 @@ class Rox_Helper_Html {
 			$result[] = ' ' . $name . '="' . $value . '"';
 		}
 		return implode('', $result);
+	}
+
+	/**
+	 * Returns the controller name for a given ActiveRecord instance.
+	 *
+	 * @param Rox_ActiveRecord $object 
+	 * @return string
+	 */
+	protected static function _controllerFromActiveRecord($object) {
+		static $results = array();
+		$class = get_class($object);
+		if (!isset($results[$class])) {
+			$results[$class] = Rox_Inflector::underscore(Rox_Inflector::pluralize($class));
+		}
+		return $results[$class];
 	}
 }
