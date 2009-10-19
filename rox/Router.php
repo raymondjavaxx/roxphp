@@ -97,15 +97,13 @@ class Rox_Router {
 			$action = $parts[1];
 		}
 
-		if ($actionPrefix !== null) {
-			$action = $actionPrefix . '_' . $action;
-		}
-
 		$result = array(
-			'controller' => Rox_Inflector::camelize($parts[0]).'Controller',
-			'action'     => Rox_Inflector::lowerCamelize($action).'Action',
-			'params'     => array_slice($parts, 2),
-			'prefix'     => $actionPrefix
+			'controller'    => $parts[0],
+			'action'        => $action,
+			'controller_class' => Rox_Inflector::camelize($parts[0]) . 'Controller',
+			'action_method' => Rox_Inflector::lowerCamelize($actionPrefix . $action) . 'Action',
+			'params'        => array_slice($parts, 2),
+			'prefix'        => $actionPrefix
 		);
 
 		return $result;	

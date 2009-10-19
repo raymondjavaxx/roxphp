@@ -58,6 +58,20 @@ class Rox_View {
 	/**
 	 * undocumented function
 	 *
+	 * @param string $name 
+	 * @return string
+	 */
+	public function element($name) {
+		extract($this->_vars, EXTR_SKIP);
+
+		ob_start();
+		include VIEWS.'elements'.DS.$name.'.tpl';
+		return ob_get_clean();
+	}
+
+	/**
+	 * undocumented function
+	 *
 	 * @return array
 	 */
 	public function getFlashMessages() {

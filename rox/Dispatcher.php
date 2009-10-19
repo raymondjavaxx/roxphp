@@ -32,39 +32,39 @@ class Rox_Dispatcher {
 	public function dispatch($url = null) {
 		$parsedUrl = Rox_Router::parseUrl($url);
 
-		$this->_loadController($parsedUrl['controller']);
+		$this->_loadController($parsedUrl['controller_class']);
 
-		$controller = new $parsedUrl['controller'](array(
+		$controller = new $parsedUrl['controller_class'](array(
 			'request' => new Rox_Request()
 		));
 
-		if ( method_exists('Rox_Controller', $parsedUrl['action']) ||
-			!method_exists($controller, $parsedUrl['action']) ||
-			strpos($parsedUrl['action'], '__') === 0 ||
-			!is_callable(array($controller, $parsedUrl['action']))) {
+		$controller->params = $parsedUrl;
+
+		if ( method_exists('Rox_Controller', $parsedUrl['action_method']) ||
+			!method_exists($controller, $parsedUrl['action_method']) ||
+			strpos($parsedUrl['action_method'], '__') === 0 ||
+			!is_callable(array($controller, $parsedUrl['action_method']))) {
 			throw new Exception('Action does not exist or is not dispatchable', 404);
 		}
 
-		$controller->setAction($parsedUrl['action']);
-
 		$controller->beforeFilter();
-		call_user_func_array(array($controller, $parsedUrl['action']), $parsedUrl['params']);
+		call_user_func_array(array($controller, $parsedUrl['action_method']), $parsedUrl['params']);
 		$controller->render();
 		$controller->afterFilter();
 	}
 
 	/**
-	 * Rox_Dispatcher::loadController()
+	 * Loads controller by class name
 	 *
 	 * @param string $name
 	 * @throws Exception
 	 */
 	protected function _loadController($name) {
-		$fileName = CONTROLLERS . $name . '.php';
-		if (!file_exists($fileName)) {
+		$filename = CONTROLLERS . $name . '.php';
+		if (!file_exists($filename)) {
 			throw new Exception('Missing controller file', 404);
 		}
 
-		require_once $fileName;
+		require_once $filename;
 	}
 }

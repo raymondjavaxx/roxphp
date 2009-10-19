@@ -2,14 +2,14 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 Ramon Torres
+ * Copyright (c) 2008 - 2009 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -18,38 +18,24 @@
  * Controller
  *
  * @package Rox
- * @copyright Copyright (c) 2008 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
 class Rox_Controller {
-
-	/**
-	 * Controller name
-	 *
-	 * @var string
-	 */
-	protected $_name;
 
 	/**
 	 * Page title
 	 *
 	 * @var string
 	 */
-	protected $_pageTitle = 'RoxPHP';
+	public $pageTitle = 'RoxPHP';
 
 	/**
 	 * Layout name
 	 *
-	 * @var array  
-	 */
-	protected $_layout = 'default';
-
-	/**
-	 * Current action
-	 *
 	 * @var string
 	 */
-	protected $_action = '';
+	protected $layout = 'default';
 
 	/**
 	 * undocumented variable
@@ -64,6 +50,13 @@ class Rox_Controller {
 	 * @var Rox_Request
 	 */
 	public $request;
+
+	/**
+	 * Request params
+	 *
+	 * @var array
+	 */
+	public $params;
 
 	/**
 	 * View variables
@@ -84,10 +77,6 @@ class Rox_Controller {
 
 		if (!empty($config['request'])) {
 			$this->request = $config['request'];
-		}
-
-		if (is_null($this->_name)) {
-			$this->_name = str_replace('Controller', '', get_class($this));
 		}
 
 		$vars = get_class_vars('ApplicationController');
@@ -114,18 +103,18 @@ class Rox_Controller {
 	 * Renders the current action
 	 */
 	public function render() {
-		$this->set('rox_page_title', $this->_pageTitle);
+		$this->set('rox_page_title', $this->pageTitle);
 
 		foreach ($this->helpers as $helper) {
 			$helperName = Rox_Inflector::lowerCamelize($helper);
 			$this->set($helperName, Rox::getHelper($helperName));
 		}
 
-		$viewPath = Rox_Inflector::underscore($this->_name);
-		$viewName = str_replace('_action', '', Rox_Inflector::underscore($this->_action));
+		$viewPath = $this->params['controller'];
+		$viewName = $this->params['action'];
 
 		$view = new Rox_View($this->_viewVars);
-		echo $view->render($viewPath, $viewName, $this->_layout);
+		echo $view->render($viewPath, $viewName, $this->layout);
 	}
 
 	/**
@@ -163,24 +152,6 @@ class Rox_Controller {
 	 */
 	public function setPageTitle($title) {
 		$this->_pageTitle = $title;
-	}
-
-	/**
-	 * Action setter
-	 *
-	 * @param $action
-	 */
-	public function setAction($action) {
-		$this->_action = $action;
-	}
-
-	/**
-	 * Layout name setter
-	 *
-	 * @param $layoutName
-	 */
-	public function setLayout($layout) {
-		$this->_layout = $layout;
 	}
 
 	/**
