@@ -39,7 +39,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 		if (isset($options['cache_dir'])) {
 			$this->_setCacheDir($options['cache_dir']);
 		} else {
-			$this->_setCacheDir(APP.'tmp'.DS.'cache'.DS);
+			$this->_setCacheDir(ROX_APP_PATH.DS.'tmp'.DS.'cache');
 		}
 	}
 
@@ -74,7 +74,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 
 		$serializedData = serialize($data);
 
-		$fp = fopen($this->_cacheDir . 'cache_' . sha1($key) . '.txt', 'w');
+		$fp = fopen($this->_cacheDir . DS . 'cache_' . sha1($key) . '.txt', 'w');
 		flock($fp, LOCK_EX);
 		fwrite($fp, $expires . "\n");
 		fwrite($fp, strlen($serializedData) . "\n");
@@ -90,7 +90,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	 * @return mixed
 	 */
 	public function read($key) {
-		$fp = @fopen($this->_cacheDir . 'cache_' . sha1($key) . '.txt', 'r');
+		$fp = @fopen($this->_cacheDir . DS . '/cache_' . sha1($key) . '.txt', 'r');
 		if ($fp === false) {
 			return false;
 		}

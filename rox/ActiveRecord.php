@@ -15,6 +15,17 @@
  */
 
 /**
+ * Data types
+ */
+define('DATATYPE_STRING', 'string');
+define('DATATYPE_INTEGER', 'integer');
+define('DATATYPE_DATE', 'date');
+define('DATATYPE_DATETIME', 'datetime');
+define('DATATYPE_BOOLEAN', 'boolean');
+define('DATATYPE_BINARY', 'binary');
+define('DATATYPE_FLOAT', 'float');
+
+/**
  * Rox_ActiveRecord class
  *
  * @package Rox

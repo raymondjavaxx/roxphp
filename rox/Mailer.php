@@ -82,7 +82,7 @@ class Rox_Mailer {
 		} else {
 			$folder   = str_replace('_mailer', '',Rox_Inflector::underscore($mailer));
 			$filename = Rox_Inflector::underscore($method).'.phtml';
-			$path     = MAILERS.'templates/'.$folder.'/'.$filename;
+			$path     = ROX_APP_PATH.'/mailers/templates/'.$folder.'/'.$filename;
 
 			$body = self::_renderTemplate($path, $this->body);
 			$adapter->setMessage($body);
@@ -121,7 +121,7 @@ class Rox_Mailer {
 		$mailerMehod = Rox_Inflector::lowerCamelize($mailerMethod);
 		$parameters = func_get_args();
 
-		require_once MAILERS.$mailerClass.'.php';
+		require_once ROX_APP_PATH.'/'.$mailerClass.'.php';
 
 		$mailer = new $mailerClass;
 		call_user_func_array(array($mailer, $mailerMehod), array_slice($parameters, 1));

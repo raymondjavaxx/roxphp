@@ -41,7 +41,7 @@ class Rox_Loader {
 	public static function loadClass($class) {
 		if (strpos($class, 'Rox_') === 0) {
 			$filename = implode(DIRECTORY_SEPARATOR, explode('_', substr($class, 3))) . '.php';
-			require_once ROX . $filename;
+			require_once ROX_FRAMEWORK_PATH . DS . $filename;
 		} else {
 			$filename = implode(DIRECTORY_SEPARATOR, explode('_', $class)) . '.php';
 			require_once $filename;

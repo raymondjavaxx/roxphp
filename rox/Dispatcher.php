@@ -60,7 +60,7 @@ class Rox_Dispatcher {
 	 * @throws Exception
 	 */
 	protected function _loadController($name) {
-		$filename = CONTROLLERS . $name . '.php';
+		$filename = ROX_APP_PATH . DS . 'controllers' . DS . $name . '.php';
 		if (!file_exists($filename)) {
 			throw new Exception('Missing controller file', 404);
 		}

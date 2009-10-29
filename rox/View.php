@@ -25,6 +25,10 @@ class Rox_View {
 
 	protected $_vars = array();
 
+	protected $_layoutsPath;
+
+	protected $_viewsPath;
+
 	/**
 	 * Class Constructor
 	 *
@@ -32,6 +36,8 @@ class Rox_View {
 	 */
 	public function __construct($vars = array()) {
 		$this->_vars = $vars;
+		$this->_viewsPath = ROX_APP_PATH . DS . 'views';
+		$this->_layoutsPath = $this->_viewsPath . DS . 'layouts';
 	}
 
 	/**
@@ -46,12 +52,12 @@ class Rox_View {
 		extract($this->_vars, EXTR_SKIP);
 
 		ob_start();
-		include VIEWS.$path.DS.$name.'.tpl';
+		include $this->_viewsPath . DS . $path . DS . $name . '.tpl';
 		$rox_layout_content = ob_get_contents();
 		ob_end_clean();
 
 		ob_start();
-		include LAYOUTS.$layout.'.tpl';
+		include $this->_layoutsPath . DS . $layout . '.tpl';
 		return ob_get_clean();
 	}
 
@@ -65,7 +71,7 @@ class Rox_View {
 		extract($this->_vars, EXTR_SKIP);
 
 		ob_start();
-		include VIEWS.'elements'.DS.$name.'.tpl';
+		include $this->_viewsPath . DS . 'elements' . DS . $name . '.tpl';
 		return ob_get_clean();
 	}
 

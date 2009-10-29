@@ -45,7 +45,7 @@ class Rox {
 	 * @param string $name
 	 */
 	public static function loadModel($name) {
-		require_once MODELS . $name . '.php';
+		require_once ROX_APP_PATH . DS . 'models' . DS . $name . '.php';
 	}
 
 	/**
@@ -75,13 +75,13 @@ class Rox {
 	protected static function _loadHelper($name) {
 		$name = Rox_Inflector::camelize($name);
 
-		$file = APP.'helpers'.DS.$name.'Helper.php';
+		$file = ROX_APP_PATH.DS.'helpers'.DS.$name.'Helper.php';
 		if (file_exists($file)) {
 			require_once $file;
 			return $name.'Helper';
 		}
 
-		$file = ROX.'Helper'.DS.$name.'.php';
+		$file = ROX_FRAMEWORK_PATH.DS.'Helper'.DS.$name.'.php';
 		if (file_exists($file)) {
 			require_once $file;
 			return 'Rox_Helper_' . $name;

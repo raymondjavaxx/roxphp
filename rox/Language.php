@@ -99,7 +99,7 @@ class Rox_Language {
 	 * @return void
 	 */
 	public function loadTable($name = 'messages') {
-		$fp = @fopen(APP . 'locale' . DS . $this->_locale->getTag() . DS . $name . '.csv', 'r');
+		$fp = @fopen(ROX_APP_PATH . DS . 'locale' . DS . $this->_locale->getTag() . DS . $name . '.csv', 'r');
 		if ($fp === false) {
 			throw new Exception('Can`t open locale file');
 		}
