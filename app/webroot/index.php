@@ -29,8 +29,6 @@ define('CONTROLLERS', APP.'controllers'.DS);
 define('HELPERS', APP.'helpers'.DS);
 define('MAILERS', APP.'mailers'.DS);
 
-define('WWW', dirname(dirname(dirname($_SERVER['PHP_SELF']))));
-
 set_include_path(implode(PATH_SEPARATOR, array(
 	MODELS,
 	CONTROLLERS,

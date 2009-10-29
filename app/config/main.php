@@ -12,7 +12,5 @@
  * @link http://roxphp.com 
  */
 
-date_default_timezone_set('America/New_York');
-
 define('ROX_DEBUG', true);
 define('ROX_DEFAULT_ROUTE', 'pages/home');

@@ -49,10 +49,10 @@ class Rox_Router {
 	 */
 	public static function url($path, $absolute = false) {
 		if ($absolute) {
-			return self::getBaseUrl() . WWW . $path;
+			return self::getBaseUrl() . self::base() . $path;
 		}
 
-		return WWW . $path;
+		return self::base() . $path;
 	}
 
 	/**
@@ -62,12 +62,29 @@ class Rox_Router {
 	 */
 	public static function getBaseUrl() {
 		static $baseUrl;
+
 		if ($baseUrl === null) {
 			//TODO: https
 			$baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
 		}
 
 		return $baseUrl;
+	}
+
+	/**
+	 * Returns the base path
+	 *
+	 * @return string
+	 */
+	public static function base() {
+		static $base = false;
+
+		if ($base === false) {
+			$base = dirname(dirname(dirname($_SERVER['PHP_SELF'])));
+			$base = $base === DIRECTORY_SEPARATOR ? null : rtrim($base, '/');
+		}
+
+		return $base;
 	}
 
 	/**
