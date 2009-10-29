@@ -97,11 +97,14 @@ class Rox_Router {
 			$action = $parts[1];
 		}
 
+		$actionMethod = ($actionPrefix == null ? $action : $actionPrefix . '_' . $action);
+		$actionMethod = Rox_Inflector::lowerCamelize($actionMethod) . 'Action';
+
 		$result = array(
 			'controller'    => $parts[0],
 			'action'        => $action,
 			'controller_class' => Rox_Inflector::camelize($parts[0]) . 'Controller',
-			'action_method' => Rox_Inflector::lowerCamelize($actionPrefix . $action) . 'Action',
+			'action_method' => $actionMethod,
 			'params'        => array_slice($parts, 2),
 			'prefix'        => $actionPrefix
 		);
