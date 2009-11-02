@@ -101,6 +101,8 @@ class Rox_Controller {
 		$viewName = $this->params['action'];
 
 		$view = new Rox_View($this->_viewVars);
+		$view->params = $this->params;
+
 		echo $view->render($viewPath, $viewName, $this->layout);
 	}
 

@@ -102,6 +102,17 @@ class Rox_Router {
 			$actionPrefix = array_shift($parts);
 		}
 
+		$extension = 'html';
+		$lastPart = array_pop($parts);
+		if ($lastPart !== null) {
+			if (preg_match('/(?<param>.*)\.(?<extension>[a-z0-9]{1,32})/', $lastPart, $matches) == 1) {
+				$lastPart = $matches['param'];
+				$extension = $matches['extension'];
+			}
+
+			array_push($parts, $lastPart);
+		}
+
 		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
 			throw new Exception('Illegal controller name', 404);
 		}
@@ -116,14 +127,16 @@ class Rox_Router {
 
 		$actionMethod = ($actionPrefix == null ? $action : $actionPrefix . '_' . $action);
 		$actionMethod = Rox_Inflector::lowerCamelize($actionMethod) . 'Action';
+		$controllerClass = Rox_Inflector::camelize($parts[0]) . 'Controller';
 
 		$result = array(
 			'controller'    => $parts[0],
 			'action'        => $action,
-			'controller_class' => Rox_Inflector::camelize($parts[0]) . 'Controller',
+			'controller_class' => $controllerClass,
 			'action_method' => $actionMethod,
 			'params'        => array_slice($parts, 2),
-			'prefix'        => $actionPrefix
+			'prefix'        => $actionPrefix,
+			'extension'     => $extension
 		);
 
 		return $result;	
