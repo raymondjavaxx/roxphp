@@ -223,6 +223,40 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Property overloading. Allows accessing model data as attributes.
+	 *
+	 * <code>
+	 *   $user = User::find(25);
+	 *   echo $user->first_name;
+	 * </code>
+	 *
+	 * @param string $var 
+	 * @return mixed
+	 */
+	public function __get($var) {
+		$var = Rox_Inflector::underscore($var);
+		return $this->getData($var);
+	}
+
+	/**
+	 * Property overloading. Allows accessing model data as attributes.
+	 *
+	 * <code>
+	 *   $user = new User;
+	 *   $user->first_name = "John";
+	 *   $user->last_name = "Doe";
+	 *   $user->save();
+	 * </code>
+	 *
+	 * @param string $var 
+	 * @return mixed
+	 */
+	public function __set($var, $value) {
+		$var = Rox_Inflector::underscore($var);
+		$this->setData($var, $value);
+	}
+
+	/**
 	 * Runs the validation callbacks
 	 *
 	 * @return boolean
