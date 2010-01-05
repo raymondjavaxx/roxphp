@@ -49,7 +49,7 @@ abstract class Rox_ActiveRecord {
 	protected $_primaryKey = 'id';
 
 	/**
-	 * The name of DataSource used by this Rox_ActiveRecord_Abstract
+	 * The name of DataSource used by this model
 	 *
 	 * @see Rox_ConnectionManager::getDataSource()
 	 * @var string
@@ -64,25 +64,25 @@ abstract class Rox_ActiveRecord {
 	protected $_data = array();
 
 	/**
-	 * Field map
+	 * Attribute map
 	 *
 	 * @var array
 	 */
-	protected $_fieldMap;
+	protected $_attributeMap;
 
 	/**
-	 * List of fields that are protected from massive asignation
+	 * List of attributes that are protected from mass assignment
 	 *
 	 * @var array
 	 */
-	protected $_protectedFields = array('id');
+	protected $_protectedAttributes = array('id');
 
 	/**
-	 * Array of modified fields
+	 * Array of modified attributes
 	 *
 	 * @var array
 	 */
-	protected $_modifiedFields = array();
+	protected $_modifiedAttributes = array();
 
 	/**
 	 * Used to check if record is new
@@ -101,16 +101,16 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Constructor
 	 *
-	 * @param array $fields
+	 * @param array $attributes
 	 * @return void
 	 */
-	public function __construct(array $fields = null) {
-		if (null === $this->_table) {
+	public function __construct(array $attributes = null) {
+		if ($this->_table === null) {
 			$this->_table = Rox_Inflector::tableize(get_class($this));
 		}
 
-		if (null !== $fields) {
-			$this->setData($fields);
+		if ($attributes !== null) {
+			$this->setData($attributes);
 		}
 	}
 
@@ -133,65 +133,61 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Flags a given field as "modified"
+	 * Flags a given attribute as "modified"
 	 *
-	 * @param string $field
+	 * @param string $attribute
 	 * @return void
 	 */
-	protected function _flagFieldAsModified($field) {
-		if (!in_array($field, $this->_modifiedFields)) {
-			$this->_modifiedFields[] = $field;
+	protected function _flagAttributeAsModified($attribute) {
+		if (!in_array($attribute, $this->_modifiedAttributes)) {
+			$this->_modifiedAttributes[] = $attribute;
 		}
 	}
 
 	/**
-	 * Resets the modified fields list
+	 * Resets the modified attributes list
 	 *
 	 * @return void
 	 */
-	protected function _resetModifiedFieldsFlags() {
-		$this->_modifiedFields = array();
+	protected function _resetModifiedAttributesFlags() {
+		$this->_modifiedAttributes = array();
 	}
 
 	/**
 	 * Set data
 	 *
-	 * @param string|array $field
+	 * @param string|array $attribute
 	 * @param mixed $value
 	 */
-	public function setData($field, $value = null) {
-		if (is_array($field)) {
-			foreach ($field as $k => $v) {
-				if (in_array($k, $this->_protectedFields)) {
-					unset($field[$k]);
+	public function setData($attribute, $value = null) {
+		if (is_array($attribute)) {
+			foreach ($attribute as $k => $v) {
+				if (in_array($k, $this->_protectedAttributes)) {
+					unset($attribute[$k]);
 				}
 			}
 
-			$this->_data = array_merge($this->_data, $field);
-			$fieldNames = array_keys($field);
-			array_walk($fieldNames, array($this, '_flagFieldAsModified'));
+			$this->_data = array_merge($this->_data, $attribute);
+			$attributeNames = array_keys($attribute);
+			array_walk($attributeNames, array($this, '_flagAttributeAsModified'));
 		} else {
-			$this->_data[$field] = $value;
-			$this->_flagFieldAsModified($field);
+			$this->_data[$attribute] = $value;
+			$this->_flagAttributeAsModified($attribute);
 		}
 	}
 
 	/**
-	 * Returns the value of a given field.
+	 * Returns the value of a given attribute.
 	 *
-	 * @param string $field
+	 * @param string $attribute
 	 * @return mixed
 	 */
-	public function getData($field = null) {
-		if (null == $field) {
+	public function getData($attribute = null) {
+		if ($attribute === null) {
 			return $this->_data;
 		}
 
-		if (array_key_exists($field, $this->_data)) {
-			return $this->_data[$field];
-		}
-
-		return null;
+		return array_key_exists($attribute, $this->_data) ? $this->_data[$attribute] : null;
 	}
 
 	/**
@@ -285,7 +281,7 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	public function getValidationErrors() {
-		if ($this->_errors == null) {
+		if ($this->_errors === null) {
 			return array();
 		}
 
@@ -322,9 +318,9 @@ abstract class Rox_ActiveRecord {
 			return false;
 		}
 
-		$fieldMap = $this->_fieldMap();
+		$attributeMap = $this->_attributeMap();
 		foreach ($data as $k => $v) {
-			if (!array_key_exists($k, $fieldMap) || !in_array($k, $this->_modifiedFields)) {
+			if (!array_key_exists($k, $attributeMap) || !in_array($k, $this->_modifiedAttributes)) {
 				unset($data[$k]);
 			}
 		}
@@ -334,7 +330,7 @@ abstract class Rox_ActiveRecord {
 		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 
 		if ($this->_newRecord) {
-			if ($this->hasField('created_at') && !isset($data['created_at'])) {
+			if ($this->hasAttribute('created_at') && !isset($data['created_at'])) {
 				$data['created_at'] = date('Y-m-d H:i:s');
 			}
 
@@ -342,25 +338,25 @@ abstract class Rox_ActiveRecord {
 				$data[$f] = $this->smartQuote($f, $v);
 			}
 
-			$fields = '`' . implode('`, `', array_keys($data)) . '`';
+			$attributes = '`' . implode('`, `', array_keys($data)) . '`';
 			$values = implode(', ', array_values($data));
 			$sql = sprintf(
 				"INSERT INTO `%s` (%s) VALUES (%s)",
 				$this->_table,
-				$fields,
+				$attributes,
 				$values
 			);
 
 			$dataSource->execute($sql);
 			if ($dataSource->affectedRows() == 1) {
 				$this->setId($dataSource->lastInsertedID());
-				$this->_resetModifiedFieldsFlags();
+				$this->_resetModifiedAttributesFlags();
 				$this->_newRecord = false;
 				$this->_afterSave(true);
 				return true;
 			}
 		} else {
-			if ($this->hasField('updated_at') && !isset($data['updated_at'])) {
+			if ($this->hasAttribute('updated_at') && !isset($data['updated_at'])) {
 				$data['updated_at'] = date('Y-m-d H:i:s');
 			}
 
@@ -378,7 +374,7 @@ abstract class Rox_ActiveRecord {
 			);
 
 			if ($dataSource->execute($sql) !== false) {
-				$this->_resetModifiedFieldsFlags();
+				$this->_resetModifiedAttributesFlags();
 				$this->_afterSave(false);
 				return true;
 			}
@@ -431,18 +427,18 @@ abstract class Rox_ActiveRecord {
 	 */
 	public function findAll($conditions = array(), $options = array()) {
 		$options = array_merge(array(
-			'fields' => null,
+			'attributes' => null,
 			'order'  => null,
 			'limit'  => null
 		), $options);
 
-		if ($options['fields'] === null) {
-			$options['fields'] = '*';
-		} else if (is_array($options['fields'])) {
-			$options['fields'] = '`' . implode('`, `', $options['fields']) . '`';
+		if ($options['attributes'] === null) {
+			$options['attributes'] = '*';
+		} else if (is_array($options['attributes'])) {
+			$options['attributes'] = '`' . implode('`, `', $options['attributes']) . '`';
 		}
 
-		$sql = sprintf('SELECT %s FROM `%s`', $options['fields'], $this->_table);
+		$sql = sprintf('SELECT %s FROM `%s`', $options['attributes'], $this->_table);
 		$sql.= $this->_buildConditionsSQL($conditions);
 
 		if (!empty($options['order'])) {
@@ -469,7 +465,7 @@ abstract class Rox_ActiveRecord {
 			'page'       => 1,
 			'conditions' => array(),
 			'order'      => null,
-			'fields'     => null
+			'attributes'     => null
 		);
 
 		$options = array_merge($defaultOptions, $options);
@@ -484,7 +480,7 @@ abstract class Rox_ActiveRecord {
 			$currentPage = min(max(intval($options['page']), 1), $pages);
 			$limit = sprintf('%d, %d', ($currentPage - 1) * $options['per_page'], $options['per_page']);
 			$items = $this->findAll($options['conditions'], array(
-				'fields' => $options['fields'],
+				'attributes' => $options['attributes'],
 				'order'  => $options['order'],
 				'limit'  => $limit
 			));
@@ -501,7 +497,7 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Rox_ActiveRecord::find()
 	 *
-	 * @param mixed $fields
+	 * @param mixed $attributes
 	 * @param array $options
 	 * @return object
 	 * @throws Rox_ActiveRecord_RecordNotFound
@@ -510,7 +506,7 @@ abstract class Rox_ActiveRecord {
 		$checkResult = false;
 
 		$options = array_merge(array(
-			'fields' => null,
+			'attributes' => null,
 			'order' => null
 		), $options, array('limit' => 1));
 
@@ -532,12 +528,12 @@ abstract class Rox_ActiveRecord {
 	 * Rox_ActiveRecord_Abstract::findLast()
 	 * 
 	 * @param array|string $conditions
-	 * @param array|string $fields
+	 * @param array|string $attributes
 	 * @return object
 	 */
-	public function findLast($conditions = null, $fields = null) {
+	public function findLast($conditions = null, $attributes = null) {
 		$options = array(
-			'fields' => $fields,
+			'attributes' => $attributes,
 			'order' => '`'.$this->_primaryKey.'` DESC',
 			'limit' => 1
 		);
@@ -620,20 +616,20 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Quotes and escapes values to be used in SQL queries  
 	 *
-	 * @param string $field
+	 * @param string $attribute
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public function smartQuote($field, $value) {
+	public function smartQuote($attribute, $value) {
 		if (null === $value) {
 			return 'NULL';
 		}
 
 		$type = DATATYPE_STRING;
 
-		$fieldMap = $this->_fieldMap();
-		if (isset($fieldMap[$field])) {
-			$type = $fieldMap[$field];
+		$attributeMap = $this->_attributeMap();
+		if (isset($attributeMap[$attribute])) {
+			$type = $attributeMap[$attribute];
 		}
 
 		switch ($type) {
@@ -655,27 +651,27 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_fieldMap()
+	 * Rox_ActiveRecord_Abstract::_attributeMap()
 	 * 
 	 * @return array
 	 */
-	protected function _fieldMap() {
-		if (null === $this->_fieldMap) {
+	protected function _attributeMap() {
+		if (null === $this->_attributeMap) {
 			$db = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
-			$this->_fieldMap = $db->generateFieldMapFromTable($this->_table);
+			$this->_attributeMap = $db->generateAttributeMapFromTable($this->_table);
 		}
 
-		return $this->_fieldMap;	
+		return $this->_attributeMap;	
 	}
 
 	/**
-	 * Checks if a field exists
+	 * Checks if a attribute exists
 	 *
-	 * @param string $field
+	 * @param string $attribute
 	 * @return boolean
 	 */
-	public function hasField($field) {
-		return array_key_exists($field, $this->_fieldMap());
+	public function hasAttribute($attribute) {
+		return array_key_exists($attribute, $this->_attributeMap());
 	}
 
 	/**
@@ -712,37 +708,84 @@ abstract class Rox_ActiveRecord {
 	// ---------------------------------------------
 
 	/**
-	 * Validates that specified fields are not empty
+	 * Validates that specified attributes are not empty
 	 *
-	 * @param string|array $fieldNames 
+	 * @param string|array $attributeNames 
 	 * @param string $message 
 	 * @return void
 	 */
-	public function _validatesPresenceOf($fieldNames, $message = "can't be blank") {
-		if (!is_array($fieldNames)) {
-			$fieldNames = array($fieldNames);
+	public function _validatesPresenceOf($attributeNames, $message = "can't be blank") {
+		if (!is_array($attributeNames)) {
+			$attributeNames = array($attributeNames);
 		}
 
-		foreach ($fieldNames as $fieldName) {
-			$this->_errors->addOnEmpty($fieldName, $message);
+		foreach ($attributeNames as $attributeName) {
+			$this->_errors->addOnEmpty($attributeName, $message);
 		}
 	}
 
 	/**
 	 * Validates the acceptance of agreements checkboxes
 	 *
-	 * @param string|array $fieldNames 
+	 * @param string|array $attributeNames 
 	 * @param string $message 
 	 * @return void
 	 */
-	public function _validatesAcceptanceOf($fieldNames, $message = 'must be accepted') {
-		if (!is_array($fieldNames)) {
-			$fieldNames = array($fieldNames);
+	public function _validatesAcceptanceOf($attributeNames, $message = 'must be accepted') {
+		if (!is_array($attributeNames)) {
+			$attributeNames = array($attributeNames);
 		}
 
-		foreach ($fieldNames as $fieldName) {
-			if ($this->getData($fieldName) != '1') {
-				$this->_errors->add($fieldName, $message);
+		foreach ($attributeNames as $attributeName) {
+			if ($this->getData($attributeName) != '1') {
+				$this->_errors->add($attributeName, $message);
+			}
+		}
+	}
+
+	/**
+	 * Validates that specified attributes are unique in the model database table.
+	 *
+	 * <code>
+	 * class User extends Rox_ActiveRecord {
+	 *     protected function _validate() {
+	 *         $this->_validatesUniquenessOf('username');
+	 *     }
+	 * }
+	 * </code>
+	 *
+	 * Config options:
+	 * - message: Custom error message (default: "has already been taken").
+	 * - scope: Columns that define the scope.
+	 *
+	 * @param array|string $attributes
+	 * @param array|string $options
+	 * @return void
+	 */
+	protected function _validatesUniquenessOf($attributes, $options = array()) {
+		$defaultOptions = array(
+			'message' => 'has already been taken',
+			'scope'   => array()
+		);
+
+		$options = array_merge($defaultOptions, $options);
+
+		$scopeConditions = array();
+		foreach ((array)$options['scope'] as $scopeAttribute) {
+			$scopeConditions[$scopeAttribute] = $this->getData($scopeAttribute);
+		}
+
+		if (!$this->_newRecord) {
+			$scopeConditions[] = sprintf("`%s` != %s", $this->_primaryKey,
+				$this->smartQuote($this->_primaryKey, $this->getId()));
+		}
+
+		foreach ((array)$attributes as $attribute) {
+			$conditions = array($attribute => $this->getData($attribute));
+			$conditions += $scopeConditions;
+
+			if ($this->exists($conditions)) {
+				$this->_errors->add($attribute, $options['message']);
 			}
 		}
 	}

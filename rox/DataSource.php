@@ -125,7 +125,7 @@ class Rox_DataSource {
 	 * @param string $table
 	 * @return array
 	 */
-	public function generateFieldMapFromTable($table) {
+	public function generateAttributeMapFromTable($table) {
 		static $mapCache = array();
 		if (!isset($mapCache[$table])) {
 			$mapCache[$table] = $this->_generateFieldMapFromTable($table);
