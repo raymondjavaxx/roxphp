@@ -384,6 +384,17 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
+	 * Updates the passed attributes and saves the record.
+	 *
+	 * @param array $attributes 
+	 * @return boolean
+	 */
+	public function updateAttributes($attributes) {
+		$this->setData($attributes);
+		return $this->save();
+	}
+
+	/**
 	 * Returns true if a record exists
 	 *
 	 * @param mixed $idOrConditions
