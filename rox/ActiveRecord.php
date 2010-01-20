@@ -135,7 +135,7 @@ abstract class Rox_ActiveRecord {
 		}
 	}
 
-	public static function model($class) {
+	public static function model($class = __CLASS__) {
 		static $instances = array();
 		if (!isset($instances[$class])) {
 			$instances[$class] = new $class;
