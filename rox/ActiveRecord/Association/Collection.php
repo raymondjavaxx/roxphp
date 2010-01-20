@@ -31,17 +31,17 @@ class Rox_ActiveRecord_Association_Collection {
 		$this->_scope = $scope;
 	}
 
-	public function all($conditions = array()) {
+	public function find($conditions = array(), $options = array()) {
 		$conditions += $this->_scope;
-		return $this->_model->findAll($conditions);
+		return $this->_model->find($conditions, $options);
 	}
 
-	public function find($conditions = array()) {
+	public function findAll($conditions = array(), $options = array()) {
 		$conditions += $this->_scope;
-		return $this->_model->find($conditions);
+		return $this->_model->findAll($conditions, $options);
 	}
 
-	public function delete($condtions = array()) {
+	public function deleteAll($condtions = array()) {
 		$conditions += $this->_scope;
 		$this->_model->deleteAll($condtions);
 	}
