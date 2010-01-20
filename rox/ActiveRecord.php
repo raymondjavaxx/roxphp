@@ -92,6 +92,27 @@ abstract class Rox_ActiveRecord {
 	protected $_newRecord = true;
 
 	/**
+	 * List of one-to-many associations
+	 *
+	 * @var array
+	 */
+	protected $_hasMany = array();
+
+	/**
+	 * List of one-to-one associations
+	 *
+	 * @var array
+	 */
+	protected $_hasOne = array();
+
+	/**
+	 * List of one-to-one associations
+	 *
+	 * @var array
+	 */
+	protected $_belongsTo = array();
+
+	/**
 	 * Validation errors
 	 *
 	 * @var Rox_ActiveRecord_ErrorCollection
@@ -112,6 +133,14 @@ abstract class Rox_ActiveRecord {
 		if ($attributes !== null) {
 			$this->setData($attributes);
 		}
+	}
+
+	public static function model($class) {
+		static $instances = array();
+		if (!isset($instances[$class])) {
+			$instances[$class] = new $class;
+		}
+		return $instances[$class];
 	}
 
 	/**
@@ -215,6 +244,17 @@ abstract class Rox_ActiveRecord {
 			return $this->find(array($key => $args[0]));
 		}
 
+		$assoc = $this->_association('belongs_to', $method);
+		if ($assoc) {
+			return self::model($assoc['class'])->find($this->{$assoc['key']});
+		}
+
+		$assoc = $this->_association('has_one', $method);
+		if ($assoc) {
+			$model = self::model($assoc['class']);
+			return $model->find(array($assoc['key'] => $this->getId()));
+		}
+
 		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
 	}
 
@@ -229,9 +269,20 @@ abstract class Rox_ActiveRecord {
 	 * @param string $var 
 	 * @return mixed
 	 */
-	public function __get($var) {
-		$var = Rox_Inflector::underscore($var);
-		return $this->getData($var);
+	public function __get($name) {
+		$name = Rox_Inflector::underscore($name);
+		if (isset($this->_data[$name])) {
+			return $this->_data[$name];
+		}
+
+		$assoc = $this->_association('has_many', $name);
+		if ($assoc) {
+			$class = $assoc['class'];
+			$scope = array($assoc['key'] => $this->getId());
+			return $this->{$name} = new Rox_ActiveRecord_Association_Collection($class, $scope);
+		}
+
+		throw new Exception("unknown attribute {$name}");
 	}
 
 	/**
@@ -250,6 +301,49 @@ abstract class Rox_ActiveRecord {
 	public function __set($var, $value) {
 		$var = Rox_Inflector::underscore($var);
 		$this->setData($var, $value);
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return array
+	 */
+	protected function _association($type, $name) {
+		static $associations;
+		if ($associations === null) {
+			$associations = $this->_normalizeAssociations();
+		}
+
+		return isset($associations[$type][$name]) ? $associations[$type][$name] : false;
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return array
+	 */
+	private function _normalizeAssociations() {
+		$associations = array('belongs_to' => array(), 'has_many' => array(), 'has_one' => array());
+		$rels = array('belongs_to' => '_belongsTo', 'has_many' => '_hasMany', 'has_one' => '_hasOne');
+		foreach ($rels as $type => $property) {
+			foreach ($this->{$property} as $name => $options) {
+				if (is_int($name) && is_string($options)) {
+					$name = $options;
+					$options = array();
+				}
+
+				$keyClass = ($type == 'belongs_to') ? $name : get_class($this);
+				$defaults = array(
+					'class' => Rox_Inflector::classify($name),
+					'key' => Rox_Inflector::underscore($keyClass) . '_id'
+				);
+
+				$options += $defaults;
+				$associations[$type][$name] = $options;
+			}
+		}
+
+		return $associations;
 	}
 
 	/**

@@ -192,6 +192,10 @@ class Rox_Inflector {
 		return $table;
 	}
 
+	public static function classify($tableName) {
+		return self::camelize(self::singularize($tableName));
+	}
+
 	/**
 	 * undocumented function
 	 *
