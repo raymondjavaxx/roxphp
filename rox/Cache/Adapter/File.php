@@ -21,44 +21,24 @@
  * @copyright Copyright (C) 2008 - 2009 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
-
-	/**
-	 * Path where to save cache files
-	 *
-	 * @var string
-	 */
-	protected $_cacheDir;
+class Rox_Cache_Adapter_File extends Rox_Cache_Adapter {
 
 	/**
 	 * Constructor
 	 *
-	 * @param array $options
+	 * @param array $config
 	 */
-	public function __construct($options) {
-		if (isset($options['cache_dir'])) {
-			$this->_setCacheDir($options['cache_dir']);
-		} else {
-			$this->_setCacheDir(ROX_APP_PATH.DS.'tmp'.DS.'cache');
+	public function __construct($config) {
+		$defaults = array('path' => ROX_APP_PATH . '/tmp/cache');
+		parent::__construct($config + $defaults);
+
+		if (!is_dir($this->_config['path'])) {
+			throw new Exception('Cache path does not exists');
 		}
 	}
 
 	/**
-	 * Sets the cache directory
-	 *
-	 * @param string $path
-	 * @return void
-	 */
-	protected function _setCacheDir($path) {
-		if (!is_dir($path)) {
-			throw new Exception('Cache directory does not exists');
-		}
-
-		$this->_cacheDir = $path;
-	}
-
-	/**
-	 * Saves data to the cache
+	 * Stores data into the cache
 	 * 
 	 * @param string $key  The cache key
 	 * @param mixed $data  Data to be saved
@@ -66,15 +46,10 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	 * @return boolean
 	 */
 	public function write($key, &$data, $expires) {
-		if (is_string($expires)) {
-			$expires = strtotime($expires);
-		} else {
-			$expires = time()+$expires;
-		}
-
+		$expires = is_string($expires) ? strtotime($expires) : time() + $expires;
 		$serializedData = serialize($data);
 
-		$fp = fopen($this->_cacheDir . DS . 'cache_' . sha1($key) . '.txt', 'w');
+		$fp = fopen($this->_config['path'] . '/cache_' . sha1($key) . '.txt', 'w');
 		flock($fp, LOCK_EX);
 		fwrite($fp, $expires . "\n");
 		fwrite($fp, strlen($serializedData) . "\n");
@@ -90,7 +65,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	 * @return mixed
 	 */
 	public function read($key) {
-		$fp = @fopen($this->_cacheDir . DS . '/cache_' . sha1($key) . '.txt', 'r');
+		$fp = @fopen($this->_config['path'] . '/cache_' . sha1($key) . '.txt', 'r');
 		if ($fp === false) {
 			return false;
 		}
@@ -121,6 +96,6 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter_Abstract {
 	 * @return boolean
 	 */
 	public function delete($key) {
-		return @unlink($this->_cacheDir . 'cache_' . sha1($key) . '.txt');
+		return @unlink($this->_config['path'] . '/cache_' . sha1($key) . '.txt');
 	}
 }

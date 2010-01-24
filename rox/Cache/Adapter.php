@@ -2,14 +2,14 @@
 /**
  * RoxPHP
  *
- * Copyright (c) 2008 - 2009 Ramon Torres
+ * Copyright (c) 2008 - 2010 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -18,18 +18,16 @@
  * Abstract class for cache adapters
  *
  * @package Rox
- * @copyright Copyright (c) 2008 - 2009 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-abstract class Rox_Cache_Adapter_Abstract {
+abstract class Rox_Cache_Adapter {
 
-	/**
-	 * Constructor
-	 * 
-	 * @param array $options
-	 * @return void
-	 */
-	abstract public function __construct($options);
+	protected $_config = array();
+
+	public function __construct($config) {
+		$this->_config += $config;
+	}
 
 	/**
 	 * Saves data to the cache

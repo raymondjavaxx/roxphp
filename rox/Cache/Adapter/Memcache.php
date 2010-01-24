@@ -2,14 +2,14 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 - 2009 Ramon Torres
+ * Copyright (C) 2008 - 2010 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
  * @package Rox
  * @author Ramon Torres
- * @copyright Copyright (C) 2008 - 2009 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2010 Ramon Torres (http://roxphp.com)
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
@@ -18,17 +18,14 @@
  * Memcache cache adapter
  *
  * @package Rox
- * @copyright Copyright (C) 2008 - 2009 Ramon Torres
+ * @copyright Copyright (C) 2008 - 2010 Ramon Torres
  * @license http://roxphp.com/static/license.html
  */
-class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
+class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter {
 
-	/**
-	 * Memcache hosts and ports
-	 *
-	 * @var array
-	 */
-	protected $_servers = array('localhost' => 11211);
+	protected $_config = array(
+		'servers' => array('127.0.0.1:11211')
+	);
 
 	/**
 	 * Memcache instance
@@ -42,11 +39,8 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 	 *
 	 * @param array $options
 	 */
-	public function __construct($options) {
-		if (isset($options['servers'])) {
-			$this->_servers = $options['servers'];
-		}
-
+	public function __construct($config = array()) {
+		parent::__construct($config);
 		$this->_initialize();
 	}
 
@@ -61,8 +55,9 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 		}
 
 		$this->_memcache = new Memcache;
-		foreach ($this->_servers as $host => $port) {
-			$this->_memcache->addServer($host, $port);
+		foreach ($this->_config['servers'] as $server) {
+			$parts = explode(':', $server);
+			$this->_memcache->addServer($parts[0], isset($parts[1]) ? $parts[1] : 11211);
 		}
 	}
 
@@ -75,12 +70,7 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter_Abstract {
 	 * @return boolean
 	 */
 	public function write($key, &$data, $expires) {
-		if (is_string($expires)) {
-			$expires = strtotime($expires);
-		} else {
-			$expires = time()+$expires;
-		}
-
+		$expires = is_string($expires) ? strtotime($expires) : time() + $expires;
 		return $this->_memcache->set($key, $data, 0, $expires);
 	}
 

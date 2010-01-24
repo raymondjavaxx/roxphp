@@ -26,23 +26,25 @@ class Rox_Cache {
 	const ADAPTER_FILE     = 'Rox_Cache_Adapter_File';
 	const ADAPTER_MEMCACHE = 'Rox_Cache_Adapter_Memcache';
 
+	protected static $_config = array(
+		'adapter' => self::ADAPTER_FILE
+	);
+
 	/**
 	 * Cache adapter instance
 	 *
-	 * @var Cache_Adapter_Abstract
+	 * @var Cache_Adapter
 	 */
 	private static $_adapter;
 
 	/**
-	 * Initializes the cache.
-	 * 
-	 * @param string $adapter
-	 * @param array $options
+	 * Initializes the cache class
+	 *
+	 * @param array $config
 	 * @return void
 	 */
-	public static function init($adapter, array $options = array()) {
-		Rox_Loader::loadClass($adapter);
-		self::$_adapter = new $adapter($options);
+	public static function init($config = array()) {
+		$this->_config += $config;
 	}
 
 	/**
@@ -54,7 +56,7 @@ class Rox_Cache {
 	 * @return boolean
 	 */
 	public static function write($key, $data, $expires) {
-		return self::$_adapter->write($key, $data, $expires);
+		return self::_adapter()->write($key, $data, $expires);
 	}
 
 	/**
@@ -64,7 +66,7 @@ class Rox_Cache {
 	 * @return mixed
 	 */
 	public static function read($key) {
-		return self::$_adapter->read($key);
+		return self::_adapter()->read($key);
 	}
 
 	/**
@@ -74,6 +76,13 @@ class Rox_Cache {
 	 * @return boolean
 	 */
 	public static function delete($key) {
-		return self::$_adapter->delete($key);
+		return self::_adapter()->delete($key);
+	}
+
+	protected static function _adapter() {
+		if (self::$_adapter === null) {
+			self::$_adapter = new self::$_config['adapter'](self::$_config);
+		}
+		return self::$_adapter;
 	}
 }
