@@ -19,6 +19,3 @@ date_default_timezone_set('America/New_York');
 
 session_name('ROXAPP');
 session_start();
-
-// Init the cache class
-Rox_Cache::init(Rox_Cache::ADAPTER_FILE);
