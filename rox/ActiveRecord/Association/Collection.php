@@ -32,7 +32,7 @@ class Rox_ActiveRecord_Association_Collection {
 	}
 
 	public function find($conditions = array(), $options = array()) {
-		$conditions += $this->_scope;
+		$options += array('conditions' => $this->_scope);
 		return $this->_model->find($conditions, $options);
 	}
 

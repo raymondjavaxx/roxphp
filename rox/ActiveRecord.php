@@ -269,20 +269,20 @@ abstract class Rox_ActiveRecord {
 	 * @param string $var 
 	 * @return mixed
 	 */
-	public function __get($name) {
-		$name = Rox_Inflector::underscore($name);
-		if (isset($this->_data[$name])) {
-			return $this->_data[$name];
+	public function __get($attribute) {
+		$attribute = Rox_Inflector::underscore($attribute);
+		if (array_key_exists($attribute, $this->_data)) {
+			return $this->_data[$attribute];
 		}
 
-		$assoc = $this->_association('has_many', $name);
+		$assoc = $this->_association('has_many', $attribute);
 		if ($assoc) {
 			$class = $assoc['class'];
 			$scope = array($assoc['key'] => $this->getId());
-			return $this->{$name} = new Rox_ActiveRecord_Association_Collection($class, $scope);
+			return $this->{$attribute} = new Rox_ActiveRecord_Association_Collection($class, $scope);
 		}
 
-		throw new Exception("unknown attribute {$name}");
+		throw new Exception("unknown attribute {$attribute}");
 	}
 
 	/**
@@ -298,9 +298,9 @@ abstract class Rox_ActiveRecord {
 	 * @param string $var 
 	 * @return mixed
 	 */
-	public function __set($var, $value) {
-		$var = Rox_Inflector::underscore($var);
-		$this->setData($var, $value);
+	public function __set($attribute, $value) {
+		$attribute = Rox_Inflector::underscore($attribute);
+		$this->setData($attribute, $value);
 	}
 
 	/**
@@ -610,13 +610,12 @@ abstract class Rox_ActiveRecord {
 	public function find($conditions = array(), $options = array()) {
 		$checkResult = false;
 
-		$options = array_merge(array(
-			'attributes' => null,
-			'order' => null
-		), $options, array('limit' => 1));
+		$options = array_merge(array('attributes' => null, 'order' => null,
+			'conditions' => array()), $options, array('limit' => 1));
 
 		if (!is_array($conditions)) {
-			$conditions = array($this->_primaryKey => $conditions);
+			$conditions = array_merge($options['conditions'], array(
+				$this->_primaryKey => $conditions));
 			$checkResult = true;
 		}
 
