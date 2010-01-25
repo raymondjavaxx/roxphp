@@ -41,8 +41,13 @@ class Rox_ActiveRecord_Association_Collection {
 		return $this->_model->findAll($conditions, $options);
 	}
 
-	public function deleteAll($condtions = array()) {
+	public function deleteAll($conditions = array()) {
 		$conditions += $this->_scope;
-		$this->_model->deleteAll($condtions);
+		$this->_model->deleteAll($conditions);
+	}
+
+	public function findCount($conditions = array()) {
+		$conditions += $this->_scope;
+		return $this->_model->findCount($conditions);
 	}
 }
