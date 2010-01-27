@@ -26,29 +26,6 @@ class Rox {
 	private static $_helperInstances = array();
 
 	/**
-	 * Returns instance of a model
-	 *
-	 * @param string $name
-	 * @return object
-	 */
-	public static function getModel($name) {
-		if (!class_exists($name)) {
-			Rox::loadModel($name);
-		}
-
-		return new $name;
-	}
-
-	/**
-	 * Loads a model
-	 *
-	 * @param string $name
-	 */
-	public static function loadModel($name) {
-		require_once ROX_APP_PATH . DS . 'models' . DS . $name . '.php';
-	}
-
-	/**
 	 * Returns a singleton instance of a helper 
 	 *  
 	 * @param string $name

@@ -137,8 +137,8 @@ class Rox_Request {
 	 * 
 	 * @return boolean
 	 */
-	public function isIPhone() {
-		return preg_match('/iP[hone|od]/', $this->getServer('HTTP_USER_AGENT', ''));
+	public function isIphone() {
+		return preg_match('/iP[hone|od]/', $this->getServer('HTTP_USER_AGENT', '')) === 1;
 	}
 
 }

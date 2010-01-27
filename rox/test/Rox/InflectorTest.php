@@ -1,14 +1,9 @@
 <?php
 
-require_once '../Inflector.php';
+require_once dirname(dirname(__FILE__)) . '/helper.php';
 
 class InflectorTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * InflectorTest::testPluralize()
-	 * 
-	 * @return void
-	 */
 	public function testPluralize() {
 		$result = Rox_Inflector::pluralize('client');
 		$this->assertEquals('clients', $result);
@@ -26,11 +21,6 @@ class InflectorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('Databases', $result);
 	}
 
-	/**
-	 * InflectorTest::testPluralize()
-	 * 
-	 * @return void
-	 */
 	public function testSingularize() {
 		$result = Rox_Inflector::singularize('presidents');
 		$this->assertEquals('president', $result);
@@ -39,11 +29,6 @@ class InflectorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('tomato', $result);
 	}
 
-	/**
-	 * InflectorTest::testUnderscore()
-	 * 
-	 * @return void
-	 */
 	public function testUnderscore() {
 		$result  = Rox_Inflector::underscore('BankAccount');
 		$this->assertEquals('bank_account', $result);
@@ -55,11 +40,6 @@ class InflectorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('i_countable', $result);
 	}
 
-	/**
-	 * InflectorTest::testTableize()
-	 * 
-	 * @return void
-	 */
 	public function testTableize() {
 		$result  = Rox_Inflector::tableize('Post');
 		$this->assertEquals('posts', $result);

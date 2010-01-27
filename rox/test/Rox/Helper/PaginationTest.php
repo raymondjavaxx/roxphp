@@ -14,15 +14,7 @@
  * @version $Id$
  */
 
-/**
- * @see Rox_Helper_Pagination
- */
-require_once '../../Helper/Pagination.php';
-
-/**
- * @see Rox_ActiveRecord_PaginationResult
- */
-require_once '../../ActiveRecord/PaginationResult.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
 
 /**
  * Test case for Pagination Helper
@@ -44,7 +36,7 @@ class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   next page     = 2
 		   previous page = 1
 		 */
-		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 3, 1, 2, 1);
+		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 3, 1, 2, 1, 40);
 		$paginationHelper = new Rox_Helper_Pagination;
 
 		$result   = $paginationHelper->links($paginationResult);
@@ -66,7 +58,7 @@ class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   next page     = 4
 		   previous page = 2
 		 */
-		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 20, 3, 4, 2);
+		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 20, 3, 4, 2, 40);
 		$paginationHelper = new Rox_Helper_Pagination;
 
 		$result = $paginationHelper->links($paginationResult, array(

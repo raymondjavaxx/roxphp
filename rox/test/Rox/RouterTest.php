@@ -1,9 +1,8 @@
 <?php
 
-require_once '../Router.php';
-require_once '../Inflector.php';
+require_once dirname(dirname(__FILE__)) . '/helper.php';
 
-class RouterTest extends PHPUnit_Framework_TestCase {
+class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 
 	public function testParseUrl() {
 		$result = Rox_Router::parseUrl('/users/edit/23');
