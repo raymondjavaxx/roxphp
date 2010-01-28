@@ -28,7 +28,13 @@ class Rox_Locale {
 	 * 
 	 * @var string
 	 */
-	private $_tag = 'en_US';
+	protected $_tag = 'en_US';
+
+	public function __construct($tag = null) {
+		if ($tag !== null) {
+			$this->setTag($tag);
+		}
+	}
 
 	/**
 	 * Returns current locale tag
@@ -51,27 +57,32 @@ class Rox_Locale {
 	/**
 	 * Autodetect the locale based on browser preferences
 	 *
-	 * @param array $available Available locales
+	 * @param array $availableLocales Available locales
 	 * @param bool $fallback
 	 * @return boolean
 	 */
-	public function autoDetect($available, $fallback = true) {
-		$locale = $this->getBrowserLocale();
-		if ($locale === false) {
+	public function autoDetect($availableLocales, $fallback = false) {
+		$locales = self::_detectBrowserLocales();
+		if (empty($locales)) {
 			return false;
 		}
 
-		if (in_array($locale, $available)) {
-			$this->currentLanguage = $locale;
-			return true;
-		} 
+		foreach ($locales as $locale) {
+			if (in_array($locale, $availableLocales)) {	
+				$this->_tag = $locale;
+				return true;
+			}
+		}
 
 		if ($fallback) {
-			$subTags = explode('_', $locale);
-			foreach ($available as $a) {
-				if (strpos($a, $subTags[0]) === 0) {
-					$this->setTag($a);
-					return true;
+			//TODO: find a more elegant way of doing this
+			foreach ($locales as $locale) {
+				$subTags = explode('_', $locale);
+				foreach ($availableLocales as $a) {
+					if (strpos($a, $subTags[0]) === 0) {
+						$this->_tag = $a;
+						return true;
+					}
 				}
 			}
 		}
@@ -82,34 +93,34 @@ class Rox_Locale {
 	/**
 	 * Gets locale tag from browser
 	 * 
-	 * @return string|false
+	 * @return array
 	 */
-	protected function getBrowserLocale() {
+	protected static function _detectBrowserLocales() {
 		if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-			return false;
+			return array();
 		}
 
-		$parts = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		if (!isset($parts[0])) {
-			return false;
+		$locales = array();
+		$tags = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		foreach ($tags as $tag) {
+			if (!preg_match('/;q=\d+\.\d+$/', $tag)) {
+				$tag .= ';q=1.0';
+			}
+
+			$pattern = "/^(?<language>[a-z]{2}).*?(?<country>[a-z]{2})?;q=?(?<qvalue>\d+\.\d+)$/";
+			if (preg_match($pattern, trim($tag), $matches) !== 1) {
+				continue;
+			}
+
+			$language = $matches['language'];
+			if (!empty($matches['country'])) {
+				$language .= '_' . strtoupper($matches['country']);
+			}
+
+			$locales[$language] = (float)$matches['qvalue'];
 		}
 
-		if (($subTags = explode('-', $parts[0])) === false) {
-			return false;
-		}
-
-		if (preg_match('/^[a-z]{2,3}/', $subTags[0]) !== 1) {
-			return false;
-		}
-
-		$locale = strtolower($subTags[0]);
-
-		if (isset($subTags[1]) && preg_match('/^[A-Z]{2}$/', $subTags[1]) === 1) {
-			$locale .= '_' . strtoupper($subTags[1]);
-		} else if (isset($subTags[2]) && preg_match('/^[A-Z]{2}$/', $subTags[2]) === 1) {
-			$locale .= '_' . strtoupper($subTags[2]);
-		}
-
-		return $locale;
+		arsort($locales, SORT_NUMERIC);
+		return array_keys($locales);
 	}
 }
