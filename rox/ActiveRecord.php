@@ -15,17 +15,6 @@
  */
 
 /**
- * Data types
- */
-define('DATATYPE_STRING', 'string');
-define('DATATYPE_INTEGER', 'integer');
-define('DATATYPE_DATE', 'date');
-define('DATATYPE_DATETIME', 'datetime');
-define('DATATYPE_BOOLEAN', 'boolean');
-define('DATATYPE_BINARY', 'binary');
-define('DATATYPE_FLOAT', 'float');
-
-/**
  * Rox_ActiveRecord class
  *
  * @package Rox
@@ -421,7 +410,7 @@ abstract class Rox_ActiveRecord {
 
 		unset($data[$this->_primaryKey]);
 
-		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = $this->datasource();
 
 		if ($this->_newRecord) {
 			if ($this->hasAttribute('created_at') && !isset($data['created_at'])) {
@@ -503,7 +492,7 @@ abstract class Rox_ActiveRecord {
 		$sql.= $this->_buildConditionsSQL($idOrConditions);
 		$sql.= ' LIMIT 1';
 
-		$result = Rox_ConnectionManager::getDataSource($this->_dataSourceName)->query($sql);
+		$result = $this->datasource()->query($sql);
 		return $result[0]['count'] == 1;
 	}
 
@@ -517,7 +506,7 @@ abstract class Rox_ActiveRecord {
 		$sql = sprintf('SELECT COUNT(*) AS `count` FROM `%s`', $this->_table);
 		$sql.= $this->_buildConditionsSQL($conditions);
 
-		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = $this->datasource();
 		$result = $dataSource->query($sql);
 
 		return (integer)$result[0]['count'];
@@ -653,7 +642,7 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	public function findBySql($sql) {
-		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = $this->datasource();
 		$rows = $dataSource->query($sql);
 
 		$className = get_class($this);
@@ -693,7 +682,7 @@ abstract class Rox_ActiveRecord {
 			$this->smartQuote($this->_primaryKey, $id)
 		);
 
-		$dataSource = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+		$dataSource = $this->datasource();
 		$dataSource->execute($sql);
 
 		$deleted = $dataSource->affectedRows() > 0;
@@ -729,7 +718,7 @@ abstract class Rox_ActiveRecord {
 			return 'NULL';
 		}
 
-		$type = DATATYPE_STRING;
+		$type = 'string';
 
 		$attributeMap = $this->_attributeMap();
 		if (isset($attributeMap[$attribute])) {
@@ -737,19 +726,19 @@ abstract class Rox_ActiveRecord {
 		}
 
 		switch ($type) {
-			case DATATYPE_INTEGER:
+			case 'integer':
 				return (integer)$value;
 
-			case DATATYPE_BOOLEAN:
+			case 'boolean':
 				return $value ? '1' : '0';
 
-			case DATATYPE_STRING:
-			case DATATYPE_DATE:
-			case DATATYPE_DATETIME:
-			case DATATYPE_BINARY:
-				return "'" . Rox_ConnectionManager::getDataSource($this->_dataSourceName)->escape($value) . "'";
+			case 'string':
+			case 'date':
+			case 'datetime':
+			case 'binary':
+				return "'" . $this->datasource()->escape($value) . "'";
 
-			case DATATYPE_FLOAT:
+			case 'float':
 				return (float)$value;
 		}
 	}
@@ -760,8 +749,8 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	protected function _attributeMap() {
-		if (null === $this->_attributeMap) {
-			$db = Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+		if ($this->_attributeMap === null) {
+			$db = $this->datasource();
 			$this->_attributeMap = $db->generateAttributeMapFromTable($this->_table);
 		}
 
@@ -776,6 +765,15 @@ abstract class Rox_ActiveRecord {
 	 */
 	public function hasAttribute($attribute) {
 		return array_key_exists($attribute, $this->_attributeMap());
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return Rox_DataSource
+	 */
+	public function datasource() {
+		return Rox_ConnectionManager::getDataSource($this->_dataSourceName);
 	}
 
 	/**
@@ -797,9 +795,9 @@ abstract class Rox_ActiveRecord {
 		$normalizedConditions = array();
 		foreach ($conditions as $f => $v) {
 			if (is_int($f)) {
-				$normalizedConditions[] = ' ' . $v;
+				$normalizedConditions[] = $v;
 			} else {
-				$normalizedConditions[] = ' `' . $f . '` = ' . $this->smartQuote($f, $v);
+				$normalizedConditions[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
 			}
 		}
 

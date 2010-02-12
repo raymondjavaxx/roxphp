@@ -21,15 +21,14 @@ class User extends Rox_ActiveRecord {
 			$this->password = md5($this->password);
 		}
 	}
+
+	public function buildConditionsSQL($conditions) {
+		return $this->_buildConditionsSQL($conditions);
+	}
 }
 
 class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * ModelTest::setUp()
-	 *
-	 * @return void
-	 */
 	public function setUp() {
 		$sql = "CREATE TABLE `users` (";
 		$sql.= "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,";
@@ -55,21 +54,11 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
-	/**
-	 * ModelTest::tearDown()
-	 *
-	 * @return void
-	 */
 	public function tearDown() {
 		$ds = Rox_ConnectionManager::getDataSource('rox-test');
 		$ds->execute("DROP TABLE `users`");
 	}
 
-	/**
-	 * ModelTest::testConstructor()
-	 *
-	 * @return void
-	 */
 	public function testConstructor() {
 		$user = new User(array(
 			'first_name' => 'John',
@@ -82,11 +71,6 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('jdoe@example.net', $user->email);
 	}
 
-	/**
-	 * ModelTest::testSaveRead()
-	 *
-	 * @return void
-	 */
 	public function testSaveRead() {
 		$user = new User;
 		$user->first_name = 'John';
@@ -102,11 +86,6 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($user->getData(), $user2->getData());
 	}
 
-	/**
-	 * ModelTest::testFindAll()
-	 *
-	 * @return void
-	 */
 	public function testFindAll() {
 		$users = User::model()->findAll();
 		$this->assertEquals(20, count($users));
@@ -114,11 +93,6 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		//print_r($users);
 	}
 
-	/**
-	 * ModelTest::testCreate()
-	 *
-	 * @return void
-	 */
 	public function testCreate() {
 		$jose = User::model()->create(array(
 			'first_name' => 'Jose',
@@ -131,11 +105,6 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_numeric($jose->getId()));
 	}
 
-	/**
-	 * ModelTest::testProtectedFields()
-	 * 
-	 * @return void
-	 */
 	public function testProtectedFields() {
 		$user = new User(array(
 			'first_name' => 'Jane',
@@ -148,5 +117,20 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
 		$user->setData('role', 'Admin');
 		$this->assertEquals('Admin', $user->getData('role'));
+	}
+
+	public function testBuildConditionsSQL() {
+		$user = new User;
+		$result = $user->buildConditionsSQL(array('first_name' => 'John'));
+		$expected = " WHERE `first_name` = 'John'";
+		$this->assertEquals($expected, $result);
+
+		$result = $user->buildConditionsSQL(array('first_name' => 'John', 'role' => 'Admin'));
+		$expected = " WHERE `first_name` = 'John' AND `role` = 'Admin'";
+		$this->assertEquals($expected, $result);
+
+		$result = $user->buildConditionsSQL('`id` = 40');
+		$expected = " WHERE `id` = 40";
+		$this->assertEquals($expected, $result);
 	}
 }
