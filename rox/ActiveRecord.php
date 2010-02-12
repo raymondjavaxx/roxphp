@@ -342,7 +342,7 @@ abstract class Rox_ActiveRecord {
 	 */
 	public function valid() {
 		if ($this->_errors === null) {
-			$this->_errors = new Rox_ActiveRecord_ErrorCollection($this->_data);
+			$this->_errors = new Rox_ActiveRecord_ErrorCollection;
 		} else {
 			$this->_errors->clear();
 		}
@@ -816,13 +816,11 @@ abstract class Rox_ActiveRecord {
 	 * @param string $message 
 	 * @return void
 	 */
-	public function _validatesPresenceOf($attributeNames, $message = "can't be blank") {
-		if (!is_array($attributeNames)) {
-			$attributeNames = array($attributeNames);
-		}
-
-		foreach ($attributeNames as $attributeName) {
-			$this->_errors->addOnEmpty($attributeName, $message);
+	protected function _validatesPresenceOf($attributeNames, $message = "cannot be left blank") {
+		foreach ((array)$attributeNames as $attributeName) {
+			if (empty($this->_data[$attributeName]) || trim($this->_data[$attributeName]) == '') {
+				$this->_errors->add($attributeName, $message);
+			}
 		}
 	}
 
@@ -833,12 +831,8 @@ abstract class Rox_ActiveRecord {
 	 * @param string $message 
 	 * @return void
 	 */
-	public function _validatesAcceptanceOf($attributeNames, $message = 'must be accepted') {
-		if (!is_array($attributeNames)) {
-			$attributeNames = array($attributeNames);
-		}
-
-		foreach ($attributeNames as $attributeName) {
+	protected function _validatesAcceptanceOf($attributeNames, $message = 'must be accepted') {
+		foreach ((array)$attributeNames as $attributeName) {
 			if ($this->getData($attributeName) != '1') {
 				$this->_errors->add($attributeName, $message);
 			}

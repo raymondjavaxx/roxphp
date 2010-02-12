@@ -31,22 +31,6 @@ class Rox_ActiveRecord_ErrorCollection implements Countable {
 	private $_errors = array();
 
 	/**
-	 * undocumented variable
-	 *
-	 * @var array
-	 */
-	private $_data;
-
-	/**
-	 * undocumented function
-	 *
-	 * @param array $data 
-	 */
-	public function __construct(array &$data) {
-		$this->_data = &$data;
-	}
-
-	/**
 	 * undocumented function
 	 *
 	 * @return integer
@@ -86,18 +70,5 @@ class Rox_ActiveRecord_ErrorCollection implements Countable {
 		}
 
 		$this->_errors[$field] = $errorMessage;
-	}
-
-	/**
-	 * undocumented function
-	 *
-	 * @param string $field 
-	 * @param string $message 
-	 * @return void
-	 */
-	public function addOnEmpty($field, $message = "This field can't be left blank") {
-		if (empty($this->_data[$field]) || trim($this->_data[$field]) == '') {
-			$this->add($field, $message);
-		}
 	}
 }

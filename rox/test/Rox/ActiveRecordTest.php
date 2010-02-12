@@ -22,8 +22,9 @@ class User extends Rox_ActiveRecord {
 		}
 	}
 
-	public function buildConditionsSQL($conditions) {
-		return $this->_buildConditionsSQL($conditions);
+	public function invokeMethod($method) {
+		$params = array_slice(func_get_args(), 1);
+		return call_user_func_array(array($this, $method), $params);
 	}
 }
 
@@ -42,16 +43,6 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
 		$ds = Rox_ConnectionManager::getDataSource('rox-test');
 		$ds->execute($sql);
-
-		for ($i=0; $i<20; $i++) {
-			$user = new User(array(
-				'first_name' => uniqid(),
-				'last_name' => uniqid(),
-				'email' => uniqid() . '@example.net',
-				'password' => 'pass'
-			));
-			$user->save();
-		}
 	}
 
 	public function tearDown() {
@@ -87,8 +78,18 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testFindAll() {
+		for ($i=0; $i<2; $i++) {
+			$user = new User(array(
+				'first_name' => uniqid(),
+				'last_name' => uniqid(),
+				'email' => uniqid() . '@example.net',
+				'password' => 'pass'
+			));
+			$user->save();
+		}
+
 		$users = User::model()->findAll();
-		$this->assertEquals(20, count($users));
+		$this->assertEquals(2, count($users));
 		$this->assertTrue($users[0] instanceof User);
 		//print_r($users);
 	}
@@ -121,16 +122,40 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
 	public function testBuildConditionsSQL() {
 		$user = new User;
-		$result = $user->buildConditionsSQL(array('first_name' => 'John'));
+		$result = $user->invokeMethod('_buildConditionsSQL', array('first_name' => 'John'));
 		$expected = " WHERE `first_name` = 'John'";
 		$this->assertEquals($expected, $result);
 
-		$result = $user->buildConditionsSQL(array('first_name' => 'John', 'role' => 'Admin'));
+		$result = $user->invokeMethod('_buildConditionsSQL', array('first_name' => 'John', 'role' => 'Admin'));
 		$expected = " WHERE `first_name` = 'John' AND `role` = 'Admin'";
 		$this->assertEquals($expected, $result);
 
-		$result = $user->buildConditionsSQL('`id` = 40');
+		$result = $user->invokeMethod('_buildConditionsSQL', '`id` = 40');
 		$expected = " WHERE `id` = 40";
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testValidatesPresenceOf() {
+		$user = new User;
+		$user->valid();
+
+		$user->invokeMethod('_validatesPresenceOf', 'first_name');
+		$result = $user->getValidationErrors();
+		$expected = array('first_name' => 'cannot be left blank');
+		$this->assertEquals($expected, $result);
+
+		$user->invokeMethod('_validatesPresenceOf', 'first_name', 'custom message');
+		$result = $user->getValidationErrors();
+		$expected = array('first_name' => 'custom message');
+		$this->assertEquals($expected, $result);
+
+		$user->invokeMethod('_validatesPresenceOf', array('first_name', 'last_name', 'password'));
+		$result = $user->getValidationErrors();
+		$expected = array(
+			'first_name' => 'cannot be left blank',
+			'last_name' => 'cannot be left blank',
+			'password' => 'cannot be left blank'
+		);
 		$this->assertEquals($expected, $result);
 	}
 }
