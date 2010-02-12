@@ -27,6 +27,9 @@ class InflectorTest extends PHPUnit_Framework_TestCase {
 
 		$result = Rox_Inflector::singularize('tomatoes');
 		$this->assertEquals('tomato', $result);
+
+		$result = Rox_Inflector::singularize('equipment');
+		$this->assertEquals('equipment', $result);	
 	}
 
 	public function testUnderscore() {
@@ -41,16 +44,22 @@ class InflectorTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testTableize() {
-		$result  = Rox_Inflector::tableize('Post');
+		$result = Rox_Inflector::tableize('Post');
 		$this->assertEquals('posts', $result);
 
-		$result  = Rox_Inflector::tableize('PageCategory');
+		$result = Rox_Inflector::tableize('PageCategory');
 		$this->assertEquals('page_categories', $result);
 
-		$result  = Rox_Inflector::tableize('App_Model_Page');
+		$result = Rox_Inflector::tableize('App_Model_Page');
 		$this->assertEquals('pages', $result);
 
-		$result  = Rox_Inflector::tableize('App_Forum_Model_Post');
+		$result = Rox_Inflector::tableize('App_Forum_Model_Post');
 		$this->assertEquals('forum_posts', $result);
+	}
+
+
+	public function testClassify() {
+		$result = Rox_Inflector::classify('user_accounts');
+		$this->assertEquals('UserAccount', $result);
 	}
 }

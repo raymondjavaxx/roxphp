@@ -81,7 +81,7 @@ class Rox_Router {
 
 		if ($base === false) {
 			$base = dirname(dirname(dirname($_SERVER['PHP_SELF'])));
-			$base = $base === DIRECTORY_SEPARATOR ? null : rtrim($base, '/');
+			$base = ($base === DIRECTORY_SEPARATOR) ? null : rtrim($base, '/');
 		}
 
 		return $base;

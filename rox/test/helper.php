@@ -11,3 +11,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once ROX_FRAMEWORK_PATH . '/Loader.php';
 
 Rox_Loader::register();
+
+// Set the default timezone used by all date/time functions
+date_default_timezone_set('America/New_York');

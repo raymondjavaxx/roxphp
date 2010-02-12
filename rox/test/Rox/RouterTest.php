@@ -4,6 +4,18 @@ require_once dirname(dirname(__FILE__)) . '/helper.php';
 
 class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 
+	protected $_originalSuperGlobals = array();
+
+	public function setUp() {
+		$this->_originalSuperGlobals = array(
+			'SERVER' => $_SERVER
+		);
+	}
+
+	public function tearDown() {
+		$_SERVER = $this->_originalSuperGlobals['SERVER'];
+	}
+
 	public function testParseUrl() {
 		$result = Rox_Router::parseUrl('/users/edit/23');
 		$expected = array(
@@ -77,5 +89,39 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEquals($expected, $result);
+	}
+
+
+	public function testParseUrlWithInvalidController() {
+		$this->setExpectedException('Exception');
+		Rox_Router::parseUrl('/articl..es');
+	}
+
+	public function testParseUrlWithInvalidAction() {
+		$this->setExpectedException('Exception');
+		Rox_Router::parseUrl('/articles/ed-it');
+	}
+
+	public function testBase() {
+		$_SERVER['PHP_SELF'] = '/folder/app/webroot/index.php';
+		$result = Rox_Router::base();
+		$this->assertSame('/folder', $result);
+	}
+
+	public function testGetBaseUrl() {
+		$_SERVER['HTTP_HOST'] = 'example.org';
+		$result = Rox_Router::getBaseUrl();
+		$this->assertSame('http://example.org', $result);
+	}
+
+	public function testUrl() {
+		$_SERVER['PHP_SELF'] = '/folder/app/webroot/index.php';
+		$_SERVER['HTTP_HOST'] = 'example.org';
+
+		$result = Rox_Router::url('/articles');
+		$this->assertSame('/folder/articles', $result);
+
+		$result = Rox_Router::url('/articles', true);
+		$this->assertSame('http://example.org/folder/articles', $result);
 	}
 }
