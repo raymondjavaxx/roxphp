@@ -24,6 +24,12 @@
 class Rox_ActiveRecord_Association_Collection {
 
 	protected $_scope = array();
+
+	/**
+	 * Model instance
+	 *
+	 * @var Rox_ActiveRecord
+	 */
 	protected $_model;
 
 	public function __construct($class, $scope) {
@@ -49,5 +55,10 @@ class Rox_ActiveRecord_Association_Collection {
 	public function findCount($conditions = array()) {
 		$conditions += $this->_scope;
 		return $this->_model->findCount($conditions);
+	}
+
+	public function paginate($options) {
+		$options += array('conditions' => $this->_scope);
+		return $this->_model->paginate($options);
 	}
 }
