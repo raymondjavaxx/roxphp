@@ -17,24 +17,27 @@
 	</style>
 </head>
 <body>
-	<div id="header">
-		<p>
-			<a href="<?php echo Rox_Router::url('/'); ?>">
-			<img src="<?php echo Rox_Router::url('/img/rox_logo.png'); ?>" alt="RoxPHP" /></a>
-		</p>
-	</div>
-	<div id="container">
-		<?php echo $rox_layout_content; ?>
-		<?php if (ROX_DEBUG) : ?>
-			<div class="exception">
-				<?php echo $exception->getMessage(); ?><br />
-				File: <?php echo $exception->getFile(); ?><br />
-				Line: <?php echo $exception->getLine(); ?>
-			</div>
-		<?php endif; ?>
-	</div>
-	<div class="footer">
-		<p>Powered by <a href="http://roxphp.com">RoxPHP</a></p>
+	<div id="wrapper">
+		<div id="header">
+			<p>
+				<a href="<?php echo Rox_Router::url('/'); ?>">
+				<img src="<?php echo Rox_Router::url('/img/rox_logo.png'); ?>" alt="RoxPHP" /></a>
+			</p>
+		</div>
+		<div id="container">
+			<?php echo $rox_layout_content; ?>
+			<?php if (ROX_DEBUG) : ?>
+				<div class="exception">
+					<?php echo $exception->getMessage(); ?><br />
+					File: <?php echo $exception->getFile(); ?><br />
+					Line: <?php echo $exception->getLine(); ?>
+					<pre><?php echo $exception->getTraceAsString(); ?></pre>
+				</div>
+			<?php endif; ?>
+		</div>
+		<div id="footer">
+			<p>Powered by <a href="http://roxphp.com">RoxPHP</a></p>
+		</div>
 	</div>
 </body>
 </html>

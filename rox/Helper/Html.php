@@ -24,6 +24,18 @@
 class Rox_Helper_Html {
 
 	/**
+	 * Renders a link element for embeding favicons
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function favicon($path = '/favicon.ico') {
+		$result = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon" />',
+			Rox_Router::url($path));
+		return $result;
+	}
+
+	/**
 	 * Rox_Helper_Html::image()
 	 *
 	 * @param string $path

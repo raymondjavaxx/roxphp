@@ -83,7 +83,7 @@ class Rox_Controller {
 		}
 
 		$vars = get_class_vars('ApplicationController');
-		$this->helpers = array_merge($vars["helpers"], $this->helpers);
+		$this->helpers = array_merge($vars['helpers'], $this->helpers);
 	}
 
 	/**

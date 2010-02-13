@@ -38,6 +38,15 @@ class Rox_Exception_Handler {
 	}
 
 	/**
+	 * Registers Rox_Exception_Handler class as exception handler
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		set_exception_handler(array('Rox_Exception_Handler', 'handle'));
+	}
+
+	/**
 	 * Renders the error page associated with the exception code
 	 * 
 	 * @param Exception $exception   

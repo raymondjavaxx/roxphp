@@ -67,7 +67,7 @@ class Rox_Helper_Form {
 				$controller = Rox_Inflector::pluralize($controller);
 				$options['action'] = '/'.$controller.'/add';
 			}
-			return $this->create($model, $options['action']);
+			return $this->create($model, $options['action'], $options);
 		}
 
 		if (!is_object($model) || !($model instanceof  Rox_ActiveRecord)) {
@@ -173,12 +173,15 @@ class Rox_Helper_Form {
 				break;
 		}
 
+		$divClasses = array('input', sprintf('%s-input', $options['type']));
+
 		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
+			$divClasses[] = 'field-with-errors';
 			$output[] = sprintf('<div class="error">%s</div>',
 				htmlspecialchars($this->_validationErrors[$this->_currentModel][$name]));
 		}
 
-		return sprintf('<div class="input %s-input">%s</div>', $options['type'], implode('', $output));
+		return sprintf('<div class="%s">%s</div>', implode(' ', $divClasses), implode('', $output));
 	}
 
 	/**

@@ -100,25 +100,27 @@ form .select-input label {
 }
 
 form .input .error {
-	-moz-border-radius:4px;
-	width:300px;
-	background-color:#FFCFCF;
-	border-color:#E5A3A3;
 	color:#D8000C;
-	padding:3px 10px;
 	margin:3px 0 0 0;
+	font-style:italic;
 }
 
 form .text-input input,
-form .password-input input,
-form .textarea-input input {
+form .password-input input {
+	width:300px;
 	font-size:16px;
 	padding:3px;
-	font-weight:bold;
+}
+
+form .textarea-input textarea {
+	width:400px;
+	height:160px;
+	font-size:16px;
+	padding:3px;
 }
 
 form .input {
-	margin-bottom: 1em;
+	margin-bottom:1em;
 }
 
 form .input label {

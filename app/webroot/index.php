@@ -17,13 +17,13 @@
 define('DS', DIRECTORY_SEPARATOR);
 
 define('ROX_APP_PATH', dirname(dirname(__FILE__)));
-define('ROX_FRAMEWORK_PATH', dirname(ROX_APP_PATH).DS.'rox');
+define('ROX_FRAMEWORK_PATH', dirname(ROX_APP_PATH).'/rox');
 
 set_include_path(implode(PATH_SEPARATOR, array(
-	ROX_APP_PATH.DS.'models',
-	ROX_APP_PATH.DS.'controllers',
-	ROX_APP_PATH.DS.'helpers',
-	ROX_APP_PATH.DS.'mailer',
+	ROX_APP_PATH.'/models',
+	ROX_APP_PATH.'/controllers',
+	ROX_APP_PATH.'/helpers',
+	ROX_APP_PATH.'/mailer',
 	ROX_FRAMEWORK_PATH,
 	// uncoment the next line to preserve default include paths
 	// get_include_path()
@@ -37,7 +37,7 @@ error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // load and set the exception handler
 require ROX_FRAMEWORK_PATH.'/Exception/Handler.php';
-set_exception_handler(array('Rox_Exception_Handler', 'handle'));
+Rox_Exception_Handler::register();
 
 // load and register the autoloader
 require ROX_FRAMEWORK_PATH.'/Loader.php';

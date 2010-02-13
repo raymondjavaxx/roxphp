@@ -58,7 +58,7 @@ class Rox_ActiveRecord_Association_Collection {
 	}
 
 	public function paginate($options) {
-		$options += array('conditions' => $this->_scope);
+		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->paginate($options);
 	}
 }
