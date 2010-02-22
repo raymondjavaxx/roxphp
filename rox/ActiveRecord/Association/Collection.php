@@ -38,22 +38,22 @@ class Rox_ActiveRecord_Association_Collection {
 	}
 
 	public function find($conditions = array(), $options = array()) {
-		$options += array('conditions' => $this->_scope);
+		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->find($conditions, $options);
 	}
 
 	public function findAll($conditions = array(), $options = array()) {
-		$conditions += $this->_scope;
+		$conditions = array_merge((array)$conditions, $this->_scope);
 		return $this->_model->findAll($conditions, $options);
 	}
 
 	public function deleteAll($conditions = array()) {
-		$conditions += $this->_scope;
+		$conditions = array_merge((array)$conditions, $this->_scope);
 		$this->_model->deleteAll($conditions);
 	}
 
 	public function findCount($conditions = array()) {
-		$conditions += $this->_scope;
+		$conditions = array_merge((array)$conditions, $this->_scope);
 		return $this->_model->findCount($conditions);
 	}
 
