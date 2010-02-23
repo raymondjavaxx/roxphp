@@ -230,7 +230,7 @@ abstract class Rox_ActiveRecord {
 
 		if (strpos($method, 'findBy') === 0) {
 			$key = Rox_Inflector::underscore(substr($method, 6));
-			return $this->find(array($key => $args[0]));
+			return $this->findFirst(array('conditions' => array($key => $args[0])));
 		}
 
 		$assoc = $this->_association('belongs_to', $method);
@@ -241,7 +241,7 @@ abstract class Rox_ActiveRecord {
 		$assoc = $this->_association('has_one', $method);
 		if ($assoc) {
 			$model = self::model($assoc['class']);
-			return $model->find(array($assoc['key'] => $this->getId()));
+			return $model->findFirst(array('conditions' => array($assoc['key'] => $this->getId())));
 		}
 
 		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
@@ -515,25 +515,27 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Rox_ActiveRecord::findAll()
 	 *
-	 * @param array|string $conditions
 	 * @param array $options  
 	 * @return array
 	 */
-	public function findAll($conditions = array(), $options = array()) {
-		$options = array_merge(array(
+	public function findAll($options = array()) {
+		$defaults = array(
+			'conditions' => array(),
 			'attributes' => null,
-			'order'  => null,
-			'limit'  => null
-		), $options);
+			'order'      => null,
+			'limit'      => null
+		);
 
-		if ($options['attributes'] === null) {
+		$options += $defaults;
+
+		if (empty($options['attributes'])) {
 			$options['attributes'] = '*';
 		} else if (is_array($options['attributes'])) {
 			$options['attributes'] = '`' . implode('`, `', $options['attributes']) . '`';
 		}
 
 		$sql = sprintf('SELECT %s FROM `%s`', $options['attributes'], $this->_table);
-		$sql.= $this->_buildConditionsSQL($conditions);
+		$sql.= $this->_buildConditionsSQL($options['conditions']);
 
 		if (!empty($options['order'])) {
 			$sql .= ' ORDER BY ' . $options['order'];
@@ -559,7 +561,7 @@ abstract class Rox_ActiveRecord {
 			'page'       => 1,
 			'conditions' => array(),
 			'order'      => null,
-			'attributes'     => null
+			'attributes' => null
 		);
 
 		$options = array_merge($defaultOptions, $options);
@@ -573,10 +575,11 @@ abstract class Rox_ActiveRecord {
 			$pages = (integer)ceil($total / $options['per_page']);
 			$currentPage = min(max(intval($options['page']), 1), $pages);
 			$limit = sprintf('%d, %d', ($currentPage - 1) * $options['per_page'], $options['per_page']);
-			$items = $this->findAll($options['conditions'], array(
+			$items = $this->findAll(array(
+				'conditions' => $options['conditions'],
 				'attributes' => $options['attributes'],
-				'order'  => $options['order'],
-				'limit'  => $limit
+				'order'      => $options['order'],
+				'limit'      => $limit
 			));
 		}
 
@@ -591,48 +594,61 @@ abstract class Rox_ActiveRecord {
 	/**
 	 * Rox_ActiveRecord::find()
 	 *
-	 * @param mixed $attributes
+	 * @param integer|string|array $ids
 	 * @param array $options
-	 * @return object
+	 * @return array|Rox_ActiveRecord
 	 * @throws Rox_ActiveRecord_RecordNotFound
 	 */
-	public function find($conditions = array(), $options = array()) {
-		$checkResult = false;
+	public function find($ids, $options = array()) {
+		$checkArray = is_array($ids);
 
-		$options = array_merge(array('attributes' => null, 'order' => null,
-			'conditions' => array()), $options, array('limit' => 1));
+		$options = array_merge_recursive(array('attributes' => null, 'order' => null),
+			$options, array('conditions' => array($this->_primaryKey => $ids)));
 
-		if (!is_array($conditions)) {
-			$conditions = array_merge($options['conditions'], array(
-				$this->_primaryKey => $conditions));
-			$checkResult = true;
+		$results = $this->findAll($options);
+		if ($checkArray) {
+			if (count($results) == count($ids)) {
+				return $results;
+			} else {
+				throw new Rox_ActiveRecord_RecordNotFound("Couldn't find all with IDs ({$ids})");
+			}
 		}
 
-		$result = $this->findAll($conditions, $options);
-		$result = reset($result);
-		if ($checkResult && !$result) {
-			throw new Rox_ActiveRecord_RecordNotFound;
+		$result = reset($results);
+		if (!$result) {
+			throw new Rox_ActiveRecord_RecordNotFound("Couldn't find record with ID = {$ids}");
 		}
 
 		return $result;
 	}
 
 	/**
+	 * Rox_ActiveRecord_Abstract::findFirst()
+	 *
+	 * @param array $options 
+	 * @return Rox_ActiveRecord
+	 */
+	public function findFirst($options = array()) {
+		$options = array_merge($options, array(
+			'limit' => 1
+		));
+
+		$results = $this->findAll($options);
+		return reset($results);
+	}
+
+	/**
 	 * Rox_ActiveRecord_Abstract::findLast()
 	 * 
-	 * @param array|string $conditions
-	 * @param array|string $attributes
-	 * @return object
+	 * @param array $options
+	 * @return Rox_ActiveRecord
 	 */
-	public function findLast($conditions = null, $attributes = null) {
-		$options = array(
-			'attributes' => $attributes,
-			'order' => '`'.$this->_primaryKey.'` DESC',
-			'limit' => 1
-		);
+	public function findLast($options = array()) {
+		$options = array_merge($options, array(
+			'order' => '`' . $this->_primaryKey . '` DESC',
+		));
 
-		$results = $this->findAll($conditions, $options);
-		return reset($results);
+		return $this->findFirst($options);
 	}
 
 	/**
@@ -642,8 +658,7 @@ abstract class Rox_ActiveRecord {
 	 * @return array
 	 */
 	public function findBySql($sql) {
-		$dataSource = $this->datasource();
-		$rows = $dataSource->query($sql);
+		$rows = $this->datasource()->query($sql);
 
 		$className = get_class($this);
 
@@ -659,18 +674,13 @@ abstract class Rox_ActiveRecord {
 	}
 
 	/**
-	 * Deletes a record
+	 * Deletes the record
 	 *
-	 * @param integer $id
 	 * @return boolean
 	 */
-	public function delete($id = null) {
-		if (empty($id)) {
-			$id = $this->getId();
-		}
-
-		if (empty($id)) {
-			return false;
+	public function delete() {
+		if ($this->_newRecord) {
+			throw new Exception("You can't delete new records");
 		}
 
 		$this->_beforeDelete();
@@ -679,7 +689,7 @@ abstract class Rox_ActiveRecord {
 			"DELETE FROM `%s` WHERE `%s` = %s",
 			$this->_table,
 			$this->_primaryKey,
-			$this->smartQuote($this->_primaryKey, $id)
+			$this->smartQuote($this->_primaryKey, $this->getId())
 		);
 
 		$dataSource = $this->datasource();
@@ -700,7 +710,7 @@ abstract class Rox_ActiveRecord {
 	 * @return void
 	 */
 	public function deleteAll($conditions = array()) {
-		$records = $this->findAll($conditions);
+		$records = $this->findAll(array('conditions' => $conditions));
 		foreach ($records as $record) {
 			$record->delete();
 		}
@@ -793,11 +803,16 @@ abstract class Rox_ActiveRecord {
 		}
 
 		$normalizedConditions = array();
-		foreach ($conditions as $f => $v) {
-			if (is_int($f)) {
-				$normalizedConditions[] = $v;
+		foreach ($conditions as $field => $value) {
+			if (is_int($field)) {
+				$normalizedConditions[] = '(' . $value . ')';
+			} else if (is_array($value)) {
+				foreach ($value as &$valueRef) {
+					$valueRef = $this->smartQuote($field, $valueRef);
+				}
+				$normalizedConditions[] = '`' . $field . '` IN(' . implode(', ', $value) . ')';
 			} else {
-				$normalizedConditions[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
+				$normalizedConditions[] = '`' . $field . '` = ' . $this->smartQuote($field, $value);
 			}
 		}
 

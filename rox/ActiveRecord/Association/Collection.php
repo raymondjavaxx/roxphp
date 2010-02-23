@@ -37,14 +37,24 @@ class Rox_ActiveRecord_Association_Collection {
 		$this->_scope = $scope;
 	}
 
-	public function find($conditions = array(), $options = array()) {
+	public function find($ids, $options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->find($conditions, $options);
+		return $this->_model->find($ids, $options);
 	}
 
-	public function findAll($conditions = array(), $options = array()) {
-		$conditions = array_merge((array)$conditions, $this->_scope);
-		return $this->_model->findAll($conditions, $options);
+	public function findFirst($options) {
+		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
+		return $this->_model->findFirst($options);
+	}
+
+	public function findLast($options) {
+		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
+		return $this->_model->findLast($options);
+	}
+
+	public function findAll($options = array()) {
+		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
+		return $this->_model->findAll($options);
 	}
 
 	public function deleteAll($conditions = array()) {

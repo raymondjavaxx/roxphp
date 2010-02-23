@@ -23,9 +23,7 @@
  */
 class Rox_ActiveRecord_RecordNotFound extends Exception {
 
-	protected $code = 404;
-	protected $message = 'Record not found';
-
-	public function __construct() {
+	public function __construct($message = 'Record not found') {
+		parent::__construct($message, 404);
 	}
 }
