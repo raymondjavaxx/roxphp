@@ -94,7 +94,7 @@ class Rox_Controller {
 
 		foreach ($this->helpers as $helper) {
 			$helperName = Rox_Inflector::lowerCamelize($helper);
-			$this->set($helperName, Rox::getHelper($helperName));
+			$this->set($helperName, Rox::getHelper($helper));
 		}
 
 		$viewPath = $this->params['controller'];
