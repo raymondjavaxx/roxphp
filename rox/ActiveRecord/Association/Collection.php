@@ -42,12 +42,12 @@ class Rox_ActiveRecord_Association_Collection {
 		return $this->_model->find($ids, $options);
 	}
 
-	public function findFirst($options) {
+	public function findFirst($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->findFirst($options);
 	}
 
-	public function findLast($options) {
+	public function findLast($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->findLast($options);
 	}
@@ -67,7 +67,7 @@ class Rox_ActiveRecord_Association_Collection {
 		return $this->_model->findCount($conditions);
 	}
 
-	public function paginate($options) {
+	public function paginate($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->paginate($options);
 	}
