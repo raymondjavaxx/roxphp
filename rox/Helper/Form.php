@@ -175,6 +175,10 @@ class Rox_Helper_Form {
 
 		$divClasses = array('input', sprintf('%s-input', $options['type']));
 
+		if (isset($options['hint'])) {
+			$output[] = sprintf('<span class="hint">%s</span>', $options['hint']);
+		}
+
 		if (isset($this->_validationErrors[$this->_currentModel][$name])) {
 			$divClasses[] = 'field-with-errors';
 			$output[] = sprintf('<div class="error">%s</div>',

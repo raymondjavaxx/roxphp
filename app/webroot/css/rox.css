@@ -130,3 +130,9 @@ form .input label {
 form .checkbox-input label {
 	display:inline;
 }
+
+form .input .hint {
+	color:#555;
+	font-size:12px;
+	display:block;
+}
