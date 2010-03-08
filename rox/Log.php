@@ -32,7 +32,7 @@ class Rox_Log {
 	protected static $_adapter;
 
 	public static function init($config = array()) {
-		self::$_config += $config;
+		self::$_config = ($config + self::$_config);
 	}
 
 	public static function write($type, $message) {

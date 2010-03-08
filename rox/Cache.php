@@ -44,7 +44,7 @@ class Rox_Cache {
 	 * @return void
 	 */
 	public static function init($config = array()) {
-		self::$_config += $config;
+		self::$_config = ($config + self::$_config);
 	}
 
 	/**
