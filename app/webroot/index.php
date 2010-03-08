@@ -23,7 +23,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 	ROX_APP_PATH.'/models',
 	ROX_APP_PATH.'/controllers',
 	ROX_APP_PATH.'/helpers',
-	ROX_APP_PATH.'/mailer',
+	ROX_APP_PATH.'/mailers',
 	ROX_FRAMEWORK_PATH,
 	// uncoment the next line to preserve default include paths
 	// get_include_path()

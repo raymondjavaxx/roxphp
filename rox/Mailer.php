@@ -121,8 +121,6 @@ class Rox_Mailer {
 		$mailerMehod = Rox_Inflector::lowerCamelize($mailerMethod);
 		$parameters = func_get_args();
 
-		require_once ROX_APP_PATH.'/'.$mailerClass.'.php';
-
 		$mailer = new $mailerClass;
 		call_user_func_array(array($mailer, $mailerMehod), array_slice($parameters, 1));
 
