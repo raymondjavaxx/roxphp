@@ -47,6 +47,16 @@ class Rox_Validator {
 	}
 
 	/**
+	 * undocumented function
+	 *
+	 * @param string $subject 
+	 * @return boolean
+	 */
+	public static function url($subject) {
+		return (boolean)filter_var($subject, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+	}
+
+	/**
 	 * Rox_Validator::minLength()
 	 *
 	 * @param string $subject
