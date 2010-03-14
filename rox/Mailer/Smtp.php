@@ -53,9 +53,9 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	public function send() {
 		$this->_connect();
 		$this->_sendLine('EHLO roxphp', 250);
-		$this->_sendLine('AUTH LOGIN', 250);
+		$this->_sendLine('AUTH LOGIN', 334);
 		$this->_sendLine(base64_encode($this->_options['username']), 334);
-		$this->_sendLine(base64_encode($this->_options['password']), 334);
+		$this->_sendLine(base64_encode($this->_options['password']), 235);
 		$this->_sendLine('MAIL FROM:<' . $this->_from . '>', 250);
 
 		$allRecipients = array_merge($this->_to, $this->_cc, $this->_bcc);
@@ -123,7 +123,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 		if (!is_null($expectedCode)) {
 			$response = $this->_getResponse();
 			if (strpos($response, (string)$expectedCode) === false) {
-				//throw new Exception('Expected response code ' . $expectedCode . ' not found');
+				throw new Exception("Unexpected response '{$response}'");
 			}
 		}
 	}
