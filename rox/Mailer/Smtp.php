@@ -14,11 +14,6 @@
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
- 
-/**
- * @see Rox_Mailer_Abstract
- */
-require_once 'Abstract.php';
 
 /**
  * SMTP Mailer
@@ -57,7 +52,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	 */
 	public function send() {
 		$this->_connect();
-		$this->_sendLine('EHLO roxphp');
+		$this->_sendLine('EHLO roxphp', 250);
 		$this->_sendLine('AUTH LOGIN', 250);
 		$this->_sendLine(base64_encode($this->_options['username']), 334);
 		$this->_sendLine(base64_encode($this->_options['password']), 334);
