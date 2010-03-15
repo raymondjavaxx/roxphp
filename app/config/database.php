@@ -2,14 +2,14 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 - 2009 Ramon Torres
+ * Copyright (C) 2008 - 2010 Ramon Torres
  *
  * This Software is released under the MIT License.
  * See license.txt for more details.
  *
- * @package Rox
+ * @package App
  * @author Ramon Torres
- * @copyright Copyright (c) 2008 - 2009 Ramon Torres (http://roxphp.com)
+ * @copyright Copyright (C) 2008 - 2010 Ramon Torres
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
