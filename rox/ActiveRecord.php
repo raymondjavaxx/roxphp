@@ -109,6 +109,13 @@ abstract class Rox_ActiveRecord {
 	protected $_errors;
 
 	/**
+	 * Timezone of magic timestamp attributes
+	 *
+	 * @var string
+	 */
+	protected $_timestampsTimezone = 'local';
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $attributes
@@ -292,6 +299,11 @@ abstract class Rox_ActiveRecord {
 		$this->setData($attribute, $value);
 	}
 
+	public function __isset($attribute) {
+		$attribute = Rox_Inflector::underscore($attribute);
+		return array_key_exists($attribute, $this->_data);
+	}
+
 	/**
 	 * undocumented function
 	 *
@@ -395,6 +407,7 @@ abstract class Rox_ActiveRecord {
 		}
 
 		$this->_beforeSave();
+		$this->_updateMagicTimestamps();
 
 		$data = $this->getData();
 		if (empty($data)) {
@@ -413,10 +426,6 @@ abstract class Rox_ActiveRecord {
 		$dataSource = $this->datasource();
 
 		if ($this->_newRecord) {
-			if ($this->hasAttribute('created_at') && !isset($data['created_at'])) {
-				$data['created_at'] = date('Y-m-d H:i:s');
-			}
-
 			foreach ($data as $f => $v) {
 				$data[$f] = $this->smartQuote($f, $v);
 			}
@@ -439,10 +448,6 @@ abstract class Rox_ActiveRecord {
 				return true;
 			}
 		} else {
-			if ($this->hasAttribute('updated_at') && !isset($data['updated_at'])) {
-				$data['updated_at'] = date('Y-m-d H:i:s');
-			}
-
 			$updateData = array();
 			foreach ($data as $f => $v) {
 				$updateData[] = '`' . $f . '` = ' . $this->smartQuote($f, $v);
@@ -464,6 +469,24 @@ abstract class Rox_ActiveRecord {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Updates the magic timestamp attributes (created_at and updated_at)
+	 *
+	 * @return void
+	 */
+	protected function _updateMagicTimestamps() {
+		$timestamp = $this->_timestampsTimezone == 'local' ?
+			date('Y-m-d H:i:s') : gmdate('Y-m-d H:i:s');
+
+		if ($this->_newRecord && $this->hasAttribute('created_at') && empty($this->created_at)) {
+			$this->created_at = $timestamp;
+		}
+
+		if ($this->hasAttribute('updated_at') && empty($data->updated_at)) {
+			$this->updated_at = $timestamp;
+		}
 	}
 
 	/**
