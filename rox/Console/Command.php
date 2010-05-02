@@ -13,13 +13,14 @@
  * @license http://roxphp.com/static/license.html
  * @version $Id$
  */
+abstract class Rox_Console_Command {
 
-class Rox_Console_Command {
-
+	public $stdin;
 	public $stdout;
 	public $stderr;
 
 	public function __construct() {
+		$this->stdin  = fopen('php://stdin', 'r');
 		$this->stdout = fopen('php://stdout', 'w');
 		$this->stderr = fopen('php://stderr', 'w');
 	}
@@ -31,8 +32,6 @@ class Rox_Console_Command {
 	}
 
 	public function run($argc, $argv) {
-		$this->hr();
-		print_r($argv);
 	}
 
 	public function hr() {
@@ -41,6 +40,10 @@ class Rox_Console_Command {
 
 	public function out($data) {
 		return fwrite($this->stdout, $data . "\n");
+	}
+
+	public function in() {
+		return rtrim(fgets($this->stdin));
 	}
 
 	public function error($data) {

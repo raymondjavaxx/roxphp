@@ -23,33 +23,61 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 	}
 
 	public function run($argc, $argv) {
-		/*
+		switch ($argv[2]) {
+			case 'controller':
+				$this->_generateController($argv[3]);
+				break;
+			case 'model':
+				$this->_generateModel($argv[3]);
+				break;
+		}
+	}
+
+	protected function _generateModel($name) {
 		$vars = array(
-			'class_name' => Rox_Inflector::classify($argv[3]),
-			'friendly_model_name' => Rox_Inflector::humanize($argv[3]),
+			'class_name' => Rox_Inflector::classify($name),
+			'friendly_model_name' => Rox_Inflector::humanize(Rox_Inflector::classify($name)),
 			'package_name' => 'App',
 			'year' => date('Y')
 		);
 
 		$data = $this->_renderTemplate('model', $vars);
-		file_put_contents(ROX_APP_PATH . '/models/' . Rox_Inflector::classify($argv[3]) . '.php', $data);
-		*/
+		$this->_writeFile('/models/' . Rox_Inflector::classify($name) . '.php', $data);
+	}
 
+	protected function _generateController($name) {
 		$vars = array(
-			'controller_name'     => Rox_Inflector::tableize($argv[3]),
-			'controller_class'    => Rox_Inflector::camelize(Rox_Inflector::tableize($argv[3]) . '_controller'),
-			'model_name'          => Rox_Inflector::underscore(Rox_Inflector::singularize($argv[3])),
-			'model_class'         => Rox_Inflector::classify($argv[3]),
-			'model_var_name'      => Rox_Inflector::lowerCamelize(Rox_Inflector::classify($argv[3])),
-			'model_var_plural_name' => Rox_Inflector::lowerCamelize(Rox_Inflector::tableize($argv[3])),
-			'friendly_model_name' => Rox_Inflector::humanize($argv[3]),
-			'friendly_controller_name' => Rox_Inflector::humanize(Rox_Inflector::tableize($argv[3])),
+			'controller_name'     => Rox_Inflector::tableize($name),
+			'controller_class'    => Rox_Inflector::camelize(Rox_Inflector::tableize($name) . '_controller'),
+			'model_name'          => Rox_Inflector::underscore(Rox_Inflector::singularize($name)),
+			'model_class'         => Rox_Inflector::classify($name),
+			'model_var_name'      => Rox_Inflector::lowerCamelize(Rox_Inflector::classify($name)),
+			'model_var_plural_name' => Rox_Inflector::lowerCamelize(Rox_Inflector::tableize($name)),
+			'friendly_model_name' => Rox_Inflector::humanize($name),
+			'friendly_controller_name' => Rox_Inflector::humanize(Rox_Inflector::tableize($name)),
 			'package_name'        => 'App',
 			'year'                => date('Y')
 		);
 
 		$data = $this->_renderTemplate('controller', $vars);
-		file_put_contents(ROX_APP_PATH . '/controllers/' . $vars['controller_class'] . '.php', $data);
+		$this->_writeFile('/controllers/' . $vars['controller_class'] . '.php', $data);
+	}
+
+	protected function _writeFile($file, $data) {
+		$absolutePath = ROX_APP_PATH . $file;
+
+		if (file_exists($absolutePath)) {
+			do {
+				$this->out("File app/{$file} already exists. Do you want to override it?(y,N)");
+				$answer = strtolower($this->in());
+			} while (!in_array($answer, array('', 'y', 'n')));
+
+			if ($answer != 'y') {
+				return false;
+			}
+		}
+
+		return file_put_contents($absolutePath, $data);
 	}
 
 	protected function _renderTemplate($name, $vars = array()) {
