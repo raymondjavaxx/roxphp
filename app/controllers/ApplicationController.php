@@ -22,4 +22,11 @@
  * @license http://roxphp.com/static/license.html
  */
 abstract class ApplicationController extends Rox_Controller {
+
+	/**
+	 * Commonly used helpers
+	 *
+	 * @var array
+	 */
+	public $helpers = array('Form', 'Html', 'Pagination');
 }
