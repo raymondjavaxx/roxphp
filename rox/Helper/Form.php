@@ -242,6 +242,15 @@ class Rox_Helper_Form {
 		return $output;
 	}
 
+	public function error($field) {
+		if (!isset($this->_validationErrors[$this->_currentModel][$field])) {
+			return null;
+		}
+
+		return sprintf('<div class="error">%s</div>',
+			htmlspecialchars($this->_validationErrors[$this->_currentModel][$field]));
+	}
+
 	/**
 	 * Renders a hidden input field
 	 *
@@ -286,7 +295,8 @@ class Rox_Helper_Form {
 		$options = array_merge(array(
 			'value' => null,
 			'attributes' => array(),
-			'multiple'  => false
+			'multiple'  => false,
+			'empty' => false
 		), $options);
 
 		if ($options['value'] === null) {
@@ -310,6 +320,11 @@ class Rox_Helper_Form {
 
 		$output = array();
 		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
+
+		if ($options['empty'] !== false) {
+			$output[] = sprintf('<option>%s</option>', htmlspecialchars($options['empty']));
+		}
+
 		foreach ($optionTags as $value => $label) {
 			$isSelected = ($value == $options['value']) ||
 				($options['multiple'] && is_array($options['value']) && in_array($value, $options['value']));
@@ -320,6 +335,7 @@ class Rox_Helper_Form {
 					htmlspecialchars($value), htmlspecialchars($label));
 			}
 		}
+
 		$output[] = '</select>';
 
 		return implode('', $output);
