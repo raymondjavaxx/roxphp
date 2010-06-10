@@ -80,8 +80,8 @@ class Rox_Router {
 		static $base = false;
 
 		if ($base === false) {
-			$base = dirname(dirname(dirname($_SERVER['PHP_SELF'])));
-			$base = ($base === DIRECTORY_SEPARATOR) ? null : rtrim($base, '/');
+			$base = str_replace('\\', '/', dirname($_SERVER['PHP_SELF']));
+			$base = rtrim(str_replace(array('/app/webroot', '/webroot'), '', $base), '/');
 		}
 
 		return $base;
