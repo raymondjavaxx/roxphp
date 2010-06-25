@@ -546,7 +546,8 @@ abstract class Rox_ActiveRecord {
 			'conditions' => array(),
 			'attributes' => null,
 			'order'      => null,
-			'limit'      => null
+			'limit'      => null,
+			'group'      => null
 		);
 
 		$options += $defaults;
@@ -559,6 +560,10 @@ abstract class Rox_ActiveRecord {
 
 		$sql = sprintf('SELECT %s FROM `%s`', $options['attributes'], $this->_table);
 		$sql.= $this->_buildConditionsSQL($options['conditions']);
+
+		if (!empty($options['group'])) {
+			$sql .= ' GROUP BY ' . $options['order'];
+		}
 
 		if (!empty($options['order'])) {
 			$sql .= ' ORDER BY ' . $options['order'];
@@ -584,7 +589,8 @@ abstract class Rox_ActiveRecord {
 			'page'       => 1,
 			'conditions' => array(),
 			'order'      => null,
-			'attributes' => null
+			'attributes' => null,
+			'group'      => null
 		);
 
 		$options = array_merge($defaultOptions, $options);
@@ -602,7 +608,8 @@ abstract class Rox_ActiveRecord {
 				'conditions' => $options['conditions'],
 				'attributes' => $options['attributes'],
 				'order'      => $options['order'],
-				'limit'      => $limit
+				'limit'      => $limit,
+				'group'      => $options['group']
 			));
 		}
 
