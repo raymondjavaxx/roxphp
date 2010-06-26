@@ -4,16 +4,19 @@
  *
  * Copyright (C) 2008 - 2010 Ramon Torres
  *
- * This Software is released under the MIT License.
- * See license.txt for more details.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
- * @package App
- * @author Ramon Torres
- * @copyright Copyright (C) 2008 - 2010 Ramon Torres
- * @license http://roxphp.com/static/license.html
- * @version $Id: Gen.php 171 2010-05-02 20:28:43Z raymondjavaxx $
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres
+ * @package Rox
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+/**
+ * undocumented class
+ *
+ * @package default
+ */
 class Rox_Console_Command_Gen extends Rox_Console_Command {
 
 	public function header() {

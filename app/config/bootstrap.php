@@ -4,14 +4,12 @@
  *
  * Copyright (C) 2008 - 2010 Ramon Torres
  *
- * This Software is released under the MIT License.
- * See license.txt for more details.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres
  * @package App
- * @author Ramon Torres
- * @copyright Copyright (C) 2008 - 2010 Ramon Torres
- * @license http://roxphp.com/static/license.html
- * @version $Id$
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
