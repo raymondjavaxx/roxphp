@@ -11,7 +11,7 @@
  * @author Ramon Torres
  * @copyright Copyright (C) 2008 - 2010 Ramon Torres
  * @license http://roxphp.com/static/license.html
- * @version $Id$
+ * @version $Id: Gen.php 171 2010-05-02 20:28:43Z raymondjavaxx $
  */
 
 class Rox_Console_Command_Gen extends Rox_Console_Command {
@@ -30,6 +30,8 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			case 'model':
 				$this->_generateModel($argv[3]);
 				break;
+			case 'views':
+				$this->_generateViews($argv[3]);
 		}
 	}
 
@@ -63,8 +65,35 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 		$this->_writeFile('/controllers/' . $vars['controller_class'] . '.php', $data);
 	}
 
+	protected function _generateViews($name) {
+		$tableName = Rox_Inflector::tableize($name);
+		$datasource = Rox_ConnectionManager::getDataSource();
+		$attributes = $datasource->generateAttributeMapFromTable($tableName);
+
+		$templates = array('add', 'edit', 'index');
+
+		$vars = array(
+			'attributes' => $attributes,
+			'friendlyModelName' => Rox_Inflector::humanize(Rox_Inflector::classify($name)),
+			'modelVarName' => Rox_Inflector::lowerCamelize(Rox_Inflector::classify(Rox_Inflector::singularize($name))),
+			'pluralModelVarName' => Rox_Inflector::lowerCamelize(Rox_Inflector::pluralize($name))
+		);
+
+		foreach ($templates as $template) {	
+			$data = $this->_renderTemplate("views/{$template}", $vars, true);	
+			$folder = Rox_Inflector::tableize($name);
+			$this->_writeFile("/views/{$folder}/{$template}.html.tpl", $data);
+		}
+	}
+
 	protected function _writeFile($file, $data) {
 		$absolutePath = ROX_APP_PATH . $file;
+
+		$directory = dirname($absolutePath);
+		clearstatcache();
+		if (!is_dir($directory)) {
+			mkdir($directory, 0777, true);
+		}
 
 		if (file_exists($absolutePath)) {
 			do {
@@ -80,11 +109,18 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 		return file_put_contents($absolutePath, $data);
 	}
 
-	protected function _renderTemplate($name, $vars = array()) {
-		$data = file_get_contents(dirname(__FILE__) . '/templates/' . $name . '.tpl');
+	protected function _renderTemplate($name, $vars = array(), $runCode = false) {
+		if ($runCode) {
+			extract($vars, EXTR_SKIP);
 
-		foreach ($vars as $k => $v) {
-			$data = str_replace('{' . $k . '}', $v, $data);
+			ob_start();
+			require dirname(__FILE__) . '/templates/' . $name . '.tpl';
+			$data = ob_get_clean();
+		} else {
+			$data = file_get_contents(dirname(__FILE__) . '/templates/' . $name . '.tpl');
+			foreach ($vars as $k => $v) {
+				$data = str_replace('{' . $k . '}', $v, $data);
+			}
 		}
 
 		return $data;
