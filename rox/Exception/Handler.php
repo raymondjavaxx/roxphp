@@ -52,7 +52,7 @@ class Rox_Exception_Handler {
 
 		$viewName = (string)$exception->getCode();
 
-		if (!file_exists(ROX_APP_PATH . DS . 'views' . DS . 'errors' . DS . $viewName . '.html.tpl')) {
+		if (!file_exists(ROX_APP_PATH . "/views/errors/{$viewName}.html.tpl")) {
 			$viewName = 'unknown';
 		}
 

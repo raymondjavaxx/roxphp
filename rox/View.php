@@ -36,8 +36,8 @@ class Rox_View {
 	 */
 	public function __construct($vars = array()) {
 		$this->_vars = $vars;
-		$this->_viewsPath = ROX_APP_PATH . DS . 'views';
-		$this->_layoutsPath = $this->_viewsPath . DS . 'layouts';
+		$this->_viewsPath = ROX_APP_PATH . '/views';
+		$this->_layoutsPath = $this->_viewsPath . '/layouts';
 	}
 
 	/**
@@ -49,12 +49,12 @@ class Rox_View {
 	 * @return string
 	 */
 	public function render($path, $name, $layout = 'default') {
-		$this->_view = $this->_viewsPath . DS . $path . DS . $name . '.' . $this->params['extension'] . '.tpl';
+		$this->_view = "{$this->_viewsPath}/{$path}/{$name}.{$this->params['extension']}.tpl";
 		if (!file_exists($this->_view)) {
 			throw new Exception("View doesn't exist", 404);
 		}
 
-		$this->_layout = $this->_layoutsPath . DS . $layout . '.' . $this->params['extension'] . '.tpl';
+		$this->_layout = "{$this->_layoutsPath}/{$layout}.{$this->params['extension']}.tpl";
 		if (!file_exists($this->_layout)) {
 			throw new Exception("Layout doesn't exist", 404);
 		}
@@ -90,7 +90,7 @@ class Rox_View {
 		extract($this->_vars, EXTR_SKIP);
 
 		ob_start();
-		include $this->_viewsPath . DS . 'elements' . DS . $name . '.tpl';
+		include "{$this->_viewsPath}/elements/{$name}.tpl";
 		return ob_get_clean();
 	}
 

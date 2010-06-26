@@ -24,12 +24,6 @@ define('ROX_DEBUG', true);
 define('ROX_DEFAULT_ROUTE', '/pages/home');
 
 /**
- * Some class libraries still use this.
- * @todo remove
- */
-define('DS', DIRECTORY_SEPARATOR);
-
-/**
  * Path to application folder
  */
 define('ROX_APP_PATH', dirname(dirname(__FILE__)));

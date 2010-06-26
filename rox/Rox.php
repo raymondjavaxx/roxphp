@@ -31,7 +31,7 @@ class Rox {
 		if (!isset(self::$_helperInstances[$name])) {
 			$className = self::_loadHelper($name);
 			if (!class_exists($className)) {
-				throw new Exception("Class '$className' not found");
+				throw new Exception("Class '{$className}' not found");
 			}
 
 			self::$_helperInstances[$name] = new $className();
@@ -48,18 +48,18 @@ class Rox {
 	protected static function _loadHelper($name) {
 		$name = Rox_Inflector::camelize($name);
 
-		$file = ROX_APP_PATH.DS.'helpers'.DS.$name.'Helper.php';
+		$file = ROX_APP_PATH . "/helpers/{$name}Helper.php";
 		if (file_exists($file)) {
 			require_once $file;
-			return $name.'Helper';
+			return $name . 'Helper';
 		}
 
-		$file = ROX_FRAMEWORK_PATH.DS.'Helper'.DS.$name.'.php';
+		$file = ROX_FRAMEWORK_PATH . "/Helper/{$name}.php";
 		if (file_exists($file)) {
 			require_once $file;
 			return 'Rox_Helper_' . $name;
 		}
 
-		throw new Exception("Helper '$name' not found");
+		throw new Exception("Helper '{$name}' not found");
 	}
 }

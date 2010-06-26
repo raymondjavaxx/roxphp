@@ -95,9 +95,10 @@ class Rox_Language {
 	 * @return void
 	 */
 	public function loadTable($name = 'messages') {
-		$fp = @fopen(ROX_APP_PATH . DS . 'locale' . DS . $this->_locale->getTag() . DS . $name . '.csv', 'r');
+	    $path = ROX_APP_PATH . "/locale/" . $this->_locale->getTag() . "/{$name}.csv";
+		$fp = @fopen($path, 'r');
 		if ($fp === false) {
-			throw new Exception('Can`t open locale file');
+			throw new Exception("Can't open locale file");
 		}
 
 		while (($data = fgetcsv($fp)) !== false) {
