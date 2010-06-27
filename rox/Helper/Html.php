@@ -32,15 +32,15 @@ class Rox_Helper_Html {
 	}
 
 	/**
-	 * Rox_Helper_Html::image()
+	 * Renders a <img> HTML tag
 	 *
 	 * @param string $path
-	 * @param string $alt
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function image($path, $alt = '', $attributes = array()) {
-		$result = sprintf('<img src="%s" alt="%s"%s />', Rox_Router::url('/img/' . $path), $alt,
+	public function image($path, $attributes = array()) {
+		$attributes += array('alt' => '');
+		$result = sprintf('<img src="%s"%s />', Rox_Router::url('/img/' . $path),
 			self::_makeAttributes($attributes));
 		return $result;
 	}
@@ -49,12 +49,11 @@ class Rox_Helper_Html {
 	 * Alias for Rox_Helper_Html::image()
 	 *
 	 * @param string $path
-	 * @param string $alt
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function img($path, $alt = '', $attributes = array()) {
-		return $this->image($path, $alt, $attributes);
+	public function img($path, $attributes = array()) {
+		return $this->image($path, $attributes);
 	}
 
 	/**
@@ -210,7 +209,7 @@ class Rox_Helper_Html {
 	protected static function _makeAttributes(array $attributes) {
 		$result = array();
 		foreach ($attributes as $name => $value) {
-			$result[] = ' ' . $name . '="' . $value . '"';
+			$result[] = ' ' . $name . '="' . htmlspecialchars($value) . '"';
 		}
 		return implode('', $result);
 	}

@@ -11,7 +11,7 @@
 		<div id="header">
 			<p>
 				<a href="<?php echo Rox_Router::url('/'); ?>">
-				<?php echo $html->image('rox_logo.png', 'RoxPHP'); ?></a>
+				<?php echo $html->image('rox_logo.png'); ?></a>
 			</p>
 		</div>
 		<div id="container">
