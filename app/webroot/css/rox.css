@@ -10,13 +10,29 @@ img {
 
 h1 {
 	color:#06f;
-	font-size:1.5em;
+	font-size:22px;
+	margin:0 0 15px 0;
+}
+
+h2 {
+	color:#333;
+	font-size:18px;
 	margin:0 0 20px 0;
+}
+
+h3 {
+	color:#333;
+	font-size:15px;
+	margin:0 0 10px 0;
+}
+
+#wrapper {
+	margin:0 auto;
+	width:960px;
 }
 
 #container {
 	background:#fffffe;
-	width:960px;
 	padding:10px;
 }
 
@@ -25,9 +41,6 @@ table {
 	border:2px solid #c2cff1;
 	border-spacing:0;
 	background:#f0f6fe;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
 	margin:0 0 10px;
 }
 
