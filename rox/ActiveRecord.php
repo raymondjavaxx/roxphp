@@ -238,13 +238,26 @@ abstract class Rox_ActiveRecord {
 
 		$assoc = $this->_association('belongs_to', $method);
 		if ($assoc) {
-			return self::model($assoc['class'])->find($this->{$assoc['key']});
+			$attributeName = '_' . $method;
+			if (!isset($this->{$attributeName})) {
+				$this->{$attributeName} = self::model($assoc['class'])->findFirst(array(
+					'conditions' => array('id' => $this->{$assoc['key']})
+				));
+			}
+
+			return $this->{$attributeName};
 		}
 
 		$assoc = $this->_association('has_one', $method);
 		if ($assoc) {
-			$model = self::model($assoc['class']);
-			return $model->findFirst(array('conditions' => array($assoc['key'] => $this->getId())));
+			$attributeName = '_' . $method;
+			if (!isset($this->{$attributeName})) {
+				$this->{$attributeName} = self::model($assoc['class'])->findFirst(array(
+					'conditions' => array($assoc['key'] => $this->getId())
+				));
+			}
+
+			return $this->{$attributeName};
 		}
 
 		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
@@ -287,9 +300,13 @@ abstract class Rox_ActiveRecord {
 	 * </code>
 	 *
 	 * @param string $var 
-	 * @return mixed
 	 */
 	public function __set($attribute, $value) {
+		if (strpos($attribute, '_') === 0) {
+			$this->{$attribute} = $value;
+			return;
+		}
+
 		$this->setData($attribute, $value);
 	}
 
