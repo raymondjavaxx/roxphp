@@ -25,7 +25,7 @@ class Rox_Exception_Handler {
 	 * @param Exception $exception
 	 */
 	public static function handle($exception) {
-		if (ob_get_level() > 0) {
+		while (ob_get_level() > 0) {
 			ob_end_clean();
 		}
 
