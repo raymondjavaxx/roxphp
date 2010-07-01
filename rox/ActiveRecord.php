@@ -262,7 +262,6 @@ abstract class Rox_ActiveRecord {
 	 * @return mixed
 	 */
 	public function __get($attribute) {
-		$attribute = Rox_Inflector::underscore($attribute);
 		if (array_key_exists($attribute, $this->_data)) {
 			return $this->_data[$attribute];
 		}
@@ -291,12 +290,10 @@ abstract class Rox_ActiveRecord {
 	 * @return mixed
 	 */
 	public function __set($attribute, $value) {
-		$attribute = Rox_Inflector::underscore($attribute);
 		$this->setData($attribute, $value);
 	}
 
 	public function __isset($attribute) {
-		$attribute = Rox_Inflector::underscore($attribute);
 		return array_key_exists($attribute, $this->_data);
 	}
 
