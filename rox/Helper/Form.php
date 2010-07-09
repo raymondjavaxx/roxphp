@@ -404,7 +404,7 @@ class Rox_Helper_Form {
 	protected function _makeAttributes($attributes) {
 		$output = array();
 		foreach ($attributes as $k => $v) {
-			$output[] = $k . '="' . $v . '"';
+			$output[] = $k . '="' . htmlspecialchars($v) . '"';
 		}
 
 		return ' ' . implode(' ', $output);
