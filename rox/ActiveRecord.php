@@ -572,7 +572,7 @@ abstract class Rox_ActiveRecord {
 		$sql.= $this->_buildConditionsSQL($options['conditions']);
 
 		if (!empty($options['group'])) {
-			$sql .= ' GROUP BY ' . $options['order'];
+			$sql .= ' GROUP BY ' . $options['group'];
 		}
 
 		if (!empty($options['order'])) {
