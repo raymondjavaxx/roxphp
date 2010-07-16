@@ -71,7 +71,7 @@ class {controller_class} extends ApplicationController {
 			}
 		}
 
-		$this->set('{model_var_name}', ${model_var_name});
+		$this->set(compact('{model_var_name}'));
 	}
 
 	/**

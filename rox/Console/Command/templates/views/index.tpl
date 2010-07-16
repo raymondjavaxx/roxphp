@@ -6,7 +6,7 @@ echo "<table>\n";
 echo "\t<tr>\n";
 
 foreach ($attributes as $name => $type) {
-	echo "\t\t<th>" . Rox_Inflector::camelize($name) . "</th>\n";
+	echo "\t\t<th>" . Rox_Inflector::humanize($name) . "</th>\n";
 }
 
 echo "\t\t<th>Actions</th>\n";
