@@ -68,13 +68,7 @@ class Rox_Controller {
 	 * @return void
 	 */
 	public function __construct($config = array()) {
-		$defaults = array(
-			'request' => null
-		);
-
-		$config += $defaults;
-
-		if (!empty($config['request'])) {
+		if (isset($config['request'])) {
 			$this->request = $config['request'];
 		}
 
