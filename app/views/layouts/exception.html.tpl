@@ -3,16 +3,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Error</title>
-	<style type="text/css" media="screen">
+	<style type="text/css">
 		img {
 			border:0;
-		}
-
-		.exception {
-			color: #7E2217;
-			background-color: #FDFAA4;
-			border: 1px solid #444;
-			padding: 8px;
 		}
 	</style>
 </head>
@@ -28,15 +21,45 @@
 			<?php echo $rox_layout_content; ?>
 			<?php if (ROX_DEBUG) : ?>
 				<div class="exception">
-					<?php echo $exception->getMessage(); ?><br />
-					File: <?php echo $exception->getFile(); ?><br />
-					Line: <?php echo $exception->getLine(); ?>
+					<h3><?php echo $exception->getMessage(); ?></h3>
+
+					<p>
+						File: <?php echo $exception->getFile(); ?><br />
+						Line: <?php echo $exception->getLine(); ?>
+					</p>
+
+					<h4>Stack Trace:</h4>
 					<pre><?php echo $exception->getTraceAsString(); ?></pre>
 				</div>
+				<style type="text/css">
+					.exception {
+						color: #7e2217;
+						padding: 8px;
+						background-color: #fdfaa4;
+						border: 2px solid #933;
+					}
+
+					.exception pre {
+						color:#fff;
+						margin:0;
+						background:#933;
+						padding:8px;
+						overflow-x:auto;
+					}
+
+					.exception h3 {
+						font-size:18px;
+						margin:0;
+						padding:0;
+					}
+
+					.exception h4 {
+						font-size:14px;
+						margin:0;
+						padding:0;
+					}
+				</style>
 			<?php endif; ?>
-		</div>
-		<div id="footer">
-			<p>Powered by <a href="http://roxphp.com">RoxPHP</a></p>
 		</div>
 	</div>
 </body>
