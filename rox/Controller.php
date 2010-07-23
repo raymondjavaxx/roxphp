@@ -38,7 +38,7 @@ class Rox_Controller {
 	 *
 	 * @var array
 	 */
-	public $helpers = array('Html', 'Form');
+	public $helpers = array();
 
 	/**
 	 * Request object
