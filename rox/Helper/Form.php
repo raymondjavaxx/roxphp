@@ -372,7 +372,7 @@ class Rox_Helper_Form {
 	 * @return string
 	 */
 	public function label($text, $for = null) {
-		return sprintf('<label for="%s">%s</label>', $for, htmlspecialchars($text));
+		return sprintf('<label for="%s">%s</label>', $for, $text);
 	}
 
 	/**
