@@ -37,13 +37,13 @@ class Rox_Language {
 	 * Language::init()
 	 * 
 	 * @param Locale $locale
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	public function init($locale = null) {
 		if (is_null($locale)) {
 			$locale = new Rox_Locale;
 		} else if (!($locale instanceof Rox_Locale)) {
-			throw new Exception('Param must be instance of Locale');
+			throw new Rox_Exception('Param must be instance of Locale');
 		}
 
 		$this->_locale = $locale;
@@ -98,7 +98,7 @@ class Rox_Language {
 	    $path = ROX_APP_PATH . "/locale/" . $this->_locale->getTag() . "/{$name}.csv";
 		$fp = @fopen($path, 'r');
 		if ($fp === false) {
-			throw new Exception("Can't open locale file");
+			throw new Rox_Exception("Can't open locale file");
 		}
 
 		while (($data = fgetcsv($fp)) !== false) {

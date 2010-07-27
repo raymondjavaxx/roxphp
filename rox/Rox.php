@@ -31,7 +31,7 @@ class Rox {
 		if (!isset(self::$_helperInstances[$name])) {
 			$className = self::_loadHelper($name);
 			if (!class_exists($className)) {
-				throw new Exception("Class '{$className}' not found");
+				throw new Rox_Exception("Class '{$className}' not found");
 			}
 
 			self::$_helperInstances[$name] = new $className();
@@ -60,6 +60,6 @@ class Rox {
 			return 'Rox_Helper_' . $name;
 		}
 
-		throw new Exception("Helper '{$name}' not found");
+		throw new Rox_Exception("Helper '{$name}' not found");
 	}
 }

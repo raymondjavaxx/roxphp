@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_ActiveRecord_RecordNotFound extends Exception {
+class Rox_ActiveRecord_RecordNotFound extends Rox_Exception {
 
 	public function __construct($message = 'Record not found') {
 		parent::__construct($message, 404);

@@ -93,12 +93,12 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testParseUrlWithInvalidController() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('Rox_Exception');
 		Rox_Router::parseUrl('/articl..es');
 	}
 
 	public function testParseUrlWithInvalidAction() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('Rox_Exception');
 		Rox_Router::parseUrl('/articles/ed-it');
 	}
 

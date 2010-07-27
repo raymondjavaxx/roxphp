@@ -67,7 +67,7 @@ class Rox_Helper_Form {
 		}
 
 		if (!is_object($model) || !($model instanceof  Rox_ActiveRecord)) {
-			throw new Exception('Invalid model param');
+			throw new Rox_Exception('Invalid model param');
 		}
 
 		$modelClass = get_class($model);
@@ -165,7 +165,7 @@ class Rox_Helper_Form {
 				break;
 
 			default:
-				throw new Exception("Unknown type '{$options['type']}'");
+				throw new Rox_Exception("Unknown type '{$options['type']}'");
 				break;
 		}
 

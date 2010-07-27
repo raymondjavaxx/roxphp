@@ -217,7 +217,7 @@ abstract class Rox_ActiveRecord {
 	 * @param string $method method name
 	 * @param array $args arguments
 	 * @return mixed
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 * @link http://us.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
 	 */
 	public function __call($method, $args) {
@@ -260,7 +260,7 @@ abstract class Rox_ActiveRecord {
 			return $this->{$attributeName};
 		}
 
-		throw new Exception('Invalid method '.get_class($this).'::'.$method.'()');
+		throw new Rox_Exception('Invalid method '.get_class($this).'::'.$method.'()');
 	}
 
 	/**
@@ -286,7 +286,7 @@ abstract class Rox_ActiveRecord {
 			return $this->{$attribute} = new Rox_ActiveRecord_Association_Collection($class, $scope);
 		}
 
-		throw new Exception("unknown attribute {$attribute}");
+		throw new Rox_Exception("unknown attribute {$attribute}");
 	}
 
 	/**
@@ -720,7 +720,7 @@ abstract class Rox_ActiveRecord {
 	 */
 	public function delete() {
 		if ($this->_newRecord) {
-			throw new Exception("You can't delete new records");
+			throw new Rox_Exception("You can't delete new records");
 		}
 
 		$this->_beforeDelete();

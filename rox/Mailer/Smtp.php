@@ -89,14 +89,14 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	 * Connects to SMTP server
 	 * 
 	 * @return void
-	 * @throws Mailer_Adapter_Exception
+	 * @throws Mailer_Adapter_Rox_Exception
 	 */
 	protected function _connect() {
 		$this->_fp = @fsockopen($this->_options['host'], $this->_options['port'],
 			$errno, $errstr, $this->_options['timeout']);
 
 		if ($this->_fp === false) {
-			throw new Exception('Could not connect to host ' . $this->_options['host']);
+			throw new Rox_Exception('Could not connect to host ' . $this->_options['host']);
 		}
 
 		// consume the response
@@ -117,7 +117,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 		if (!is_null($expectedCode)) {
 			$response = $this->_getResponse();
 			if (strpos($response, (string)$expectedCode) === false) {
-				throw new Exception("Unexpected response '{$response}'");
+				throw new Rox_Exception("Unexpected response '{$response}'");
 			}
 		}
 	}

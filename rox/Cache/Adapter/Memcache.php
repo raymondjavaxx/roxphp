@@ -47,7 +47,7 @@ class Rox_Cache_Adapter_Memcache extends Rox_Cache_Adapter {
 	 */
 	protected function _initialize() {
 		if (!class_exists('Memcache', false)) {
-			throw new Exception('This cache adapter requires the php_memcache extension');
+			throw new Rox_Exception('This cache adapter requires the php_memcache extension');
 		}
 
 		$this->_memcache = new Memcache;

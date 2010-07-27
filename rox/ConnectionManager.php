@@ -62,11 +62,11 @@ class Rox_ConnectionManager {
 	 *
 	 * @param string $name
 	 * @return void
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	protected static function _instantiateDataSource($name) {
 		if (!isset(self::$_configs[$name])) {
-			throw new Exception('Configuration entry not found for ' . $name);
+			throw new Rox_Exception('Configuration entry not found for ' . $name);
 		}
 
 		$dataSource = new Rox_DataSource(self::$_configs[$name]);

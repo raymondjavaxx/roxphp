@@ -29,7 +29,7 @@ class Rox_Cache_Adapter_File extends Rox_Cache_Adapter {
 		parent::__construct($config + $defaults);
 
 		if (!is_dir($this->_config['path'])) {
-			throw new Exception('Cache path does not exists');
+			throw new Rox_Exception('Cache path does not exists');
 		}
 	}
 

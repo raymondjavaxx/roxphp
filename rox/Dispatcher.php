@@ -23,7 +23,7 @@ class Rox_Dispatcher {
 	 * Rox_Dispatcher::dispatch()
 	 *
 	 * @param mixed $url
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	public function dispatch($url = null) {
 		$parsedUrl = Rox_Router::parseUrl($url);
@@ -40,7 +40,7 @@ class Rox_Dispatcher {
 			!method_exists($controller, $parsedUrl['action_method']) ||
 			strpos($parsedUrl['action_method'], '__') === 0 ||
 			!is_callable(array($controller, $parsedUrl['action_method']))) {
-			throw new Exception('Action does not exist or is not dispatchable', 404);
+			throw new Rox_Exception('Action does not exist or is not dispatchable', 404);
 		}
 
 		$controller->beforeFilter();
@@ -53,12 +53,12 @@ class Rox_Dispatcher {
 	 * Loads controller by class name
 	 *
 	 * @param string $name
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	protected function _loadController($name) {
 		$filename = ROX_APP_PATH . "/controllers/{$name}.php";
 		if (!file_exists($filename)) {
-			throw new Exception('Missing controller file', 404);
+			throw new Rox_Exception('Missing controller file', 404);
 		}
 
 		require_once $filename;

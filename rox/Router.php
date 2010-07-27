@@ -88,7 +88,7 @@ class Rox_Router {
 	 *
 	 * @param string $url
 	 * @return array
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	public static function parseUrl($url) {
 		$parts = explode('/', trim($url, '/'));
@@ -110,13 +110,13 @@ class Rox_Router {
 		}
 
 		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
-			throw new Exception('Illegal controller name', 404);
+			throw new Rox_Exception('Illegal controller name', 404);
 		}
 
 		$action = 'index';
 		if (isset($parts[1])) {
 			if (preg_match('/^[a-z_]+$/', $parts[1]) != 1) {
-				throw new Exception('Illegal action name', 404);
+				throw new Rox_Exception('Illegal action name', 404);
 			}
 			$action = $parts[1];
 		}

@@ -62,18 +62,18 @@ class Rox_DataSource {
 	 * Connects to database server
 	 *
 	 * @return void
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	public function connect() {
 		$this->_link = mysql_connect($this->_settings['host'],
 			$this->_settings['username'], $this->_settings['password']);
 
 		if (false === $this->_link) {
-			throw new Exception('Could not connect to DB server - ' . mysql_error());
+			throw new Rox_Exception('Could not connect to DB server - ' . mysql_error());
 		}
 
 		if (mysql_select_db($this->_settings['database'], $this->_link) == false) {
-			throw new Exception('Could not select DB - ' . mysql_error($this->_link));
+			throw new Rox_Exception('Could not select DB - ' . mysql_error($this->_link));
 		}
 	}
 

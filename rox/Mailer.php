@@ -109,7 +109,7 @@ class Rox_Mailer {
 	 */
 	public static function send($mailerAndMethod) {
 		if (strpos($mailerAndMethod, '.') == false) {
-			throw new Exception('mailer and method should be separated by a period.');
+			throw new Rox_Exception('mailer and method should be separated by a period.');
 		}
 
 		list($mailerClass, $mailerMethod) = explode('.', $mailerAndMethod);
