@@ -21,7 +21,7 @@
 			<?php echo $rox_layout_content; ?>
 			<?php if (ROX_DEBUG) : ?>
 				<div class="exception">
-					<h3><?php echo $exception->getMessage(); ?></h3>
+					<h3><?php echo get_class($exception) ?>: <?php echo $exception->getMessage(); ?></h3>
 
 					<p>
 						File: <?php echo $exception->getFile(); ?><br />
