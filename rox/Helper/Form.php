@@ -50,7 +50,7 @@ class Rox_Helper_Form {
 	/**
 	 * Rox_Helper_Form::forModel()
 	 *
-	 * @param Rox_ActiveRecord|string $model 
+	 * @param Rox_ActiveModel|string $model 
 	 * @param array $options 
 	 * @return string
 	 */
@@ -66,7 +66,7 @@ class Rox_Helper_Form {
 			return $this->create($model, $options['action'], $options);
 		}
 
-		if (!is_object($model) || !($model instanceof  Rox_ActiveRecord)) {
+		if (!is_object($model) || !($model instanceof  Rox_ActiveModel)) {
 			throw new Rox_Exception('Invalid model param');
 		}
 
