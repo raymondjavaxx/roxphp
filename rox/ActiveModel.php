@@ -66,7 +66,7 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Validation errors
 	 *
-	 * @var Rox_ActiveRecord_ErrorCollection
+	 * @var Rox_ActiveModel_ErrorCollection
 	 */
 	protected $_errors;
 
@@ -217,7 +217,7 @@ abstract class Rox_ActiveModel {
 	 */
 	public function valid() {
 		if ($this->_errors === null) {
-			$this->_errors = new Rox_ActiveRecord_ErrorCollection;
+			$this->_errors = new Rox_ActiveModel_ErrorCollection;
 		} else {
 			$this->_errors->clear();
 		}
