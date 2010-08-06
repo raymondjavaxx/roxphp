@@ -526,7 +526,7 @@ abstract class Rox_ActiveRecord {
 		$sql.= ' LIMIT 1';
 
 		$result = $this->datasource()->query($sql);
-		return $result[0]['count'] == 1;
+		return $result[0]['count'] > 0;
 	}
 
 	/**
