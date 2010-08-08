@@ -318,7 +318,7 @@ class Rox_Helper_Form {
 		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
 
 		if ($options['empty'] !== false) {
-			$output[] = sprintf('<option>%s</option>', htmlspecialchars($options['empty']));
+			$output[] = sprintf('<option value="">%s</option>', htmlspecialchars($options['empty']));
 		}
 
 		foreach ($optionTags as $value => $label) {
