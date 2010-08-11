@@ -40,6 +40,11 @@ class Rox_View {
 		$this->_layoutsPath = $this->_viewsPath . '/layouts';
 	}
 
+	public function __get($attribute) {
+		$this->{$attribute} = Rox::getHelper($attribute);
+		return $this->{$attribute};
+	}
+
 	/**
 	 * Renders a view + layout
 	 *
