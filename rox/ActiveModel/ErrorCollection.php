@@ -13,11 +13,11 @@
  */
 
 /**
- * Rox_ActiveRecord_ErrorCollection
+ * Rox_ActiveModel_ErrorCollection
  *
  * @package Rox
  */
-class Rox_ActiveRecord_ErrorCollection implements Countable {
+class Rox_ActiveModel_ErrorCollection implements Countable {
 
 	/**
 	 * undocumented variable

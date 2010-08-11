@@ -2,16 +2,16 @@
 
 require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
 
-class Rox_ActiveRecord_ErrorCollectionTest extends PHPUnit_Framework_TestCase {
+class Rox_ActiveModel_ErrorCollectionTest extends PHPUnit_Framework_TestCase {
 
 	public function testAdd() {
-		$collection = new Rox_ActiveRecord_ErrorCollection;
+		$collection = new Rox_ActiveModel_ErrorCollection;
 		$collection->add('username', 'Invalid username');
 		$result = $collection->toArray();
 		$expected = array('username' => 'Invalid username');
 		$this->assertSame($expected, $result);
 
-		$collection = new Rox_ActiveRecord_ErrorCollection;
+		$collection = new Rox_ActiveModel_ErrorCollection;
 		$collection->add('email');
 		$result = $collection->toArray();
 		$expected = array('email' => 'Email is invalid');
@@ -19,7 +19,7 @@ class Rox_ActiveRecord_ErrorCollectionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testClear() {
-		$collection = new Rox_ActiveRecord_ErrorCollection;
+		$collection = new Rox_ActiveModel_ErrorCollection;
 
 		$collection->add('username', 'Invalid username');
 		$result = $collection->toArray();

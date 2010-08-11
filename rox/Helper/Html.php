@@ -99,10 +99,10 @@ class Rox_Helper_Html {
 	 * Creates an HTML link that points to the "view" path of a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
-	public function viewLink($text, Rox_ActiveRecord $object) {
+	public function viewLink($text, Rox_ActiveModel $object) {
 		return $this->link($text, $this->viewPath($object));
 	}
 
@@ -110,10 +110,10 @@ class Rox_Helper_Html {
 	 * Creates an HTML link that points to the "edit" path of a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
-	public function editLink($text, Rox_ActiveRecord $object) {
+	public function editLink($text, Rox_ActiveModel $object) {
 		return $this->link($text, $this->editPath($object));
 	}
 
@@ -121,10 +121,10 @@ class Rox_Helper_Html {
 	 * Creates an HTML link for deleting a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
-	public function deleteLink($text, Rox_ActiveRecord $object) {
+	public function deleteLink($text, Rox_ActiveModel $object) {
 		return $this->link($text, $this->deletePath($object), array('class' => 'delete'));
 	}
 
@@ -134,11 +134,11 @@ class Rox_Helper_Html {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/view/[Record ID]
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function viewUrl(Rox_ActiveRecord $object, $absolute = false) {
+	public function viewUrl(Rox_ActiveModel $object, $absolute = false) {
 		return Rox_Router::url($this->viewPath($object), $absolute);
 	}
 
@@ -148,11 +148,11 @@ class Rox_Helper_Html {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/edit/[Record ID]
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function editUrl(Rox_ActiveRecord $object, $absolute = false) {
+	public function editUrl(Rox_ActiveModel $object, $absolute = false) {
 		return Rox_Router::url($this->editPath($object), $absolute);
 	}
 
@@ -162,42 +162,42 @@ class Rox_Helper_Html {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/delete/[Record ID]
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function delteUrl(Rox_ActiveRecord $object, $absolute = false) {
+	public function delteUrl(Rox_ActiveModel $object, $absolute = false) {
 		return Rox_Router::url($this->deletePath($object), $absolute);
 	}
 
 	/**
 	 * Returns the path for viewing a record.
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
 	public function viewPath($object) {
-		return "/" . self::_controllerFromActiveRecord($object) . "/view/" . $object->getId();
+		return "/" . self::_controllerNameFromModel($object) . "/view/" . $object->getId();
 	}
 
 	/**
 	 * Returns the path for editing a record.
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
 	public function editPath($object) {
-		return "/" . self::_controllerFromActiveRecord($object) . "/edit/" . $object->getId();
+		return "/" . self::_controllerNameFromModel($object) . "/edit/" . $object->getId();
 	}
 
 	/**
 	 * Returns the path for deleting a record.
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
 	public function deletePath($object) {
-		return "/" . self::_controllerFromActiveRecord($object) . "/delete/" . $object->getId();
+		return "/" . self::_controllerNameFromModel($object) . "/delete/" . $object->getId();
 	}
 
 	/**
@@ -215,12 +215,12 @@ class Rox_Helper_Html {
 	}
 
 	/**
-	 * Returns the controller name for a given ActiveRecord instance.
+	 * Returns the controller name for a given ActiveModel instance.
 	 *
-	 * @param Rox_ActiveRecord $object 
+	 * @param Rox_ActiveModel $object 
 	 * @return string
 	 */
-	protected static function _controllerFromActiveRecord($object) {
+	protected static function _controllerNameFromModel(Rox_ActiveModel $object) {
 		static $results = array();
 		$class = get_class($object);
 		if (!isset($results[$class])) {
