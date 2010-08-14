@@ -73,7 +73,7 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 		$datasource = Rox_ConnectionManager::getDataSource();
 		$attributes = $datasource->generateAttributeMapFromTable($tableName);
 
-		$templates = array('add', 'edit', 'index');
+		$templates = array('add', 'edit', 'index', 'view');
 
 		$vars = array(
 			'attributes' => $attributes,
@@ -109,6 +109,7 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			}
 		}
 
+		$this->out("Writing file: app{$file}");
 		return file_put_contents($absolutePath, $data);
 	}
 
