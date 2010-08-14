@@ -14,6 +14,10 @@
 
 require_once dirname(dirname(dirname(__FILE__))) . '/app/config/bootstrap.php';
 
-$command = new Rox_Console_Command_Gen;
-$command->header();
-$command->run($argc, $argv);
+try {
+	$command = new Rox_Console_Command_Gen;
+	$command->header();
+	$command->run($argc, $argv);
+} catch (Exception $e) {
+    echo sprintf("E: %s (%d)", $e->getMessage(), $e->getCode());
+}
