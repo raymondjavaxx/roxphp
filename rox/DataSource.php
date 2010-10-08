@@ -169,7 +169,7 @@ class Rox_DataSource {
 	 * @return string
 	 */
 	public function escape($value) {
-		return mysql_real_escape_string($value);
+		return mysql_real_escape_string($value, $this->_link);
 	}
 
 	/**
@@ -254,6 +254,15 @@ class Rox_DataSource {
 	}
 
 	/**
+	 * Returns the number of the affected rows in previous operation
+	 *
+	 * @return integer
+	 */
+	public function affectedRows() {
+		return mysql_affected_rows($this->_link);
+	}
+
+	/**
 	 * Date formater
 	 * 
 	 * @param string $date
@@ -271,14 +280,5 @@ class Rox_DataSource {
 	 */
 	public function formatDateTime($dateTime) {
 		return date(self::DBMS_DATETIME_FORMAT, strtotime($dateTime));
-	}
-
-	/**
-	 * Returns the number of the affected rows in previous operation
-	 *
-	 * @return integer
-	 */
-	public function affectedRows() {
-		return mysql_affected_rows();
 	}
 }
