@@ -206,12 +206,12 @@ class Rox_DataSource {
 	 *
 	 * @param string $sql
 	 * @return resource
-	 * @throws Exception
+	 * @throws Rox_Exception
 	 */
 	public function execute($sql) {
 		$result = mysql_query($sql, $this->_link);
-		if (false === $result) {
-			throw new Exception(mysql_error($this->_link), mysql_errno($this->_link));
+		if ($result === false) {
+			throw new Rox_Exception(mysql_error($this->_link), mysql_errno($this->_link));
 		}
 		return $result;
 	}
