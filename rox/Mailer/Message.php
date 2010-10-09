@@ -100,7 +100,7 @@ class Rox_Mailer_Message {
 	}
 
 	public function serializeParts() {
-		$boundary = uniqid('roxbound');
+		$boundary = uniqid('roxbound', true);
 
 		$lines = array();
 		$lines[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
