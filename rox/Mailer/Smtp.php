@@ -60,7 +60,14 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 		$this->_sendLine('DATA', 354);
 
 		$this->_sendEmailHeader();
+		$boundary = uniqid('rox');
+		$this->_sendLine('Content-Type: multipart/alternative; boundary="' . $boundary . '"');
+		$this->_sendLine('');
+		$this->_sendData("--$boundary\r\n");
+		$this->_sendLine('Content-Type: ' . $this->_contentType);
+		$this->_sendLine('');
 		$this->_sendData($this->_message);
+		$this->_sendData("\r\n--{$boundary}\r\n");
 		$this->_sendData("\r\n\r\n\r\n.\r\n", 250);
 
 		$this->_sendLine('QUIT');
@@ -82,7 +89,6 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 		$this->_sendLine('X-Mailer: RoxPHP SMTP Mailer');
 
 		$this->_sendLine('Subject:' . $this->_subject);
-		$this->_sendLine('Content-Type: text/plain; charset=UTF-8');
 	}
 
 	/**

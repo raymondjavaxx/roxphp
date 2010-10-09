@@ -22,7 +22,7 @@ class Rox_Mailer {
 	public $recipients;
 	public $from;
 	public $subject;
-	public $body;
+	public $body = array();
 	public $cc = array();
 	public $bcc = array();
 	public $replyTo;
@@ -44,8 +44,7 @@ class Rox_Mailer {
 	 * @param array $settings
 	 */
 	public static function setAdapter($adapter, $settings = array()) {
-		self::$_settings['adapter'] = $adapter;
-		self::$_settings['adapter_settings'] = $settings;
+		self::$_settings = array('adapter' => $adapter, 'adapter_settings' => $settings);
 	}
 
 	/**
@@ -55,11 +54,6 @@ class Rox_Mailer {
 	 */
 	private function _send($mailer, $method) {
 		$adapterClassName = 'Rox_Mailer_' . Rox_Inflector::camelize(self::$_settings['adapter']);
-		if (!class_exists($adapterClassName)) {
-			$adapterFile = Rox_Inflector::camelize(self::$_settings['adapter']);
-			require_once ROX . 'Mailer/' . $adapterFile . '.php'; 
-		}
-
 		$adapter = new $adapterClassName(self::$_settings['adapter_settings']);
 
 		if (is_string($this->recipients)) {
@@ -74,17 +68,24 @@ class Rox_Mailer {
 		$adapter->setSubject($this->subject);
 
 		if (is_string($this->body)) {
+			$adapter->setContentType('text/plain; charset=UTF-8');
 			$adapter->setMessage($this->body);
-		} else {
-			$folder   = str_replace('_mailer', '',Rox_Inflector::underscore($mailer));
-			$filename = Rox_Inflector::underscore($method).'.phtml';
-			$path     = ROX_APP_PATH.'/mailers/templates/'.$folder.'/'.$filename;
-
-			$body = self::_renderTemplate($path, $this->body);
-			$adapter->setMessage($body);
+			return $adapter->send();
 		}
-		
-		return $adapter->send();
+
+		$filename = Rox_Inflector::underscore($method);
+		$folder = str_replace('_mailer', '', Rox_Inflector::underscore($mailer));
+		$extensions = array('txt.tpl' => 'text/plain; charset=UTF-8', 'html.tpl' => 'text/html; charset=UTF-8');
+		foreach ($extensions as $extension => $contentType) {
+			$path = ROX_APP_PATH . "/mailers/templates/{$folder}/{$filename}.{$extension}";
+			if (file_exists($path)) {
+				$adapter->setContentType($contentType);
+				$adapter->setMessage(self::_renderTemplate($path, $this->body));
+				return $adapter->send();
+			}
+		}
+
+		throw new Exception('No template found');
 	}
 
 	/**

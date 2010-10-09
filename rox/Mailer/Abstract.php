@@ -68,6 +68,8 @@ abstract class Rox_Mailer_Abstract {
 	 */
 	protected $_message = '';
 
+	protected $_contentType = 'text/plain; charset=UTF-8';
+
 	/**
 	 * Constructor
 	 * 
@@ -161,5 +163,9 @@ abstract class Rox_Mailer_Abstract {
 		}
 
 		$this->_bcc = array_merge($this->_bcc, $bcc);
+	}
+
+	public function setContentType($type) {
+		$this->_contentType = $type;
 	}
 }
