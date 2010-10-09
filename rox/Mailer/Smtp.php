@@ -32,7 +32,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	 * @var array
 	 */
 	protected $_options = array(
-		'host'     => null,
+		'host'     => '127.0.0.1',
 		'username' => null,
 		'password' => null,
 		'port'     => 25,
@@ -40,55 +40,31 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	);
 
 	/**
-	 * Rox_Mailer_Smtp::send()
-	 * 
-	 * @return void
+	 * Sends email message
+	 *
+	 * @param Rox_Mailer_Message
+	 * @return mixed
 	 */
-	public function send() {
+	public function send(Rox_Mailer_Message $message) {
 		$this->_connect();
+
 		$this->_sendLine('EHLO roxphp', 250);
 		$this->_sendLine('AUTH LOGIN', 334);
 		$this->_sendLine(base64_encode($this->_options['username']), 334);
 		$this->_sendLine(base64_encode($this->_options['password']), 235);
-		$this->_sendLine('MAIL FROM:<' . $this->_from . '>', 250);
+		$this->_sendLine('MAIL FROM:<' . $message->from . '>', 250);
 
-		$allRecipients = array_merge($this->_to, $this->_cc, $this->_bcc);
+		$allRecipients = array_merge($message->to, $message->cc, $message->bcc);
 		foreach ($allRecipients as $recipient) {
 			$this->_sendLine('RCPT TO:<' . $recipient . '>', 250);
 		}
 
 		$this->_sendLine('DATA', 354);
-
-		$this->_sendEmailHeader();
-		$boundary = uniqid('rox');
-		$this->_sendLine('Content-Type: multipart/alternative; boundary="' . $boundary . '"');
-		$this->_sendLine('');
-		$this->_sendData("--$boundary\r\n");
-		$this->_sendLine('Content-Type: ' . $this->_contentType);
-		$this->_sendLine('');
-		$this->_sendData($this->_message);
-		$this->_sendData("\r\n--{$boundary}\r\n");
+		$this->_sendData($email->serialize());
 		$this->_sendData("\r\n\r\n\r\n.\r\n", 250);
-
 		$this->_sendLine('QUIT');
 
 		$this->_disconnect();
-	}
-
-	/**
-	 * Rox_Mailer_Smtp::_sendEmailHeader()
-	 * 
-	 * @return void
-	 */
-	protected function _sendEmailHeader() {
-		$this->_sendLine('From: ' . $this->_from);
-
-		$this->_sendLine('To: ' . implode(', ', $this->_to));
-		$this->_sendLine('Cc: ' . implode(', ', $this->_cc));
-		$this->_sendLine('Bcc: ' . implode(', ', $this->_bcc));
-		$this->_sendLine('X-Mailer: RoxPHP SMTP Mailer');
-
-		$this->_sendLine('Subject:' . $this->_subject);
 	}
 
 	/**

@@ -19,13 +19,21 @@
  */
 class Rox_Mailer {
 
-	public $recipients;
-	public $from;
-	public $subject;
-	public $body = array();
-	public $cc = array();
-	public $bcc = array();
-	public $replyTo;
+	public $defaults = array();
+
+	/**
+	 * undocumented variable
+	 *
+	 * @var Rox_Mailer_Message
+	 */
+	public $message;
+
+	/**
+	 * View variables
+	 *
+	 * @var array  
+	 */
+	protected $_templateVars = array();
 
 	/**
 	 * Settings
@@ -36,6 +44,10 @@ class Rox_Mailer {
 		'adapter' => 'smtp',
 		'adapter_settigns' => array() 
 	);
+
+	public function __construct() {
+		$this->message = new Rox_Mailer_Message($this->defaults);
+	}
 
 	/**
 	 * Sets the adapter and settings for the mailer module.
@@ -48,57 +60,53 @@ class Rox_Mailer {
 	}
 
 	/**
+	 * Sets a template variable
+	 *
+	 * @param string|array $varName
+	 * @param mixed $value
+	 */
+	public function set($varName, $value = null) {
+		if (is_array($varName)) {
+			$this->_templateVars += $varName;
+		} else {
+			$this->_templateVars[$varName] = $value;
+		}
+	}
+
+	/**
 	 * Sends the email.
 	 * 
 	 * @return boolean
 	 */
-	private function _send($mailer, $method) {
+	private function _send($method) {
 		$adapterClassName = 'Rox_Mailer_' . Rox_Inflector::camelize(self::$_settings['adapter']);
 		$adapter = new $adapterClassName(self::$_settings['adapter_settings']);
 
-		if (is_string($this->recipients)) {
-			$this->recipients = array($this->recipients);
-		}
-
-		$adapter->addTo($this->recipients);
-		$adapter->addBcc($this->bcc);
-		$adapter->addCc($this->cc);
-
-		$adapter->setFrom($this->from);
-		$adapter->setSubject($this->subject);
-
-		if (is_string($this->body)) {
-			$adapter->setContentType('text/plain; charset=UTF-8');
-			$adapter->setMessage($this->body);
-			return $adapter->send();
-		}
-
+		$folder = str_replace('_mailer', '', Rox_Inflector::underscore(get_class($this)));
 		$filename = Rox_Inflector::underscore($method);
-		$folder = str_replace('_mailer', '', Rox_Inflector::underscore($mailer));
 		$extensions = array('txt.tpl' => 'text/plain; charset=UTF-8', 'html.tpl' => 'text/html; charset=UTF-8');
+
 		foreach ($extensions as $extension => $contentType) {
 			$path = ROX_APP_PATH . "/mailers/templates/{$folder}/{$filename}.{$extension}";
 			if (file_exists($path)) {
-				$adapter->setContentType($contentType);
-				$adapter->setMessage(self::_renderTemplate($path, $this->body));
-				return $adapter->send();
+				$message->addPart($contentType, self::_renderTemplate($path));
 			}
 		}
 
-		throw new Exception('No template found');
+		$adapter->send($message);
+		//throw new Exception('No template found');
 	}
 
 	/**
 	 * Renders the email template
 	 * 
 	 * @param string $templatePath
-	 * @param array $vars template variables
 	 * @return string
 	 */
-	private function _renderTemplate($templatePath, $vars) {
-		extract($vars, EXTR_SKIP);
+	private function _renderTemplate($templatePath) {
+		extract($this->_templateVars, EXTR_SKIP);
 		ob_start();
-		include $templatePath;
+		require $templatePath;
 		return ob_get_clean();
 	}
 
