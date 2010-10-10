@@ -54,7 +54,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 		$this->_sendLine(base64_encode($this->_options['password']), 235);
 		$this->_sendLine('MAIL FROM:<' . $message->from . '>', 250);
 
-		$allRecipients = array_merge($message->to, $message->cc, $message->bcc);
+		$allRecipients = array_merge((array)$message->to, (array)$message->cc, (array)$message->bcc);
 		foreach ($allRecipients as $recipient) {
 			$this->_sendLine('RCPT TO:<' . $recipient . '>', 250);
 		}

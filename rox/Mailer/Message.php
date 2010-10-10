@@ -73,48 +73,107 @@ class Rox_Mailer_Message {
 		$this->_headers[$name] = $value;
 	}
 
-	public function addPart($contentType, $data) {
-		$this->_parts[] = array('content_type' => $contentType, 'data' => $data);
+	public function addPart($contentType, $data, $headers = array()) {
+		$this->_parts[] = array(
+			'content_type' => $contentType,
+			'data' => $data,
+			'headers' => $headers
+		);
 	}
 
-	public function serialize() {
+	public function addAttachment($filename, $data) {
+		$encodedData = wordwrap(base64_encode($data), 76, "\n", true);
+		$this->addPart('application/octet-stream', $encodedData, array(
+			'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+			'Content-Transfer-Encoding' => 'base64'
+		));
+	}
+
+	public function addQuotedPrintablePart($contentType, $data, $headers = array()) {
+		$this->addPart($contentType, self::_encodeText($data), array(
+			'Content-Transfer-Encoding' => 'quoted-printable'
+		));
+	}
+
+	/**
+	 * Serializes the object to MIME
+	 *
+	 * @param array $options 
+	 * @return string
+	 */
+	public function serialize($options = array()) {
 		$lines = array();
 
+		$lines[] = 'MIME-Version: 1.0';
 		$lines[] = 'From: ' . $this->from;
 		$lines[] = 'To: ' . implode(', ', (array)$this->to);
-		$lines[] = 'Cc: ' . implode(', ', (array)$this->cc);
-		$lines[] = 'Bcc: ' . implode(', ', (array)$this->bcc);
-		$lines[] = 'X-Mailer: RoxPHP SMTP Mailer';
+
+		if (!empty($this->cc)) {
+			$lines[] = 'Cc: ' . implode(', ', (array)$this->cc);
+		}
+
+		if (!empty($this->bcc)) {
+			$lines[] = 'Bcc: ' . implode(', ', (array)$this->bcc);
+		}
+
+		$lines[] = 'Subject: ' . $this->subject;
+		$lines[] = 'X-Mailer: RoxPHP Mailer';
 
 		foreach ($this->_headers as $name => $value) {
 			$lines[] = "{$name}: {$value}";
 		}
 
-		$lines[] = 'Subject:' . $this->subject;
-
 		if (count($this->_parts)) {
-			$lines[] = $this->serializeParts();
+			$lines[] = $this->serializeParts($options);
 		}
 
-		return implode("\r\n", $lines);
+		return implode("\n", $lines);
 	}
 
-	public function serializeParts() {
-		$boundary = uniqid('roxbound', true);
+	public function serializeParts($options = array()) {
+		if (!isset($options['boundary'])) {
+			$options['boundary'] = uniqid('rox', true);
+		}
 
 		$lines = array();
-		$lines[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
+		$lines[] = 'Content-Type: multipart/mixed; boundary="' . $options['boundary'] . '"';
 		$lines[] = '';
 
 		foreach ($this->_parts as $part) {
-			$lines[] = '--' . $boundary;
+			$lines[] = "--{$options['boundary']}";
 			$lines[] = 'Content-Type: ' . $part['content_type'];
+
+			foreach ($part['headers'] as $name => $value) {
+				$lines[] = "{$name}: {$value}";
+			}
+
 			$lines[] = '';
 			$lines[] = $part['data'];
 		}
 
-		$lines[] = '--' . $boundary;
+		$lines[] = "--{$options['boundary']}";
 
-		return implode("\r\n", $lines);
+		return implode("\n", $lines);
 	}
+
+	/**
+	 * Encodes text to Quoted-printable
+	 *
+	 * @param string $text 
+	 * @return string
+	 */
+	protected static function _encodeText($text) {
+		$chars  = str_split(utf8_decode($text));
+		foreach ($chars as &$char) {
+			$ascii = ord($char);
+			if ($ascii > 0x255) {
+				$char = '?';
+			} else if ($char == ' ' || $char == '=' || $ascii > 127) {
+				$char = '=' . strtoupper(bin2hex($char));
+			}
+		}
+
+		return implode('', $chars);
+	}
+
 }
