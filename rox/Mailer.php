@@ -79,7 +79,7 @@ class Rox_Mailer {
 	 * @return boolean
 	 */
 	private function _send($method) {
-		$adapterClassName = 'Rox_Mailer_' . Rox_Inflector::camelize(self::$_settings['adapter']);
+		$adapterClassName = 'Rox_Mailer_Adapter_' . Rox_Inflector::camelize(self::$_settings['adapter']);
 		$adapter = new $adapterClassName(self::$_settings['adapter_settings']);
 
 		$folder = str_replace('_mailer', '', Rox_Inflector::underscore(get_class($this)));

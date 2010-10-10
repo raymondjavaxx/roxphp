@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
+class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 
 	/**
 	 * Connection resource
@@ -86,7 +86,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	}
 
 	/**
-	 * Rox_Mailer_Smtp::_sendData()
+	 * Rox_Mailer_Adapter_Smtp::_sendData()
 	 * 
 	 * @param mixed $data
 	 * @param mixed $expectedCode
@@ -105,7 +105,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	}
 
 	/**
-	 * Rox_Mailer_Smtp::_sendLine()
+	 * Rox_Mailer_Adapter_Smtp::_sendLine()
 	 * 
 	 * @param mixed $data
 	 * @param mixed $expectedCode
@@ -116,7 +116,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	}
 
 	/**
-	 * Rox_Mailer_Smtp::_getResponse()
+	 * Rox_Mailer_Adapter_Smtp::_getResponse()
 	 * 
 	 * @return string|false
 	 */
@@ -130,7 +130,7 @@ class Rox_Mailer_Smtp extends Rox_Mailer_Abstract {
 	}
 
 	/**
-	 * Rox_Mailer_Smtp::_disconnect()
+	 * Rox_Mailer_Adapter_Smtp::_disconnect()
 	 * 
 	 * @return boolean
 	 */

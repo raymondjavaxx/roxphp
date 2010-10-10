@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-abstract class Rox_Mailer_Abstract {
+abstract class Rox_Mailer_Adapter {
 
 	/**
 	 * Mailer options
