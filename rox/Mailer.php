@@ -19,44 +19,29 @@
  */
 class Rox_Mailer {
 
+	const ADAPTER_SMTP = 'Rox_Mailer_Adapter_Smtp';
+
+	protected static $_config = array(
+		'adapter' => self::ADAPTER_SMTP
+	);
+
 	public $defaults = array();
 
-	/**
-	 * undocumented variable
-	 *
-	 * @var Rox_Mailer_Message
-	 */
 	public $message;
 
 	/**
-	 * View variables
+	 * Template variables
 	 *
 	 * @var array  
 	 */
 	protected $_templateVars = array();
 
-	/**
-	 * Settings
-	 *
-	 * @var array
-	 */
-	protected static $_settings = array(
-		'adapter' => 'smtp',
-		'adapter_settigns' => array() 
-	);
-
 	public function __construct() {
 		$this->message = new Rox_Mailer_Message($this->defaults);
 	}
 
-	/**
-	 * Sets the adapter and settings for the mailer module.
-	 * 
-	 * @param string $adapter
-	 * @param array $settings
-	 */
-	public static function setAdapter($adapter, $settings = array()) {
-		self::$_settings = array('adapter' => $adapter, 'adapter_settings' => $settings);
+	public static function init($config = array()) {
+		self::$_config = ($config + self::$_config);
 	}
 
 	/**
@@ -79,8 +64,7 @@ class Rox_Mailer {
 	 * @return boolean
 	 */
 	private function _send($method) {
-		$adapterClassName = 'Rox_Mailer_Adapter_' . Rox_Inflector::camelize(self::$_settings['adapter']);
-		$adapter = new $adapterClassName(self::$_settings['adapter_settings']);
+		$adapter = new self::$_config['adapter'](self::$_config);
 
 		$folder = str_replace('_mailer', '', Rox_Inflector::underscore(get_class($this)));
 		$filename = Rox_Inflector::underscore($method);
