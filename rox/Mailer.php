@@ -29,6 +29,8 @@ class Rox_Mailer {
 
 	public $message;
 
+	public $params;
+
 	/**
 	 * Template variables
 	 *
@@ -59,26 +61,28 @@ class Rox_Mailer {
 	}
 
 	/**
-	 * Sends the email.
+	 * Sends the email
 	 * 
-	 * @return boolean
+	 * @return mixed
 	 */
-	private function _send($method) {
-		$adapter = new self::$_config['adapter'](self::$_config);
+	private function _send() {
+		$folder   = $this->params['mailer'];
+		$filename = $this->params['email'];
 
-		$folder = str_replace('_mailer', '', Rox_Inflector::underscore(get_class($this)));
-		$filename = Rox_Inflector::underscore($method);
-		$extensions = array('txt.tpl' => 'text/plain; charset=UTF-8', 'html.tpl' => 'text/html; charset=UTF-8');
+		$extensions = array(
+			'txt.tpl' => 'text/plain; charset="utf-8"',
+			'html.tpl' => 'text/html; charset="utf-8"'
+		);
 
 		foreach ($extensions as $extension => $contentType) {
 			$path = ROX_APP_PATH . "/mailers/templates/{$folder}/{$filename}.{$extension}";
 			if (file_exists($path)) {
-				$message->addPart($contentType, self::_renderTemplate($path));
+				$this->message->addQuotedPrintablePart($contentType, self::_renderTemplate($path));
 			}
 		}
 
-		$adapter->send($message);
-		//throw new Exception('No template found');
+		$adapter = new self::$_config['adapter'](self::$_config);
+		return $adapter->send($this->message);
 	}
 
 	/**
@@ -97,22 +101,29 @@ class Rox_Mailer {
 	/**
 	 * Rox_Mailer::send()
 	 * 
-	 * @param string $mailerAndMethod
-	 * @return boolean
+	 * @param string $mailerAndEmail
+	 * @param ...
+	 * @return mixed
 	 */
-	public static function send($mailerAndMethod) {
-		if (strpos($mailerAndMethod, '.') == false) {
-			throw new Rox_Exception('mailer and method should be separated by a period.');
+	public static function send($mailerAndEmail) {
+		if (strpos($mailerAndEmail, '.') == false) {
+			throw new Rox_Exception('mailer and email should be separated by a period.');
 		}
 
-		list($mailerClass, $mailerMethod) = explode('.', $mailerAndMethod);
-		$mailerClass = Rox_Inflector::camelize($mailerClass . '_mailer');
-		$mailerMehod = Rox_Inflector::lowerCamelize($mailerMethod);
-		$parameters = func_get_args();
+		list($mailer, $email) = explode('.', $mailerAndEmail);
+		$mailerClass = Rox_Inflector::camelize($mailer . '_mailer');
+		$emailMethod = Rox_Inflector::lowerCamelize($email);
+		$args = array_slice(func_get_args(), 1);
 
-		$mailer = new $mailerClass;
-		call_user_func_array(array($mailer, $mailerMehod), array_slice($parameters, 1));
+		$mailerInstance = new $mailerClass;
+		$mailerInstance->params = array(
+			'mailer'       => $mailer,
+			'mailer_class' => $mailerClass,
+			'email'        => $email,
+			'email_method' => $emailMethod
+		);
 
-		return $mailer->_send($mailerClass, $mailerMehod);
+		call_user_func_array(array($mailerInstance, $emailMethod), $args);
+		return $mailerInstance->_send();
 	}
 }

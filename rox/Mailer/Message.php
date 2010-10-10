@@ -59,7 +59,11 @@ class Rox_Mailer_Message {
 	public $subject = '';
 
 	public function __construct($defaults = array()) {
-		foreach ($defaults as $k => $v) {
+		$this->set($defaults);
+	}
+
+	public function set($attributes) {
+		foreach ($attributes as $k => $v) {
 			$this->{$k} = $v;
 		}
 	}
@@ -136,7 +140,7 @@ class Rox_Mailer_Message {
 		}
 
 		$lines = array();
-		$lines[] = 'Content-Type: multipart/mixed; boundary="' . $options['boundary'] . '"';
+		$lines[] = 'Content-Type: multipart/alternative; boundary="' . $options['boundary'] . '"';
 		$lines[] = '';
 
 		foreach ($this->_parts as $part) {

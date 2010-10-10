@@ -27,7 +27,7 @@ From: ramon@example.org
 To: john@example.org
 Subject: Testing
 X-Mailer: RoxPHP Mailer
-Content-Type: multipart/mixed; boundary="boundary123"
+Content-Type: multipart/alternative; boundary="boundary123"
 
 --boundary123
 Content-Type: text/plain; charset="utf-8"
