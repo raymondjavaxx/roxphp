@@ -43,7 +43,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 * Sends email message
 	 *
 	 * @param Rox_Mailer_Message
-	 * @return mixed
+	 * @return void
 	 */
 	public function send(Rox_Mailer_Message $message) {
 		$this->_connect();
@@ -64,8 +64,8 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 		}
 
 		$this->_sendLine('DATA', 354);
-		$this->_sendData($email->serialize());
-		$this->_sendData("\r\n\r\n\r\n.\r\n", 250);
+		$this->_sendData($message->serialize());
+		$this->_sendData("\r\n.\r\n", 250);
 		$this->_sendLine('QUIT');
 
 		$this->_disconnect();
@@ -102,7 +102,9 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 
 		if (!is_null($expectedCode)) {
 			$response = $this->_getResponse();
+
 			if (strpos($response, (string)$expectedCode) === false) {
+				$response = $this->_getResponse();
 				throw new Rox_Exception("Unexpected response '{$response}'");
 			}
 		}
@@ -126,11 +128,10 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 */
 	protected function _getResponse() {
 		do {
-			$data = @fgets($this->_fp);
-			$status = stream_get_meta_data($this->_fp);
-		} while ($status['unread_bytes'] > 0);
+			$result = trim(fgets($this->_fp, 1024));
+		} while (strpos($result, '-') === 3);
 
-		return $data;
+		return $result;
 	}
 
 	/**
