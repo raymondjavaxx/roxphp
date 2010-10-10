@@ -33,7 +33,7 @@ abstract class Rox_Mailer_Adapter {
 	 * @return void
 	 */
 	public function __construct($config = array()) {
-		$this->_config += $config;
+		$this->_config = ($config + $this->_config);
 	}
 
 	/**
