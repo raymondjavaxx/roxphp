@@ -31,7 +31,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 *
 	 * @var array
 	 */
-	protected $_options = array(
+	protected $_config = array(
 		'host'     => '127.0.0.1',
 		'username' => null,
 		'password' => null,
@@ -42,7 +42,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	/**
 	 * Sends email message
 	 *
-	 * @param Rox_Mailer_Message
+	 * @param Rox_Mailer_Message $message
 	 * @return void
 	 */
 	public function send(Rox_Mailer_Message $message) {
@@ -50,10 +50,10 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 
 		$this->_sendLine('EHLO roxphp', 250);
 
-		if (!empty($this->_options['username'])) {
+		if (!empty($this->_config['username'])) {
 			$this->_sendLine('AUTH LOGIN', 334);
-			$this->_sendLine(base64_encode($this->_options['username']), 334);
-			$this->_sendLine(base64_encode($this->_options['password']), 235);
+			$this->_sendLine(base64_encode($this->_config['username']), 334);
+			$this->_sendLine(base64_encode($this->_config['password']), 235);
 		}
 
 		$this->_sendLine('MAIL FROM:<' . $message->from . '>', 250);
@@ -75,14 +75,14 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 * Connects to SMTP server
 	 * 
 	 * @return void
-	 * @throws Mailer_Adapter_Rox_Exception
+	 * @throws Rox_Exception
 	 */
 	protected function _connect() {
-		$this->_fp = @fsockopen($this->_options['host'], $this->_options['port'],
-			$errno, $errstr, $this->_options['timeout']);
+		$this->_fp = @fsockopen($this->_config['host'], $this->_config['port'],
+			$errno, $errstr, $this->_config['timeout']);
 
 		if ($this->_fp === false) {
-			throw new Rox_Exception('Could not connect to host ' . $this->_options['host']);
+			throw new Rox_Exception('Could not connect to host ' . $this->_config['host']);
 		}
 
 		// consume the response
@@ -90,12 +90,12 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	}
 
 	/**
-	 * Rox_Mailer_Adapter_Smtp::_sendData()
+	 * Sends data to SMTP server
 	 * 
 	 * @param mixed $data
 	 * @param mixed $expectedCode
 	 * @return void
-	 * @throws Mailer_Adapter_Exception
+	 * @throws Rox_Exception
 	 */
 	protected function _sendData($data, $expectedCode = null) {
 		fputs($this->_fp, $data);
@@ -104,27 +104,26 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 			$response = $this->_getResponse();
 
 			if (strpos($response, (string)$expectedCode) === false) {
-				$response = $this->_getResponse();
 				throw new Rox_Exception("Unexpected response '{$response}'");
 			}
 		}
 	}
 
 	/**
-	 * Rox_Mailer_Adapter_Smtp::_sendLine()
+	 * Sends a line of text to the server
 	 * 
-	 * @param mixed $data
-	 * @param mixed $expectedCode
+	 * @param string $text
+	 * @param integer $expectedCode
 	 * @return void
 	 */
-	protected function _sendLine($data, $expectedCode = null) {
-		$this->_sendData($data . "\r\n", $expectedCode);
+	protected function _sendLine($text, $expectedCode = null) {
+		$this->_sendData($text . "\r\n", $expectedCode);
 	}
 
 	/**
-	 * Rox_Mailer_Adapter_Smtp::_getResponse()
+	 * Get response from server
 	 * 
-	 * @return string|false
+	 * @return string
 	 */
 	protected function _getResponse() {
 		do {
@@ -135,7 +134,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	}
 
 	/**
-	 * Rox_Mailer_Adapter_Smtp::_disconnect()
+	 * Disconnects from SMTP server
 	 * 
 	 * @return boolean
 	 */

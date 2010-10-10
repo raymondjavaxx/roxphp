@@ -24,7 +24,7 @@ abstract class Rox_Mailer_Adapter {
 	 *
 	 * @var array
 	 */
-	protected $_options = array();
+	protected $_config = array();
 
 	/**
 	 * Constructor
@@ -32,8 +32,8 @@ abstract class Rox_Mailer_Adapter {
 	 * @param mixed $options
 	 * @return void
 	 */
-	public function __construct($options = array()) {
-		$this->_options += $options;
+	public function __construct($config = array()) {
+		$this->_config += $config;
 	}
 
 	/**
