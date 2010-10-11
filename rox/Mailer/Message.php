@@ -176,6 +176,11 @@ class Rox_Mailer_Message {
 			}
 		}
 
-		return implode('', $chars);
+		$lines = explode("\n", implode('', $chars));
+		foreach ($lines as &$line) {
+			$line = wordwrap($line, 70, "=\n");
+		}
+
+		return implode("\n", $lines);
 	}
 }

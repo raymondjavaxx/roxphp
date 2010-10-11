@@ -13,6 +13,13 @@ class Rox_Mailer_MessageTest extends PHPUnit_Framework_TestCase {
 
 		$message->addQuotedPrintablePart('text/plain; charset="utf-8"', 'Cinéma');
 
+		$htmlParagraphs = <<<EOD
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dapi bus aliquet porttitor.</p>
+<p>t vehicula varius velit, eu sagittis nibh auctor vitae.</p>
+EOD;
+
+		$message->addQuotedPrintablePart('text/html; charset="utf-8"', $htmlParagraphs);
+
 		$pixel = <<<EOD
 iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
 bWFnZVJlYWR5ccllPAAAAAZQTFRFAP8AAAAAbwN+QwAAAAxJREFUeNpiYAAIMAAAAgABT21Z4QAA
@@ -36,6 +43,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 Cin=C3=A9ma
+--boundary123
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dapi=
+bus aliquet porttitor.</p>
+<p>t vehicula varius velit, eu sagittis nibh auctor vitae.</p>
 --boundary123
 Content-Type: application/octet-stream
 Content-Disposition: attachment; filename="pixel.png"
