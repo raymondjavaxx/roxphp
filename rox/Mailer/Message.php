@@ -142,6 +142,8 @@ class Rox_Mailer_Message {
 		$lines = array();
 		$lines[] = 'Content-Type: multipart/alternative; boundary="' . $options['boundary'] . '"';
 		$lines[] = '';
+		$lines[] = 'This is a multi-part message in MIME format';
+		$lines[] = '';
 
 		foreach ($this->_parts as $part) {
 			$lines[] = "--{$options['boundary']}";
@@ -155,7 +157,7 @@ class Rox_Mailer_Message {
 			$lines[] = $part['data'];
 		}
 
-		$lines[] = "--{$options['boundary']}";
+		$lines[] = "--{$options['boundary']}--";
 
 		return implode("\n", $lines);
 	}

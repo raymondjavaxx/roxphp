@@ -29,6 +29,8 @@ Subject: Testing
 X-Mailer: RoxPHP Mailer
 Content-Type: multipart/alternative; boundary="boundary123"
 
+This is a multi-part message in MIME format
+
 --boundary123
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
@@ -42,7 +44,7 @@ Content-Transfer-Encoding: base64
 iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
 bWFnZVJlYWR5ccllPAAAAAZQTFRFAP8AAAAAbwN+QwAAAAxJREFUeNpiYAAIMAAAAgABT21Z4QAA
 AABJRU5ErkJggg==
---boundary123
+--boundary123--
 EOD;
 
 		$serialized = $message->serialize(array('boundary' => 'boundary123'));
