@@ -167,17 +167,13 @@ class Rox_Mailer_Message {
 	 * @return string
 	 */
 	protected static function _encodeText($text) {
-		$chars  = str_split(utf8_decode($text));
+		$chars  = str_split($text);
 		foreach ($chars as &$char) {
-			$ascii = ord($char);
-			if ($ascii > 0x255) {
-				$char = '?';
-			} else if ($char == ' ' || $char == '=' || $ascii > 127) {
+			if ($char == '=' || ord($char) > 127) {
 				$char = '=' . strtoupper(bin2hex($char));
 			}
 		}
 
 		return implode('', $chars);
 	}
-
 }

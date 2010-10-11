@@ -33,7 +33,7 @@ Content-Type: multipart/alternative; boundary="boundary123"
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Cin=E9ma
+Cin=C3=A9ma
 --boundary123
 Content-Type: application/octet-stream
 Content-Disposition: attachment; filename="pixel.png"
