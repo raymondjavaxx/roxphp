@@ -14,10 +14,18 @@
 
 require_once dirname(dirname(dirname(__FILE__))) . '/app/config/bootstrap.php';
 
+if ($argc == 1) {
+	echo 'usage: rox <command> ...';
+	exit(1);
+}
+
 try {
-	$command = new Rox_Console_Command_Db;
+	$class = "Rox_Console_Command_" . Rox_Inflector::camelize($argv[1]);
+	$command = new $class;
 	$command->header();
 	$command->run($argc, $argv);
+	exit(0);
 } catch (Exception $e) {
     echo sprintf("E: %s (%d)", $e->getMessage(), $e->getCode());
+    exit(1);
 }
