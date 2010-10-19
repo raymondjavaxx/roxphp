@@ -21,6 +21,10 @@ class Rox_ActiveRecord_Migration_Connection {
 		return $operation;
 	}
 
+	public function dropTable($tableName) {
+		$this->_datasource()->execute("DROP TABLE `{$tableName}`");
+	}
+
 	public function addColumn($tableName, $columnName, $type, $options = array()) {
 		$sql = sprintf("ALTER TABLE `%s` ADD `%s` %s",
 			$tableName, $columnName, self::expandColumn($type, $options));

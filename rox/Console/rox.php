@@ -15,7 +15,7 @@
 require_once dirname(dirname(dirname(__FILE__))) . '/app/config/bootstrap.php';
 
 try {
-	$command = new Rox_Console_Command_Gen;
+	$command = new Rox_Console_Command_Db;
 	$command->header();
 	$command->run($argc, $argv);
 } catch (Exception $e) {

@@ -19,6 +19,11 @@ class Rox_ActiveRecord_Migration {
 		return $this->_connection->createTable($tableName, $options);
 	}
 
+	public function dropTable($tableName) {
+		echo " # dropping table {$tableName}\n";
+		return $this->_connection->dropTable($tableName);
+	}
+
 	public function addColumn($tableName, $columnName, $type, $options = array()) {
 		echo " # adding column {$tableName}.{$columnName}\n";
 		$this->_connection->addColumn($tableName, $columnName, $type, $options);
