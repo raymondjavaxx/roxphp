@@ -2,12 +2,29 @@
 
 class Rox_ActiveRecord_Migration_Connection {
 
+	protected static $_typeMap = array(
+		'binary'    => array('native_type' => 'BLOB'),
+		'boolean'   => array('native_type' => 'TINYINT', 'len' => 1),
+		'date'      => array('native_type' => 'DATE'),
+		'datetime'  => array('native_type' => 'DATETIME'),
+		'decimal'   => array('native_type' => 'DECIMAL'),
+		'float'     => array('native_type' => 'FLOAT'),
+		'integer'   => array('native_type' => 'INTEGER', 'len' => 11),
+		'string'    => array('native_type' => 'VARCHAR', 'len' => 255),
+		'text'      => array('native_type' => 'TEXT'),
+		'time'      => array('native_type' => 'TIME'),
+		'timestamp' => array('native_type' => 'DATETIME'),
+	);
+
 	public function createTable($tableName, $options = array()) {
 		$operation = new Rox_ActiveRecord_Migration_CreateTableOperation($tableName, $options);
 		return $operation;
 	}
 
 	public function addColumn($tableName, $columnName, $type, $options = array()) {
+		$sql = sprintf("ALTER TABLE `%s` ADD `%s` %s",
+			$tableName, $columnName, self::expandColumn($type, $options));
+		$this->_datasource()->execute($sql);
 	}
 
 	public function renameColumn($tableName, $columnName, $newColumnName) {
@@ -44,5 +61,24 @@ class Rox_ActiveRecord_Migration_Connection {
 
 	protected function _datasource() {
 		return Rox_ConnectionManager::getDataSource();
+	}
+
+	public static function expandColumn($type, $options = array()) {
+		if (!isset(self::$_typeMap[$type])) {
+			throw new Rox_Exception("Unknown type {$type}");
+		}
+
+		$defaults = array('null' => true);
+		$definition = array_merge(self::$_typeMap[$type], $defaults, $options);
+
+		$result = array();
+		$result[] = $definition['native_type'];
+
+		if (array_key_exists('len', $definition)) {
+			$result[] = "({$definition['len']})";
+		}
+
+		$result[] = $definition['null'] ? ' NULL' : ' NOT NULL';
+		return implode('', $result);
 	}
 }
