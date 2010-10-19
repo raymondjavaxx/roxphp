@@ -15,7 +15,7 @@ class Rox_ActiveRecord_Migration {
 	}
 
 	public function createTable($tableName, $options = array()) {
-		echo " # creating table {$tableName}{\n";
+		echo " # creating table {$tableName}\n";
 		return $this->_connection->createTable($tableName, $options);
 	}
 
