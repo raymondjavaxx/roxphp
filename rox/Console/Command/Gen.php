@@ -30,11 +30,18 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			case 'controller':
 				$this->_generateController($argv[3]);
 				break;
+
 			case 'model':
 				$this->_generateModel($argv[3]);
 				break;
+
 			case 'views':
 				$this->_generateViews($argv[3]);
+				break;
+
+			case 'migration':
+				$this->_generateMigration($argv[3]);
+				break;
 		}
 	}
 
@@ -87,6 +94,25 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			$folder = Rox_Inflector::tableize($name);
 			$this->_writeFile("/views/{$folder}/{$template}.html.tpl", $data);
 		}
+	}
+
+	protected function _generateMigration($name) {
+		$name = Rox_Inflector::underscore($name);
+
+		foreach (glob(ROX_APP_PATH . '/config/migrations/*.php') as $file) {
+			if (preg_match("/([0-9]+)_{$name}.php/", $file) == 1) {
+				throw new Exception("A migration named {$name} already exists");
+			}
+		}
+
+		$version = gmdate('Ymdhis');
+
+		$data = $this->_renderTemplate('migration', array(
+			'class_name' => Rox_Inflector::camelize($name),
+			'year' => date('Y')
+		));
+
+		$this->_writeFile("/config/migrations/{$version}_{$name}.php", $data);
 	}
 
 	protected function _writeFile($file, $data) {
