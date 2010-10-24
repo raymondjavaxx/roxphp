@@ -39,7 +39,7 @@ class Rox_ActiveRecord_Migration_CreateTableOperation {
 
 		$name = $args[0];
 		$type = $method;
-		$options = array_slice($args, 1);
+		$options = isset($args[1]) ? $args[1] : array();
 
 		$this->column($name, $type, $options);
 	}
