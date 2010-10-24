@@ -19,6 +19,10 @@
  */
 class Rox_ActiveRecord_Migration_Migrator {
 
+	public function __construct() {
+		$this->_createSchemaMigrationsTable();
+	}
+
 	public function migrate($direction) {
 		$this->_scan($direction);
 
@@ -100,6 +104,15 @@ class Rox_ActiveRecord_Migration_Migrator {
 		$version = end($versions);
 		$migrations = self::_scan();
 		return $migrations[$version];
+	}
+
+	protected function _createSchemaMigrationsTable() {
+		$datasource = Rox_ConnectionManager::getDataSource();
+		if (!in_array('schema_migrations', $datasource->listTables())) {
+			$t = new Rox_ActiveRecord_Migration_CreateTableOperation('schema_migrations');
+			$t->string('version');
+			$t->finish();
+		}
 	}
 
 	protected static function _migratedVersions() {
