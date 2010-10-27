@@ -105,7 +105,7 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			}
 		}
 
-		$version = gmdate('Ymdhis');
+		$version = gmdate('YmdHis');
 
 		$data = $this->_renderTemplate('migration', array(
 			'class_name' => Rox_Inflector::camelize($name),
