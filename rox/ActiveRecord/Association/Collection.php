@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_ActiveRecord_Association_Collection {
+class Rox_ActiveRecord_Association_Collection implements IteratorAggregate {
 
 	protected $_scope = array();
 
@@ -66,5 +66,9 @@ class Rox_ActiveRecord_Association_Collection {
 	public function paginate($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->paginate($options);
+	}
+
+	public function getIterator() {
+		return new ArrayIterator($this->findAll());
 	}
 }
