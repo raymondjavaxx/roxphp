@@ -100,10 +100,11 @@ class Rox_Helper_Html {
 	 *
 	 * @param string $text 
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function viewLink($text, Rox_ActiveModel $object) {
-		return $this->link($text, $this->viewPath($object));
+	public function viewLink($text, Rox_ActiveModel $object, $options = array()) {
+		return $this->link($text, $this->viewPath($object, $options));
 	}
 
 	/**
@@ -111,10 +112,11 @@ class Rox_Helper_Html {
 	 *
 	 * @param string $text 
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function editLink($text, Rox_ActiveModel $object) {
-		return $this->link($text, $this->editPath($object));
+	public function editLink($text, Rox_ActiveModel $object, $options = array()) {
+		return $this->link($text, $this->editPath($object, $options));
 	}
 
 	/**
@@ -122,10 +124,11 @@ class Rox_Helper_Html {
 	 *
 	 * @param string $text 
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function deleteLink($text, Rox_ActiveModel $object) {
-		return $this->link($text, $this->deletePath($object), array('class' => 'delete'));
+	public function deleteLink($text, Rox_ActiveModel $object, $options = array()) {
+		return $this->link($text, $this->deletePath($object, $options), array('class' => 'delete'));
 	}
 
 	/**
@@ -174,30 +177,36 @@ class Rox_Helper_Html {
 	 * Returns the path for viewing a record.
 	 *
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function viewPath($object) {
-		return "/" . self::_controllerNameFromModel($object) . "/view/" . $object->getId();
+	public function viewPath($object, $options = array()) {
+		$path = "/" . self::_controllerNameFromModel($object) . "/view/" . $object->getId();
+		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
 	/**
 	 * Returns the path for editing a record.
 	 *
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function editPath($object) {
-		return "/" . self::_controllerNameFromModel($object) . "/edit/" . $object->getId();
+	public function editPath($object, $options = array()) {
+		$path = "/" . self::_controllerNameFromModel($object) . "/edit/" . $object->getId();
+		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
 	/**
 	 * Returns the path for deleting a record.
 	 *
 	 * @param Rox_ActiveModel $object 
+	 * @param array $options
 	 * @return string
 	 */
-	public function deletePath($object) {
-		return "/" . self::_controllerNameFromModel($object) . "/delete/" . $object->getId();
+	public function deletePath($object, $options = array()) {
+		$path = "/" . self::_controllerNameFromModel($object) . "/delete/" . $object->getId();
+		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
 	/**

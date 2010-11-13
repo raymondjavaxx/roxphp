@@ -28,7 +28,7 @@ class Rox_Dispatcher {
 	public function dispatch($url = null) {
 		$parsedUrl = Rox_Router::parseUrl($url);
 
-		$this->_loadController($parsedUrl['controller_class']);
+		$this->_loadController($parsedUrl);
 
 		$controller = new $parsedUrl['controller_class'](array(
 			'request' => new Rox_Request()
@@ -55,12 +55,18 @@ class Rox_Dispatcher {
 	 * @param string $name
 	 * @throws Rox_Exception
 	 */
-	protected function _loadController($name) {
-		$filename = ROX_APP_PATH . "/controllers/{$name}.php";
-		if (!file_exists($filename)) {
-			throw new Rox_Exception('Missing controller file', 404);
+	protected function _loadController($params) {
+		$path = ROX_APP_PATH . "/controllers";
+		if (isset($params['namespace']) && $params['namespace']) {
+			$path .= "/{$params['namespace']}/{$params['controller_class']}.php";
+		} else {
+			$path .= "/{$params['controller_class']}.php";
 		}
 
-		require_once $filename;
+		if (!file_exists($path)) {
+			throw new Rox_Exception('Missing controller file' . $path, 404);
+		}
+
+		require_once $path;
 	}
 }

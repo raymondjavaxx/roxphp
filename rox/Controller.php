@@ -88,6 +88,11 @@ class Rox_Controller {
 		}
 
 		$viewPath = $this->params['controller'];
+		if (!empty($this->params['namespace'])) {
+			$simpleControllerName = substr($this->params['controller'], strlen($this->params['namespace']) + 1);
+			$viewPath = $this->params['namespace'] . '/' . $simpleControllerName;
+		}
+
 		$viewName = $this->params['action'];
 
 		$view = new Rox_View($this->_viewVars);

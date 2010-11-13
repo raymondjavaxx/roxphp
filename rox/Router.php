@@ -109,29 +109,29 @@ class Rox_Router {
 			array_push($parts, $lastPart);
 		}
 
-		if (preg_match('/^[a-z_]+$/', $parts[0]) != 1) {
+		if (preg_match('/^(?!_)[a-z_]+(?<!_)$/', $parts[0]) != 1) {
 			throw new Rox_Exception('Illegal controller name', 404);
 		}
 
 		$action = 'index';
 		if (isset($parts[1])) {
-			if (preg_match('/^[a-z_]+$/', $parts[1]) != 1) {
+			if (preg_match('/^(?!_)[a-z_]+(?<!_)$/', $parts[1]) != 1) {
 				throw new Rox_Exception('Illegal action name', 404);
 			}
 			$action = $parts[1];
 		}
 
-		$actionMethod = ($actionPrefix == null ? $action : $actionPrefix . '_' . $action);
-		$actionMethod = Rox_Inflector::lowerCamelize($actionMethod) . 'Action';
-		$controllerClass = Rox_Inflector::camelize($parts[0]) . 'Controller';
+		$controller = $actionPrefix ? "{$actionPrefix}_{$parts[0]}" : $parts[0];
+		$actionMethod = Rox_Inflector::lowerCamelize($action) . 'Action';
+		$controllerClass = Rox_Inflector::camelize($controller) . 'Controller';
 
 		$result = array(
-			'controller'    => $parts[0],
+			'controller'    => $controller,
 			'action'        => $action,
 			'controller_class' => $controllerClass,
 			'action_method' => $actionMethod,
 			'params'        => array_slice($parts, 2),
-			'prefix'        => $actionPrefix,
+			'namespace'     => $actionPrefix,
 			'extension'     => $extension
 		);
 
