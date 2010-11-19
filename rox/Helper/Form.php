@@ -41,10 +41,18 @@ class Rox_Helper_Form {
 	protected $_validationErrors = array();
 
 	/**
+	 * Options
+	 *
+	 * @var array
+	 */
+	protected $_options = array('is_child' => false);
+
+	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public function __construct($options = array()) {
 		$this->_data = $_POST;
+		$this->_options = array_merge($this->_options, $options);
 	}
 
 	/**
@@ -56,32 +64,36 @@ class Rox_Helper_Form {
 	 */
 	public function forModel($model, $options = array()) {
 		$options = array_merge(array('action' => null), $options);
+		$this->setModel($model);
 
-		if (is_string($model)) {
-			if ($options['action'] === null) {
-				$controller = Rox_Inflector::underscore($model);
-				$controller = Rox_Inflector::pluralize($controller);
-				$options['action'] = '/'.$controller.'/add';
-			}
-			return $this->create($model, $options['action'], $options);
-		}
-
-		if (!is_object($model) || !($model instanceof  Rox_ActiveModel)) {
-			throw new Rox_Exception('Invalid model param');
-		}
-
-		$modelClass = get_class($model);
-		$modelName = Rox_Inflector::underscore($modelClass);
 		if ($options['action'] === null) {
-			$controller = Rox_Inflector::pluralize($modelName);
-			$options['action'] = ($model->getId() === null) ? '/'.$controller.'/add' :
-				'/'.$controller.'/edit/'.$model->getId();
+			$controller = Rox_Inflector::pluralize($this->_currentModel);
+			$options['action'] = (is_string($model) || $model->getId() === null) ? "/{$controller}/add" :
+				'/' . $controller . '/edit/' . $model->getId();
 		}
 
-		$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
-		$this->_validationErrors[$modelName] = $model->getValidationErrors();
+		return $this->create($options['action'], $options);
+	}
 
-		return $this->create($modelName, $options['action'], $options);
+	public function setModel($model) {
+		$validModel = is_string($model) || (is_object($model) && $model instanceof  Rox_ActiveModel);
+		if (!$validModel) {
+			throw new Rox_Exception('Model should be string or a Rox_ActiveModel');
+		}
+
+		$modelName = Rox_Inflector::underscore(is_object($model) ? get_class($model) : $model);
+		$this->_currentModel = $modelName;
+
+		if (is_object($model)) {
+			$this->_data = array_merge($this->_data, array($modelName => $model->getData()));
+			$this->_validationErrors[$modelName] = $model->getValidationErrors();
+		}
+	}
+
+	public function fieldsFor($model) {
+		$helperInstance = new Rox_Helper_Form(array('is_child' => true));
+		$helperInstance->setModel($model);
+		return $helperInstance;
 	}
 
 	/**
@@ -92,15 +104,10 @@ class Rox_Helper_Form {
 	 * @param array $attributes
 	 * @return string
 	 */
-	public function create($model, $action, $attributes = array()) {
+	public function create($action, $attributes = array()) {
 		$attributes['action'] = Rox_Router::url($action);
-		$attributes = array_merge(array(
-			'method' => 'post',
-		), $attributes);
-
-		$this->_currentModel = Rox_Inflector::underscore($model);
-		$formTag = sprintf('<form%s>', $this->_makeAttributes($attributes));
-		return $formTag;
+		$attributes = array_merge(array('method' => 'post'), $attributes);
+		return sprintf('<form%s>', $this->_makeAttributes($attributes));
 	}
 
 	/**
@@ -381,7 +388,7 @@ class Rox_Helper_Form {
 	 * @return string
 	 */
 	public function end() {
-		return '</form>';
+		return $this->_options['is_child'] ? null : '</form>';
 	}
 
 	protected function _valueForField($name) {
