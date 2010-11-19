@@ -8,6 +8,10 @@ img {
 	border:0;
 }
 
+a {
+	color:#00d;
+}
+
 h1 {
 	color:#06f;
 	font-size:22px;
@@ -36,36 +40,46 @@ h3 {
 	padding:10px;
 }
 
+/** Tables **/
 table {
 	width:100%;
-	border:2px solid #c2cff1;
+	border:0;
 	border-spacing:0;
 	background:#f0f6fe;
 	margin:0 0 10px;
 }
 
+table tr:nth-child(odd) {
+	background-color: #f8fbfe;
+}
+
+table th, table td {
+	padding:8px;
+}
+
 table td {
-	padding:4px;
+	border-bottom:1px solid #ccc;
 }
 
 table td.money {
 	text-align:right;
 }
 
+table td a {
+	text-decoration:none;
+}
+
+table td a:hover {
+	text-decoration:underline;
+}
+
 table th {
 	color:#06c;
 	background:#dde;
-	padding:4px;
 	text-align:left;
 }
 
-.exception {
-	color: #7e2217;
-	background-color: #fdfaa4;
-	border: 1px solid #444;
-	padding: 8px;
-}
-
+/** Pagination **/
 .pagination {
 	margin:0 0 10px;
 }
@@ -80,7 +94,7 @@ table th {
 	background:#06f;
 }
 
-/** flash messages **/
+/** Flash messages **/
 .flash-message {
 	border: 1px solid;
 	margin: 10px 0px;
@@ -112,21 +126,24 @@ form .select-input label {
 	font-size:15px;
 }
 
-form .input .error {
-	color:#D8000C;
-	margin:3px 0 0 0;
-	font-style:italic;
+form .submit input {
+	font-size:20px;
+}
+
+form .text-input input,
+form .password-input input,
+form .select-input select {
+	font-size:16px;
+	padding:3px;
 }
 
 form .text-input input,
 form .password-input input {
 	width:300px;
-	font-size:16px;
-	padding:3px;
 }
 
 form .textarea-input textarea {
-	width:400px;
+	width:500px;
 	height:160px;
 	font-size:16px;
 	padding:3px;
@@ -142,6 +159,12 @@ form .input label {
 
 form .checkbox-input label {
 	display:inline;
+}
+
+form .input .error {
+	color:#D8000C;
+	margin:3px 0 0 0;
+	font-style:italic;
 }
 
 form .input .hint {
