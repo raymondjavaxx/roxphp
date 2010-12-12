@@ -15,5 +15,5 @@
 // include the bootstrap file
 require dirname(dirname(__FILE__)) . '/config/bootstrap.php';
 
-$dispatcher = new Rox_Dispatcher;
-$dispatcher->dispatch(new Rox_Request);
+$dispatcher = new Rox_Http_Dispatcher;
+$dispatcher->dispatch(new Rox_Http_Request);

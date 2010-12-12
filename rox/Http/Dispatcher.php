@@ -17,12 +17,11 @@
  *
  * @package Rox
  */
-class Rox_Dispatcher {
+class Rox_Http_Dispatcher {
 
 	/**
-	 * Rox_Dispatcher::dispatch()
+	 * Dispatches an HTTP request
 	 *
-	 * @param mixed $url
 	 * @param Rox_Http_Request $request
 	 * @throws Rox_Exception
 	 */

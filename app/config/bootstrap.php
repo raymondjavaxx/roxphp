@@ -19,11 +19,6 @@
 define('ROX_DEBUG', true);
 
 /**
- * Controller/action to call when user lands on homepage.
- */
-define('ROX_DEFAULT_ROUTE', '/pages/home');
-
-/**
  * Path to application folder
  */
 define('ROX_APP_PATH', dirname(dirname(__FILE__)));
@@ -58,4 +53,5 @@ Rox_Loader::register();
 
 // Load DB configuration file and init
 require ROX_APP_PATH . '/config/database.php';
+require ROX_APP_PATH . '/config/routes.php';
 require ROX_APP_PATH . '/config/init.php';
