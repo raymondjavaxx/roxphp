@@ -8,12 +8,23 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright Copyright (c) 2008 - 2010 Ramon Torres
- * @package App
+ * @package Rox
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-// include the bootstrap file
-require dirname(dirname(__FILE__)) . '/config/bootstrap.php';
+/**
+ * Rox_Http_Decoder_Json
+ *
+ * @package Rox
+ */
+class Rox_Http_Decoder_Json {
 
-$dispatcher = new Rox_Dispatcher;
-$dispatcher->dispatch(new Rox_Request);
+	public function decode($data) {
+		$result = json_decode($data, true);
+		if ($result === null) {
+			throw new Rox_Exception("Data is not valid JSON");
+		}
+
+		return $result;
+	}
+}

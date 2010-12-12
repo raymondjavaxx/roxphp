@@ -66,13 +66,18 @@ class Rox_Helper_Form {
 		$options = array_merge(array('action' => null), $options);
 		$this->setModel($model);
 
+		$method = (is_string($model) || $model->getId() === null) ? 'POST' : 'PUT';
+
 		if ($options['action'] === null) {
 			$controller = Rox_Inflector::pluralize($this->_currentModel);
-			$options['action'] = (is_string($model) || $model->getId() === null) ? "/{$controller}/add" :
-				'/' . $controller . '/edit/' . $model->getId();
+			$options['action'] = (is_string($model) || $model->getId() === null) ? "/{$controller}" :
+				'/' . $controller . '/' . $model->getId();
 		}
 
-		return $this->create($options['action'], $options);
+		$result = array();
+		$result[] = $this->create($options['action'], $options);
+		$result[] = sprintf('<input type="hidden" name="_method" value="%s">', $method);
+		return implode('', $result);
 	}
 
 	public function setModel($model) {

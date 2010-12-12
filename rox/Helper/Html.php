@@ -181,7 +181,7 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function viewPath($object, $options = array()) {
-		$path = "/" . self::_controllerNameFromModel($object) . "/view/" . $object->getId();
+		$path = "/" . self::_controllerNameFromModel($object) . "/" . $object->getId();
 		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
@@ -193,7 +193,7 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function editPath($object, $options = array()) {
-		$path = "/" . self::_controllerNameFromModel($object) . "/edit/" . $object->getId();
+		$path = "/" . self::_controllerNameFromModel($object) . "/" . $object->getId() . "/edit";
 		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
@@ -205,7 +205,7 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function deletePath($object, $options = array()) {
-		$path = "/" . self::_controllerNameFromModel($object) . "/delete/" . $object->getId();
+		$path = "/" . self::_controllerNameFromModel($object) . "/" . $object->getId();
 		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
 	}
 
