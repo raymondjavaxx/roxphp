@@ -43,7 +43,7 @@ class Rox_Controller {
 	/**
 	 * Request object
 	 *
-	 * @var Rox_Request
+	 * @var Rox_Http_Request
 	 */
 	public $request;
 

@@ -23,7 +23,7 @@ class Rox_Dispatcher {
 	 * Rox_Dispatcher::dispatch()
 	 *
 	 * @param mixed $url
-	 * @param Rox_Request $request
+	 * @param Rox_Http_Request $request
 	 * @throws Rox_Exception
 	 */
 	public function dispatch($request) {
