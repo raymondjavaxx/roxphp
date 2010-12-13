@@ -7,9 +7,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	protected $_originalSuperGlobals = array();
 
 	public function setUp() {
-		$this->_originalSuperGlobals = array(
-			'SERVER' => $_SERVER
-		);
+		$this->_originalSuperGlobals = array('SERVER' => $_SERVER);
 	}
 
 	public function tearDown() {
@@ -17,89 +15,102 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParseUrl() {
+		Rox_Router::resource('companies');
+		Rox_Router::resource('companies.people');
+		Rox_Router::connect('/:controller/:action/:id', array());
+		Rox_Router::connect('/:controller/:action', array());
+		Rox_Router::connect('/:controller', array('action' => 'index'));
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$result = Rox_Router::parseUrl('/companies');
+		$expected = array(
+			'controller' => 'companies',
+			'controller_class' => 'CompaniesController',
+			'action' => 'index',
+			'action_method' => 'indexAction',
+			'args' => array(),
+			'namespace' => false,
+			'extension' => 'html'
+		);
+		$this->assertEquals($expected, $result);
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$result = Rox_Router::parseUrl('/companies');
+		$expected = array(
+			'controller' => 'companies',
+			'controller_class' => 'CompaniesController',
+			'action' => 'add',
+			'action_method' => 'addAction',
+			'args' => array(),
+			'namespace' => false,
+			'extension' => 'html'
+		);
+		$this->assertEquals($expected, $result);
+
+		$_SERVER['REQUEST_METHOD'] = 'PUT';
+		$result = Rox_Router::parseUrl('/companies/1');
+		$expected = array(
+			'controller' => 'companies',
+			'controller_class' => 'CompaniesController',
+			'action' => 'edit',
+			'action_method' => 'editAction',
+			'args' => array('id' => '1'),
+			'namespace' => false,
+			'extension' => 'html'
+		);
+		$this->assertEquals($expected, $result);
+
+		$_SERVER['REQUEST_METHOD'] = 'DELETE';
+		$result = Rox_Router::parseUrl('/companies/1');
+		$expected = array(
+			'controller' => 'companies',
+			'controller_class' => 'CompaniesController',
+			'action' => 'delete',
+			'action_method' => 'deleteAction',
+			'args' => array('id' => '1'),
+			'namespace' => false,
+			'extension' => 'html'
+		);
+		$this->assertEquals($expected, $result);
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$result = Rox_Router::parseUrl('/companies/1.json');
+		$expected = array(
+			'controller' => 'companies',
+			'controller_class' => 'CompaniesController',
+			'action' => 'view',
+			'action_method' => 'viewAction',
+			'args' => array('id' => '1'),
+			'namespace' => false,
+			'extension' => 'json'
+		);
+		$this->assertEquals($expected, $result);
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$result = Rox_Router::parseUrl('/companies/1/people/25.xml');
+		$expected = array(
+			'controller' => 'people',
+			'controller_class' => 'PeopleController',
+			'action' => 'view',
+			'action_method' => 'viewAction',
+			'args' => array('company_id' => '1', 'id' => '25'),
+			'namespace' => false,
+			'extension' => 'xml'
+		);
+		$this->assertEquals($expected, $result);
+	
+		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$result = Rox_Router::parseUrl('/users/edit/23');
 		$expected = array(
 			'controller' => 'users',
 			'controller_class' => 'UsersController',
 			'action' => 'edit',
 			'action_method' => 'editAction',
-			'params' => array('23'),
-			'prefix' => null,
+			'args' => array('id' => '23'),
+			'namespace' => false,
 			'extension' => 'html'
 		);
-
 		$this->assertEquals($expected, $result);
-	}
-
-	public function testParseUrlWithPrefix() {
-		Rox_Router::setConfig(array('prefixes' => array('admin')));
-
-		$result = Rox_Router::parseUrl('/admin/users/edit/23');
-		$expected = array(
-			'controller' => 'users',
-			'controller_class' => 'UsersController',
-			'action' => 'edit',
-			'action_method' => 'adminEditAction',
-			'params' => array('23'),
-			'prefix' => 'admin',
-			'extension' => 'html'
-		);
-
-		$this->assertEquals($expected, $result);
-	}
-
-	public function testParseUrlWithDefaultAction() {
-		$result = Rox_Router::parseUrl('/users');
-		$expected = array(
-			'controller' => 'users',
-			'controller_class' => 'UsersController',
-			'action' => 'index',
-			'action_method' => 'indexAction',
-			'params' => array(),
-			'prefix' => null,
-			'extension' => 'html'
-		);
-
-		$this->assertEquals($expected, $result);
-	}
-
-	public function testParseUrlWithExtension() {
-		$result = Rox_Router::parseUrl('/articles.json');
-		$expected = array(
-			'controller' => 'articles',
-			'controller_class' => 'ArticlesController',
-			'action' => 'index',
-			'action_method' => 'indexAction',
-			'params' => array(),
-			'prefix' => null,
-			'extension' => 'json'
-		);
-
-		$this->assertEquals($expected, $result);
-
-		$result = Rox_Router::parseUrl('/articles/view/3.xml');
-		$expected = array(
-			'controller' => 'articles',
-			'controller_class' => 'ArticlesController',
-			'action' => 'view',
-			'action_method' => 'viewAction',
-			'params' => array('3'),
-			'prefix' => null,
-			'extension' => 'xml'
-		);
-
-		$this->assertEquals($expected, $result);
-	}
-
-
-	public function testParseUrlWithInvalidController() {
-		$this->setExpectedException('Rox_Exception');
-		Rox_Router::parseUrl('/articl..es');
-	}
-
-	public function testParseUrlWithInvalidAction() {
-		$this->setExpectedException('Rox_Exception');
-		Rox_Router::parseUrl('/articles/ed-it');
 	}
 
 	public function testBase() {

@@ -61,7 +61,7 @@ class Rox_Route {
 		$specialSections = array('controller', 'action', 'extension');
 		foreach ($specialSections as $key) {
 			if (isset($matches[$key])) {
-				$this->config['args'][$key] = $matches[$key];
+				$this->config['params'][$key] = $matches[$key];
 				unset($matches[$key]);
 			}
 		}

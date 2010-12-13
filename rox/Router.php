@@ -157,7 +157,6 @@ class Rox_Router {
 			$params['action_method'] = Rox_Inflector::lowerCamelize($params['action']) . 'Action';
 			$params['controller_class'] = Rox_Inflector::camelize($params['controller']) . 'Controller';
 
-			//print_r($params);exit;
 			return $params;
 		}
 
