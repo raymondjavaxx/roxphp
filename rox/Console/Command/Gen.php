@@ -86,7 +86,8 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 			'attributes' => $attributes,
 			'friendlyModelName' => Rox_Inflector::humanize(Rox_Inflector::classify($name)),
 			'modelVarName' => Rox_Inflector::lowerCamelize(Rox_Inflector::classify(Rox_Inflector::singularize($name))),
-			'pluralModelVarName' => Rox_Inflector::lowerCamelize(Rox_Inflector::pluralize($name))
+			'pluralModelVarName' => Rox_Inflector::lowerCamelize(Rox_Inflector::pluralize($name)),
+			'controller' => Rox_Inflector::tableize($name)
 		);
 
 		foreach ($templates as $template) {	

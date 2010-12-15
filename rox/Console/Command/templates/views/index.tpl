@@ -44,5 +44,7 @@ echo "\t\t</tr>\n";
 echo "\t<?php endforeach; ?>\n";
 echo "</table>\n\n";
 
-echo "<p><?php echo \$pagination->links(\${$pluralModelVarName}) ?></p>\n";
+echo "<p><?php echo \$html->link('New {$friendlyModelName}', '/{$controller}/new') ?></p>\n\n";
+
+echo "<?php echo \$pagination->links(\${$pluralModelVarName}) ?>\n";
 ?>
