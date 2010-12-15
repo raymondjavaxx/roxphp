@@ -17,7 +17,17 @@
  *
  * @package Rox
  */
-class Rox_Request {
+class Rox_Http_Request {
+
+	public $data = array();
+
+	public function data($key = null, $default = null) {
+		if ($key === null) {
+			return $this->data;
+		}
+
+		return isset($this->data[$key]) ? $this->data[$key] : $default;
+	}
 
 	/**
 	 * Request::getPost()

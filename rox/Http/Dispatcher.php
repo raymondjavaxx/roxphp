@@ -17,34 +17,36 @@
  *
  * @package Rox
  */
-class Rox_Dispatcher {
+class Rox_Http_Dispatcher {
 
 	/**
-	 * Rox_Dispatcher::dispatch()
+	 * Dispatches an HTTP request
 	 *
-	 * @param mixed $url
+	 * @param Rox_Http_Request $request
 	 * @throws Rox_Exception
 	 */
-	public function dispatch($url = null) {
-		$parsedUrl = Rox_Router::parseUrl($url);
+	public function dispatch($request) {
+		Rox_Http_Request_Normalizer::normalize($request);
 
-		$this->_loadController($parsedUrl);
+		$route = $request->getQuery('route', '/');
 
-		$controller = new $parsedUrl['controller_class'](array(
-			'request' => new Rox_Request()
-		));
+		$params = Rox_Router::parseUrl($route);
+		if ($params === false) {
+			throw new Rox_Exception('No route matches request', 404);
+		}
 
-		$controller->params = $parsedUrl;
+		$this->_loadController($params);
 
-		if ( method_exists('Rox_Controller', $parsedUrl['action_method']) ||
-			!method_exists($controller, $parsedUrl['action_method']) ||
-			strpos($parsedUrl['action_method'], '__') === 0 ||
-			!is_callable(array($controller, $parsedUrl['action_method']))) {
+		$controller = new $params['controller_class'](array('request' => $request));
+		$controller->params = $params;
+
+		if (!method_exists($controller, $params['action_method']) ||
+			!is_callable(array($controller, $params['action_method']))) {
 			throw new Rox_Exception('Action does not exist or is not dispatchable', 404);
 		}
 
 		$controller->beforeFilter();
-		call_user_func_array(array($controller, $parsedUrl['action_method']), $parsedUrl['params']);
+		call_user_func_array(array($controller, $params['action_method']), $params['args']);
 		$controller->render();
 		$controller->afterFilter();
 	}

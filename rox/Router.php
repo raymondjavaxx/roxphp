@@ -28,6 +28,35 @@ class Rox_Router {
 		'prefixes' => array('admin')
 	);
 
+	protected static $_matches = array();
+	protected static $_routes = array();
+
+	public static function match($path, $params) {
+		self::$_matches[$path] = $params;
+	}
+
+	/**
+	 * Connects a route
+	 *
+	 * @param string $template 
+	 * @param array $params 
+	 * @param array $options 
+	 * @return void
+	 */
+	public static function connect($template, $params, $options = array()) {
+		self::$_routes[] = new Rox_Route(compact('template', 'params', 'options'));
+	}
+
+	/**
+	 * Connects the homepage
+	 *
+	 * @param array $params 
+	 * @return void
+	 */
+	public static function connectRoot($params) {
+		self::match('/', $params);
+	}
+
 	/**
 	 * Sets the configuration for the routing
 	 *
@@ -84,57 +113,69 @@ class Rox_Router {
 	}
 
 	/**
-	 * undocumented function
+	 * Creates restful routes for controller
 	 *
-	 * @param string $url
-	 * @return array
-	 * @throws Rox_Exception
+	 * @param string $name controller name
+	 * @param string $namespace (optional)
+	 * @return void
 	 */
+	public static function resource($name, $namespace = false) {
+		if (strpos($name, '.') !== false) {
+			$resource = array();
+
+			$controllers = explode('.', $name);
+			$lastController = array_pop($controllers);
+
+			foreach ($controllers as $key => $value) {
+				$resource[] = $value;
+				$resource[] = ':' . Rox_Inflector::singularize($value) . '_id';
+			}
+
+			$resource[] = $lastController;
+
+			$resource = implode('/', $resource);
+			$controller = ($namespace === false) ? $lastController : "{$lastController}_{$name}";
+		} else {
+			$resource = ($namespace === false) ? $name : "{$namespace}/{$name}";
+			$controller = ($namespace === false) ? $name : "{$namespace}_{$name}";
+		}
+
+		self::connect("/{$resource}", array('controller' => $controller, 'action' => 'add', 'namespace' => $namespace), array('via' => 'POST'));
+		self::connect("/{$resource}", array('controller' => $controller, 'action' => 'index', 'namespace' => $namespace));
+		self::connect("/{$resource}/new", array('controller' => $controller, 'action' => 'add', 'namespace' => $namespace));
+		self::connect("/{$resource}/:id/edit", array('controller' => $controller, 'action' => 'edit', 'namespace' => $namespace));
+		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'edit', 'namespace' => $namespace),array('via' => 'PUT'));
+		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'delete', 'namespace' => $namespace),array('via' => 'DELETE'));
+		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'view', 'namespace' => $namespace));
+	}
+
 	public static function parseUrl($url) {
-		$parts = explode('/', trim($url, '/'));
+		if ($params = self::_parseUrl($url)) {
+			$defaults = array('action' => 'index', 'extension' => 'html', 'namespace' => false, 'args' => array());
+			$params += $defaults;
 
-		$actionPrefix = null;
-		if (in_array($parts[0], self::$_config['prefixes'])) {
-			$actionPrefix = array_shift($parts);
+			$params['action_method'] = Rox_Inflector::lowerCamelize($params['action']) . 'Action';
+			$params['controller_class'] = Rox_Inflector::camelize($params['controller']) . 'Controller';
+
+			return $params;
 		}
 
-		$extension = 'html';
-		$lastPart = array_pop($parts);
-		if ($lastPart !== null) {
-			if (preg_match('/(?<param>.*)\.(?<extension>[a-z0-9]{1,32})/', $lastPart, $matches) == 1) {
-				$lastPart = $matches['param'];
-				$extension = $matches['extension'];
+		return $params;
+	}
+
+	protected static function _parseUrl($url) {
+		$url = '/' . trim($url, '/');
+
+		if (isset(self::$_matches[$url])) {
+			return self::$_matches[$url];
+		}
+
+		foreach (self::$_routes as $route) {
+			if ($params = $route->match($url)) {
+				return $params;
 			}
-
-			array_push($parts, $lastPart);
 		}
 
-		if (preg_match('/^(?!_)[a-z_]+(?<!_)$/', $parts[0]) != 1) {
-			throw new Rox_Exception('Illegal controller name', 404);
-		}
-
-		$action = 'index';
-		if (isset($parts[1])) {
-			if (preg_match('/^(?!_)[a-z_]+(?<!_)$/', $parts[1]) != 1) {
-				throw new Rox_Exception('Illegal action name', 404);
-			}
-			$action = $parts[1];
-		}
-
-		$controller = $actionPrefix ? "{$actionPrefix}_{$parts[0]}" : $parts[0];
-		$actionMethod = Rox_Inflector::lowerCamelize($action) . 'Action';
-		$controllerClass = Rox_Inflector::camelize($controller) . 'Controller';
-
-		$result = array(
-			'controller'    => $controller,
-			'action'        => $action,
-			'controller_class' => $controllerClass,
-			'action_method' => $actionMethod,
-			'params'        => array_slice($parts, 2),
-			'namespace'     => $actionPrefix,
-			'extension'     => $extension
-		);
-
-		return $result;	
+		return false;
 	}
 }

@@ -18,7 +18,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsAjax() {
-		$request = new Rox_Request;
+		$request = new Rox_Http_Request;
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 		$this->assertTrue($request->isAjax());
 
@@ -30,7 +30,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsSSL() {
-		$request = new Rox_Request;
+		$request = new Rox_Http_Request;
 		$_SERVER['HTTPS'] = true;
 		$this->assertTrue($request->isSSL());
 
@@ -46,12 +46,12 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsIphone() {
-		$request = new Rox_Request;
+		$request = new Rox_Http_Request;
 		$_SERVER['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A537a Safari/419.3";
 		$this->assertTrue($request->isIphone());
 
 		$_SERVER['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A100a Safari/419.3";
-		$this->assertFalse($request->isIphone());
+		$this->assertTrue($request->isIphone());
 
 		// Firefox on Windows 7
 		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 GTB6 (.NET CLR 3.5.30729)';
