@@ -8,7 +8,7 @@
 class {controller_class} extends ApplicationController {
 
 	/**
-	 * /{controller_name}
+	 * GET /{controller_name}
 	 *
 	 * @return void
 	 */
@@ -21,7 +21,7 @@ class {controller_class} extends ApplicationController {
 	}
 
 	/**
-	 * /{controller_name}/view/1
+	 * GET /{controller_name}/1
 	 *
 	 * @param integer $id 
 	 * @return void
@@ -32,7 +32,8 @@ class {controller_class} extends ApplicationController {
 	}
 
 	/**
-	 * /{controller_name}/add
+	 * GET /{controller_name}/new
+	 * POST /{controller_name}
 	 *
 	 * @return void
 	 */
@@ -40,10 +41,10 @@ class {controller_class} extends ApplicationController {
 		${model_var_name} = new {model_class};
 
 		if ($this->request->isPost()) {
-			${model_var_name}->setData($this->request->getPost('{model_name}'));
+			${model_var_name}->setData($this->request->data('{model_name}'));
 			if (${model_var_name}->save()) {
 				$this->flash('success', 'The {friendly_model_name} has been created.');
-				$this->redirect('/{controller_name}/view/' . ${model_var_name}->id);
+				$this->redirect('/{controller_name}/' . ${model_var_name}->id);
 			} else {
 				$this->flash('error', 'Could not create the {friendly_model_name}. Please try again.');
 			}
@@ -53,7 +54,8 @@ class {controller_class} extends ApplicationController {
 	}
 
 	/**
-	 * /{controller_name}/edit/1
+	 * GET /{controller_name}/1/edit
+	 * PUT /{controller_name}/1
 	 *
 	 * @param integer $id 
 	 * @return void
@@ -61,11 +63,11 @@ class {controller_class} extends ApplicationController {
 	public function editAction($id = null) {
 		${model_var_name} = {model_class}::model()->find($id);
 
-		if ($this->request->isPost()) {
-			$newData = $this->request->getPost('{model_name}');
+		if ($this->request->isPut()) {
+			$newData = $this->request->data('{model_name}');
 			if (${model_var_name}->updateAttributes($newData)) {
 				$this->flash('success', 'The {friendly_model_name} has been updated.');
-				$this->redirect('/{controller_name}/view/' . ${model_var_name}->id);
+				$this->redirect('/{controller_name}/' . ${model_var_name}->id);
 			} else {
 				$this->flash('error', 'Could not update {friendly_model_name}. Please try again.');
 			}
@@ -75,13 +77,13 @@ class {controller_class} extends ApplicationController {
 	}
 
 	/**
-	 * /{controller_name}/delete/1
+	 * DELETE /{controller_name}/1
 	 *
 	 * @param integer $id 
 	 * @return void
 	 */
 	public function deleteAction($id = null) {
-		if ($this->request->isPost()) {
+		if ($this->request->isDelete()) {
 			${model_var_name} = {model_class}::model()->find($id);
 			${model_var_name}->delete();
 			$this->flash('success', 'The {friendly_model_name} has been deleted.');
