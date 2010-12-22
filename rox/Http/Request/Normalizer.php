@@ -38,11 +38,7 @@ class Rox_Http_Request_Normalizer {
 			$_SERVER['REQUEST_METHOD'] = $method;
 		}
 
-		$contentType = $request->getServer('CONTENT_TYPE');
-		if (!$contentType) {
-			return;
-		}
-
+		list($contentType) = explode(';', $request->getServer('CONTENT_TYPE'));
 		$request->data = array_merge($_GET, $_POST);
 
 		// list of content type that PHP knows how to parse
