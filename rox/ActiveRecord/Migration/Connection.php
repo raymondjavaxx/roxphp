@@ -24,7 +24,7 @@ class Rox_ActiveRecord_Migration_Connection {
 		'boolean'   => array('native_type' => 'TINYINT', 'len' => 1),
 		'date'      => array('native_type' => 'DATE'),
 		'datetime'  => array('native_type' => 'DATETIME'),
-		'decimal'   => array('native_type' => 'DECIMAL'),
+		'decimal'   => array('native_type' => 'DECIMAL', 'len' => '10,2'),
 		'float'     => array('native_type' => 'FLOAT'),
 		'integer'   => array('native_type' => 'INTEGER', 'len' => 11),
 		'string'    => array('native_type' => 'VARCHAR', 'len' => 255),
