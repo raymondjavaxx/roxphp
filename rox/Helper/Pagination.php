@@ -20,18 +20,6 @@
 class Rox_Helper_Pagination {
 
 	/**
-	 * Default options
-	 *
-	 * @var array
-	 */
-	protected $_options = array(
-		'class'          => 'pagination',
-		'previous_label' => '&laquo; Previous',
-		'next_label'     => 'Next &raquo;',
-		'max_items'      => 8
-	);
-
-	/**
 	 * Generates the pagination nav
 	 * 
 	 * @param Rox_ActiveRecord_PaginationResult $collection
@@ -39,61 +27,67 @@ class Rox_Helper_Pagination {
 	 * @return string
 	 */
 	public function links(Rox_ActiveRecord_PaginationResult $collection, $options = array()) {
-		$options = array_merge($this->_options, $options);
+		$defaults = array(
+			'class'          => 'pagination',
+			'previous_label' => '&laquo; Previous',
+			'next_label'     => 'Next &raquo;',
+			'max_items'      => 8,
+			'link_separator' => ' '
+		);
+
+		$options += $defaults;
 		$currentPage = $collection->getCurrentPage();
 
 		$output = array();
 
 		if ($collection->getPreviousPage() != $currentPage) {
-			$output[] = $this->_linkOrSpan($collection->getPreviousPage(), $currentPage,
-				$options['previous_label']);
+			$output[] = $this->_link($collection->getPreviousPage(), $options['previous_label'], 'prev');
 		}
 
-		$start = max(1, $collection->getCurrentPage() - floor($options['max_items'] / 2));
+		$start = max(1, $currentPage - floor($options['max_items'] / 2));
 		$end   = min($collection->getPages(), $options['max_items'] + $start - 1);
 
 		if ($start > 1) {
-			$output[] = $this->_linkOrSpan(1, $currentPage);
+			$output[] = $this->_link(1);
 			$output[] = '<span>...</span>';
 		}
 
 		for ($i = $start; $i<=$end; $i++) {
-			$output[] = $this->_linkOrSpan($i, $currentPage);
+			$output[] = ($i == $currentPage) ? "<em>{$currentPage}</em>" : $this->_link($i);
 		}
 
 		if ($end < $collection->getPages()) {
 			$output[] = '<span>...</span>';
-			$output[] = $this->_linkOrSpan($collection->getPages(), $currentPage);
+			$output[] = $this->_link($collection->getPages());
 		}
 
 		if ($collection->getNextPage() != $currentPage) {
-			$output[] = $this->_linkOrSpan($collection->getNextPage(), $currentPage,
-				$options['next_label']);
+			$output[] = $this->_link($collection->getNextPage(), $options['next_label'], 'next');
 		}
 
-		return sprintf('<div class="%s">%s</div>', $options['class'], implode(' ', $output));
+		$output = implode($options['link_separator'], $output);
+		return sprintf('<div class="%s">%s</div>', $options['class'], $output);
 	}
 
 	/**
-	 * undocumented function
+	 * Generates a pagination link
 	 *
 	 * @param integer $page 
-	 * @param integer $currentPage 
 	 * @param string $text 
+	 * @param string $rel
 	 * @return string
 	 */
-	protected function _linkOrSpan($page, $currentPage, $text = null) {
-		if (null == $text) {
+	protected function _link($page, $text = false, $rel = false) {
+		if ($text === false) {
 			$text = (string)$page;
 		}
 
-		if ($page == $currentPage) {
-			return sprintf('<span class="current">%s</span>', $text);
-		}
+		$attributes = ($rel === false) ? '' : ' rel="' . $rel . '"';
 
-		$getVars = $_GET;
-		unset($getVars['route']);
-		$query = http_build_query(array_merge($getVars, array('page' => $page)));
-		return sprintf('<a href="?%s">%s</a>', htmlspecialchars($query), $text);
+		$vars = array_merge($_GET, array('page' => $page));
+		unset($vars['route']);
+		$href = '?' . htmlspecialchars(http_build_query($vars));
+
+		return sprintf('<a href="%s"%s>%s</a>', $href, $attributes, $text);
 	}
 }

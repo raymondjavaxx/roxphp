@@ -26,7 +26,7 @@ class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		$paginationHelper = new Rox_Helper_Pagination;
 
 		$result   = $paginationHelper->links($paginationResult);
-		$expected = '<div class="pagination"><span class="current">1</span> <a href="?page=2">2</a> <a href="?page=3">3</a> <a href="?page=2">Next &raquo;</a></div>';
+		$expected = '<div class="pagination"><em>1</em> <a href="?page=2">2</a> <a href="?page=3">3</a> <a href="?page=2" rel="next">Next &raquo;</a></div>';
 
 		$this->assertEquals($result, $expected);
 	}

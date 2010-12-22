@@ -85,11 +85,12 @@ table th {
 }
 
 .pagination span,
+.pagination em,
 .pagination a {
 	padding:1px 6px;
 }
 
-.pagination span.current {
+.pagination em {
 	color:#fff;
 	background:#06f;
 }
