@@ -38,10 +38,17 @@ class Rox_Http_Request_Normalizer {
 			$_SERVER['REQUEST_METHOD'] = $method;
 		}
 
-		list($contentType) = explode(';', $request->getServer('CONTENT_TYPE'));
+		$contentType = $request->getServer('CONTENT_TYPE');
+		if (!$contentType) {
+			return false;
+		}
+
+		// remove parameters
+		list($contentType) = explode(';', $contentType);
+
 		$request->data = array_merge($_GET, $_POST);
 
-		// list of content type that PHP knows how to parse
+		// list of content types that PHP knows how to parse
 		$knownTypes = array('application/x-www-form-urlencoded', 'multipart/form-data');
 		if(!in_array($contentType, $knownTypes)) {
 			if (array_key_exists($contentType, self::$_config['body_decoders'])) {
