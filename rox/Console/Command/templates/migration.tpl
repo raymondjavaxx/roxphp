@@ -13,8 +13,4 @@ class {class_name} extends Rox_ActiveRecord_Migration {
 		// $t->timestamps();
 		// $t->finish();
 	}
-
-	public function down() {
-		// $this->dropTable('your_table');
-	}
 }
