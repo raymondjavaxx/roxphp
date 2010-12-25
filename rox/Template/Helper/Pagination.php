@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Helper_Pagination extends Rox_Helper {
+class Rox_Template_Helper_Pagination extends Rox_Template_Helper {
 
 	/**
 	 * Generates the pagination nav

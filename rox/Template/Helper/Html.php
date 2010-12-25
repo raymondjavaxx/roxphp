@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Helper_Html extends Rox_Helper {
+class Rox_Template_Helper_Html extends Rox_Template_Helper {
 
 	/**
 	 * Renders a link element for embeding favicons

@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-abstract class Rox_Helper {
+abstract class Rox_Template_Helper {
 
 	protected function _tag($name, $text, $attributes = array()) {
 		return sprintf('<%s%s>%s</%s>', $name, $this->_attributes($attributes), $text, $name);

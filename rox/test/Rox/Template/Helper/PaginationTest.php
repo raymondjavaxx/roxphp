@@ -1,13 +1,13 @@
 <?php
 
-require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
+require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/helper.php';
 
 /**
  * Test case for Pagination Helper
  *
  * @package Rox_Test
  */
-class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
+class Rox_Template_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Tests the Rox_Helper_Pagination::links() method
@@ -23,7 +23,7 @@ class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   previous page = 1
 		 */
 		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 3, 1, 2, 1, 40);
-		$paginationHelper = new Rox_Helper_Pagination;
+		$paginationHelper = new Rox_Template_Helper_Pagination;
 
 		$result   = $paginationHelper->links($paginationResult);
 		$expected = '<div class="pagination"><em>1</em> <a href="?page=2">2</a> <a href="?page=3">3</a> <a href="?page=2" rel="next" class="next-page">Next &raquo;</a></div>';
@@ -45,7 +45,7 @@ class Rox_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   previous page = 2
 		 */
 		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 20, 3, 4, 2, 40);
-		$paginationHelper = new Rox_Helper_Pagination;
+		$paginationHelper = new Rox_Template_Helper_Pagination;
 
 		$result = $paginationHelper->links($paginationResult, array(
 			'class'          => 'my-custom-pagination-class',

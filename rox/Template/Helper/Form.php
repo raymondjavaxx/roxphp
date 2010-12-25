@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Helper_Form extends Rox_Helper {
+class Rox_Template_Helper_Form extends Rox_Template_Helper {
 
 	/**
 	 * Holds the name of the current model

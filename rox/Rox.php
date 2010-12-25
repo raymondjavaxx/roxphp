@@ -54,10 +54,10 @@ class Rox {
 			return $name . 'Helper';
 		}
 
-		$file = ROX_FRAMEWORK_PATH . "/Helper/{$name}.php";
+		$file = ROX_FRAMEWORK_PATH . "/Template/Helper/{$name}.php";
 		if (file_exists($file)) {
 			require_once $file;
-			return 'Rox_Helper_' . $name;
+			return 'Rox_Template_Helper_' . $name;
 		}
 
 		throw new Rox_Exception("Helper '{$name}' not found");
