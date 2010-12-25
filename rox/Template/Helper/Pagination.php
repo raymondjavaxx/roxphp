@@ -28,13 +28,13 @@ class Rox_Template_Helper_Pagination extends Rox_Template_Helper {
 	 */
 	public function links(Rox_ActiveRecord_PaginationResult $collection, $options = array()) {
 		$defaults = array(
-			'class'           => 'pagination',
-			'next_class' => 'next-page',
-			'prev_class' => 'prev-page',
-			'prev_label'      => '&laquo; Previous',
-			'next_label'      => 'Next &raquo;',
-			'max_items'       => 8,
-			'link_separator'  => ' '
+			'class'          => 'pagination',
+			'next_class'     => 'next-page',
+			'prev_class'     => 'prev-page',
+			'prev_label'     => '&laquo; Previous',
+			'next_label'     => 'Next &raquo;',
+			'max_items'      => 8,
+			'link_separator' => ' '
 		);
 
 		$options += $defaults;
