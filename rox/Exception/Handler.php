@@ -56,7 +56,7 @@ class Rox_Exception_Handler {
 			$viewName = 'unknown';
 		}
 
-		$view = new Rox_View(array('exception' => $exception));
+		$view = new Rox_Template_View(array('exception' => $exception));
 		echo $view->render('errors', $viewName, 'exception');
 	}
 }

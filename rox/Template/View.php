@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_View {
+class Rox_Template_View {
 
 	public $params = array('extension' => 'html');
 
@@ -68,7 +68,7 @@ class Rox_View {
 	}
 
 	/**
-	 * Backend for Rox_View::render()
+	 * Backend for Rox_Template_View::render()
 	 *
 	 * @return string
 	 */
