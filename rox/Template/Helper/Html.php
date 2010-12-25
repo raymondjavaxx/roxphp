@@ -172,7 +172,7 @@ class Rox_Template_Helper_Html extends Rox_Template_Helper {
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function delteUrl(Rox_ActiveModel $object, $absolute = false) {
+	public function deleteUrl(Rox_ActiveModel $object, $absolute = false) {
 		return Rox_Router::url($this->deletePath($object), $absolute);
 	}
 
