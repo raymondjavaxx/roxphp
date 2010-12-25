@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Helper_Html {
+class Rox_Helper_Html extends Rox_Helper {
 
 	/**
 	 * Renders a link element for embeding favicons
@@ -26,9 +26,11 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function favicon($path = '/favicon.ico') {
-		$result = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon" />',
-			Rox_Router::url($path));
-		return $result;
+		return $this->_selfClosingTag('link', array(
+			'rel' => 'shortcut icon',
+			'href' => Rox_Router::url($path),
+			'type' => 'image/x-icon'
+		));
 	}
 
 	/**
@@ -39,10 +41,8 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function image($path, $attributes = array()) {
-		$attributes += array('alt' => '');
-		$result = sprintf('<img src="%s"%s />', Rox_Router::url('/img/' . $path),
-			self::_makeAttributes($attributes));
-		return $result;
+		$attributes = array('src' => Rox_Router::url('/img/' . $path), 'alt' => '') + $attributes;
+		return $this->_selfClosingTag('img', $attributes);
 	}
 
 	/**
@@ -64,9 +64,12 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function css($file, $media = 'all') {
-		$output = sprintf('<link rel="stylesheet" type="text/css" href="%s" media="%s" />',
-			Rox_Router::url('/css/' . $file . '.css'), $media);
-		return $output;
+		return $this->_selfClosingTag('link', array(
+			'rel' => 'stylesheet',
+			'type' => 'text/css',
+			'href' => Rox_Router::url('/css/' . $file . '.css'),
+			'media' => $media
+		));
 	}
 
 	/**
@@ -76,9 +79,10 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function javascript($file) {
-		$output = sprintf('<script type="text/javascript" src="%s"></script>',
-			Rox_Router::url('/js/' . $file . '.js'));
-		return $output;
+		return $this->_tag('script', '', array(
+			'type' => 'text/javascript',
+			'src' => Rox_Router::url('/js/' . $file . '.js')
+		));
 	}
 
 	/**
@@ -90,9 +94,8 @@ class Rox_Helper_Html {
 	 * @return string
 	 */
 	public function link($text, $path, $attributes = array()) {
-		$output = sprintf('<a href="%s"%s>%s</a>', Rox_Router::url($path),
-			self::_makeAttributes($attributes), $text);
-		return $output;
+		$attributes = array('href' => Rox_Router::url($path)) + $attributes;
+		return $this->_tag('a', $text, $attributes);
 	}
 
 	/**
@@ -207,20 +210,6 @@ class Rox_Helper_Html {
 	public function deletePath($object, $options = array()) {
 		$path = "/" . self::_controllerNameFromModel($object) . "/" . $object->getId();
 		return isset($options['namespace']) ? '/' . $options['namespace'] . $path : $path;
-	}
-
-	/**
-	 * undocumented function
-	 *
-	 * @param array $attributes 
-	 * @return string
-	 */
-	protected static function _makeAttributes(array $attributes) {
-		$result = array();
-		foreach ($attributes as $name => $value) {
-			$result[] = ' ' . $name . '="' . htmlspecialchars($value) . '"';
-		}
-		return implode('', $result);
 	}
 
 	/**

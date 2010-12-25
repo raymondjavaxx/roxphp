@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_Helper_Form {
+class Rox_Helper_Form extends Rox_Helper {
 
 	/**
 	 * Holds the name of the current model
@@ -112,7 +112,7 @@ class Rox_Helper_Form {
 	public function create($action, $attributes = array()) {
 		$attributes['action'] = Rox_Router::url($action);
 		$attributes = array_merge(array('method' => 'post'), $attributes);
-		return sprintf('<form%s>', $this->_makeAttributes($attributes));
+		return sprintf('<form%s>', $this->_attributes($attributes));
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Rox_Helper_Form {
 	 */
 	public function text($name, $attributes = array()) {
 		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'text'));
-		return $this->_makeSelfClosingTag('input', $attributes);
+		return $this->_selfClosingTag('input', $attributes);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Rox_Helper_Form {
 	 */
 	public function password($name, $attributes = array()) {
 		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'password'));
-		return $this->_makeSelfClosingTag('input', $attributes);
+		return $this->_selfClosingTag('input', $attributes);
 	}
 
 	/**
@@ -229,7 +229,7 @@ class Rox_Helper_Form {
 	public function file($name, $attributes = array()) {
 		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'file'));
 		unset($attributes['value']);
-		return $this->_makeSelfClosingTag('input', $attributes);
+		return $this->_selfClosingTag('input', $attributes);
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Rox_Helper_Form {
 		unset($attributes['value']);
 
 		$output = sprintf('<textarea%s>%s</textarea>',
-			$this->_makeAttributes($attributes), htmlspecialchars($value));
+			$this->_attributes($attributes), htmlspecialchars($value));
 
 		return $output;
 	}
@@ -268,7 +268,7 @@ class Rox_Helper_Form {
 	 */
 	public function hidden($name, $attributes = array()) {
 		$attributes = $this->_normalizeAttributes($name, $attributes, array('type' => 'hidden'));
-		return $this->_makeSelfClosingTag('input', $attributes);
+		return $this->_selfClosingTag('input', $attributes);
 	}
 
 	public function checkbox($name, $attributes = array()) {
@@ -280,14 +280,14 @@ class Rox_Helper_Form {
 		$attributes['value'] = 1;
 
 		$output = array();
-		$output[] = $this->_makeSelfClosingTag('input', array(
+		$output[] = $this->_selfClosingTag('input', array(
 			//'id'    => $attributes['id'] . '_',
 			'name'  => $attributes['name'],
 			'value' => 0,
 			'type'  => 'hidden'
 		));
 
-		$output[] = $this->_makeSelfClosingTag('input', $attributes);
+		$output[] = $this->_selfClosingTag('input', $attributes);
 		return implode('', $output);
 	}
 
@@ -327,7 +327,7 @@ class Rox_Helper_Form {
 		}
 
 		$output = array();
-		$output[] = sprintf('<select%s>', $this->_makeAttributes($options['attributes']));
+		$output[] = sprintf('<select%s>', $this->_attributes($options['attributes']));
 
 		if ($options['empty'] !== false) {
 			$output[] = sprintf('<option value="">%s</option>', htmlspecialchars($options['empty']));
@@ -407,18 +407,5 @@ class Rox_Helper_Form {
 
 	protected function _makeFieldName($name) {
 		return $this->_currentModel.'['.$name.']';
-	}
-
-	protected function _makeSelfClosingTag($name, $attributes = array()) {
-		return sprintf('<%s%s/>', $name, $this->_makeAttributes($attributes));
-	}
-
-	protected function _makeAttributes($attributes) {
-		$output = array();
-		foreach ($attributes as $k => $v) {
-			$output[] = $k . '="' . htmlspecialchars($v) . '"';
-		}
-
-		return ' ' . implode(' ', $output);
 	}
 }
