@@ -34,21 +34,27 @@ class Rox_ActiveRecord_Migration_Connection {
 	);
 
 	public function createTable($tableName, $options = array()) {
+		$this->_log(" # creating table {$tableName}");
 		$operation = new Rox_ActiveRecord_Migration_CreateTableOperation($tableName, $options);
 		return $operation;
 	}
 
 	public function dropTable($tableName) {
+		$this->_log(" # dropping table {$tableName}");
 		$this->_datasource()->execute("DROP TABLE `{$tableName}`");
 	}
 
 	public function addColumn($tableName, $columnName, $type, $options = array()) {
+		$this->_log(" # adding column {$tableName}.{$columnName}");
+
 		$sql = sprintf("ALTER TABLE `%s` ADD `%s` %s",
 			$tableName, $columnName, self::expandColumn($type, $options));
 		$this->_datasource()->execute($sql);
 	}
 
 	public function renameColumn($tableName, $columnName, $newColumnName) {
+		$this->_log(" # renaming column {$tableName}.{$columnName} to {$tableName}.{$newColumnName}");
+
 		$columnInfo = $this->_columnInfo($tableName, $columnName);
 		$sql = sprintf("ALTER TABLE `%s` CHANGE `%s` `%s` %s",
 			$tableName, $columnName, $newColumnName, strtoupper($columnInfo['type']));
@@ -56,15 +62,21 @@ class Rox_ActiveRecord_Migration_Connection {
 	}
 
 	public function removeColumn($tableName, $columnName) {
+		$this->_log(" # removing column {$tableName}.{$columnName}");
+
 		$sql = sprintf("ALTER TABLE `%s` DROP `%s`", $tableName, $columnName);
 		$this->_datasource()->execute($sql);
 	}
 
 	public function createDatabase($name) {
+		$this->_log(" # creating database {$name}");
+
 		$this->_datasource()->execute("CREATE DATABASE `{$name}`");
 	}
 
 	public function dropDatabase($name) {
+		$this->_log(" # dropping database {$name}");
+
 		$this->_datasource()->execute("DROP DATABASE `{$name}`");
 	}
 
@@ -82,6 +94,10 @@ class Rox_ActiveRecord_Migration_Connection {
 
 	protected function _datasource() {
 		return Rox_ConnectionManager::getDataSource();
+	}
+
+	protected function _log($text) {
+		echo $text . "\n";
 	}
 
 	public static function expandColumn($type, $options = array()) {
