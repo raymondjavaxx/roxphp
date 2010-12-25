@@ -29,7 +29,7 @@ class Rox_ActiveRecord_Migration {
 	}
 
 	public function down() {
-		$this->_connection = new Rox_ActiveRecord_Migration_Proxy($this->_connection);
+		$this->_connection = new Rox_ActiveRecord_Migration_ConnectionProxy($this->_connection);
 		$this->up();
 		$this->_connection->playReversed();
 	}

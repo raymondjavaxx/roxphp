@@ -13,23 +13,11 @@
  */
 
 /**
- * Migration Proxy class
+ * Connection Proxy class
  *
  * @package Rox
  */
-class Rox_ActiveRecord_Migration_Proxy {
-
-	protected $_target;
-
-	protected $_calls = array();
-
-	public function __construct($target = null) {
-		$this->_target = $target;
-	}
-
-	public function __call($method, $args) {
-		$this->_calls[] = compact('method', 'args');
-	}
+class Rox_ActiveRecord_Migration_ConnectionProxy extends Rox_ActiveRecord_Migration_RecordingProxy {
 
 	public function inverse() {
 		$calls = array_reverse($this->_calls);
@@ -82,7 +70,6 @@ class Rox_ActiveRecord_Migration_Proxy {
 		$args = func_get_args();
 		$this->_calls[] = compact('method', 'args');
 
-		$class = __CLASS__;
-		return new $class;
+		return new Rox_ActiveRecord_Migration_RecordingProxy;
 	}
 }
