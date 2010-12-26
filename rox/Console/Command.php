@@ -19,16 +19,6 @@
  */
 abstract class Rox_Console_Command {
 
-	public $stdin;
-	public $stdout;
-	public $stderr;
-
-	public function __construct() {
-		$this->stdin  = fopen('php://stdin', 'r');
-		$this->stdout = fopen('php://stdout', 'w');
-		$this->stderr = fopen('php://stderr', 'w');
-	}
-
 	public function header() {
 		$this->hr();
 		$this->out(' RoxPHP Console');
@@ -43,14 +33,14 @@ abstract class Rox_Console_Command {
 	}
 
 	public function out($data) {
-		return fwrite($this->stdout, $data . "\n");
+		return fwrite(STDOUT, $data . "\n");
 	}
 
 	public function in() {
-		return rtrim(fgets($this->stdin));
+		return rtrim(fgets(STDIN));
 	}
 
 	public function error($data) {
-		return fwrite($this->stderr, $data . "\n");
+		return fwrite(STDERR, $data . "\n");
 	}
 }
