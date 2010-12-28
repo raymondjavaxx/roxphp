@@ -33,6 +33,19 @@ class Rox_ActiveRecord_Association_Collection implements IteratorAggregate {
 		$this->_scope = $scope;
 	}
 
+	public function build($attributes = array()) {
+		$class = get_class($this->_model);
+
+		$other = new $class;
+		$other->setData($attributes);
+
+		foreach ($this->_scope as $attribute => $value) {
+			$other->{$attribute} = $value;
+		}
+
+		return $other;
+	}
+
 	public function find($ids, $options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		return $this->_model->find($ids, $options);
