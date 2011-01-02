@@ -40,6 +40,7 @@ class Rox_Mailer {
 
 	public function __construct() {
 		$this->message = new Rox_Mailer_Message($this->defaults);
+		$this->message->setHeader(array('Date' => date(DATE_RFC2822)));
 	}
 
 	public static function init($config = array()) {
