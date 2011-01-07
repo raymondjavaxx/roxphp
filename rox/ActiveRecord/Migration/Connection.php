@@ -21,7 +21,7 @@ class Rox_ActiveRecord_Migration_Connection {
 
 	protected static $_typeMap = array(
 		'binary'    => array('native_type' => 'BLOB'),
-		'boolean'   => array('native_type' => 'TINYINT', 'len' => 1),
+		'boolean'   => array('native_type' => 'TINYINT', 'len' => 1, 'null' => false, 'default' => false),
 		'date'      => array('native_type' => 'DATE'),
 		'datetime'  => array('native_type' => 'DATETIME'),
 		'decimal'   => array('native_type' => 'DECIMAL', 'len' => '10,2'),
@@ -116,6 +116,22 @@ class Rox_ActiveRecord_Migration_Connection {
 		}
 
 		$result[] = $definition['null'] ? ' NULL' : ' NOT NULL';
+
+		if (array_key_exists('default', $definition)) {
+			switch (gettype($definition['default'])) {
+				case 'NULL':
+					$result[] = " DEFAULT NULL";
+					break;
+				case 'boolean':
+					$default = $definition['default'] ? '1' : '0';
+					$result[] = " DEFAULT '{$default}'";
+					break;
+				default:
+					$result[] = " DEFAULT '{$definition['default']}'";
+					break;
+			}
+		}
+
 		return implode('', $result);
 	}
 }
