@@ -68,6 +68,13 @@ class Rox_Mailer_Message {
 		}
 	}
 
+	/**
+	 * Sets email header
+	 *
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void
+	 */
 	public function setHeader($name, $value = null) {
 		if (is_array($name)) {
 			$this->_headers += $name;
@@ -75,6 +82,22 @@ class Rox_Mailer_Message {
 		}
 
 		$this->_headers[$name] = $value;
+	}
+
+	public function fromEmailAddress() {
+		return $this->_extractEmailAddress($this->from);
+	}
+
+	protected function _formatEmailAddress($email) {
+		if (is_array($email)) {
+			if (isset($email['name']) && isset($email['email'])) {
+				return self::_encodeTextInline($email['name']) . ' <' . $email['email'] . '>';
+			} else {
+				throw new Rox_Exception();
+			}
+		}
+
+		return (string)$email;
 	}
 
 	public function addPart($contentType, $data, $headers = array()) {
@@ -109,7 +132,7 @@ class Rox_Mailer_Message {
 		$lines = array();
 
 		$lines[] = 'MIME-Version: 1.0';
-		$lines[] = 'From: ' . $this->from;
+		$lines[] = 'From: ' . $this->_formatEmailAddress($this->from);
 		$lines[] = 'To: ' . implode(', ', (array)$this->to);
 
 		if (!empty($this->cc)) {
@@ -120,7 +143,7 @@ class Rox_Mailer_Message {
 			$lines[] = 'Bcc: ' . implode(', ', (array)$this->bcc);
 		}
 
-		$lines[] = 'Subject: ' . $this->subject;
+		$lines[] = 'Subject: ' . self::_encodeTextInline($this->subject);
 		$lines[] = 'X-Mailer: RoxPHP Mailer';
 
 		foreach ($this->_headers as $name => $value) {
@@ -162,6 +185,14 @@ class Rox_Mailer_Message {
 		return implode("\n", $lines);
 	}
 
+	protected function _extractEmailAddress($email) {
+		if (is_array($email) && isset($email['email'])) {
+			return $email['email'];
+		}
+
+		return (string)$email;
+	}
+
 	/**
 	 * Encodes text to Quoted-printable
 	 *
@@ -182,5 +213,9 @@ class Rox_Mailer_Message {
 		}
 
 		return implode("\n", $lines);
+	}
+
+	protected static function _encodeTextInline($text) {
+		return '=?UTF-8?Q?' . self::_encodeText($text) . '?=';
 	}
 }

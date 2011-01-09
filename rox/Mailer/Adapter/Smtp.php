@@ -56,7 +56,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 			$this->_sendLine(base64_encode($this->_config['password']), 235);
 		}
 
-		$this->_sendLine('MAIL FROM:<' . $message->from . '>', 250);
+		$this->_sendLine('MAIL FROM:<' . $message->fromEmailAddress() . '>', 250);
 
 		$allRecipients = array_merge((array)$message->to, (array)$message->cc, (array)$message->bcc);
 		foreach ($allRecipients as $recipient) {
