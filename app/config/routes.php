@@ -12,11 +12,22 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-// connect the homepage
+// Connect the homepage
 Rox_Router::connectRoot(array('controller' => 'pages', 'action' => 'home'));
 
-// default routes
-Rox_Router::connect('/:controller/:action/:id', array());
+// Custom routes
+
+// Default routes
+Rox_Router::connect('/:controller', array('action' => 'index'), array('via' => 'GET'));
+Rox_Router::connect('/:controller/new', array('action' => 'add'), array('via' => 'GET'));
+Rox_Router::connect('/:controller', array('action' => 'add'), array('via' => 'POST'));
+Rox_Router::connect('/:controller/:id', array('action' => 'view'), array('via' => 'GET'));
+Rox_Router::connect('/:controller/:id/edit', array('action' => 'edit'), array('via' => 'GET'));
+Rox_Router::connect('/:controller/:id', array('action' => 'edit'), array('via' => 'PUT'));
+Rox_Router::connect('/:controller/:id', array('action' => 'delete'), array('via' => 'DELETE'));
+
+// Legacy routes
+//Rox_Router::connect('/:controller/:action/:id', array());
 //Rox_Router::connect('/:controller/:action/:id/:param1/:param2', array());
-Rox_Router::connect('/:controller/:action', array());
-Rox_Router::connect('/:controller', array('action' => 'index'));
+//Rox_Router::connect('/:controller/:action', array());
+//Rox_Router::connect('/:controller', array('action' => 'index'));
