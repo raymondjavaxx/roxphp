@@ -48,6 +48,13 @@ class Rox_Controller {
 	public $request;
 
 	/**
+	 * Response object
+	 *
+	 * @var Rox_Http_Response
+	 */
+	public $response;
+
+	/**
 	 * Request params
 	 *
 	 * @var array
@@ -70,6 +77,10 @@ class Rox_Controller {
 	public function __construct($config = array()) {
 		if (isset($config['request'])) {
 			$this->request = $config['request'];
+		}
+
+		if (isset($config['response'])) {
+			$this->response = $config['response'];
 		}
 
 		$vars = get_class_vars('ApplicationController');
@@ -98,7 +109,7 @@ class Rox_Controller {
 		$view = new Rox_Template_View($this->_viewVars);
 		$view->params = $this->params;
 
-		echo $view->render($viewPath, $viewName, $this->layout);
+		$this->response->body = $view->render($viewPath, $viewName, $this->layout);
 	}
 
 	/**
@@ -134,9 +145,15 @@ class Rox_Controller {
 	 *
 	 * @param string $url
 	 */
-	protected function redirect($url) {
-		header('HTTP/1.1 301');
-		header('Location: ' . Rox_Router::url($url));
+	protected function redirect($url, $options = array()) {
+		$defaults = array('status' => 301);
+		$options += $defaults;
+
+		$location = preg_match('/^([a-z0-9]+):\/\//', $url) === 1 ? $url : Rox_Router::url($url);
+
+		$this->response->status = $options['status'];
+		$this->response->header('Location', $location);
+		$this->response->render();
 		exit;
 	}
 
@@ -146,15 +163,8 @@ class Rox_Controller {
 	 * @param string $default
 	 */
 	protected function redirectToReferer($default = '/') {
-		if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-			$referer = $_SERVER['HTTP_REFERER'];
-		} else {
-			$referer = Rox_Router::url($default);
-		}
-
-		header('HTTP/1.1 301');
-		header('Location: ' . $referer);
-		exit;
+		$url = empty($_SERVER['HTTP_REFERER']) ? $default : $_SERVER['HTTP_REFERER'];
+		$this->redirect($url);
 	}
 
 	// ------------------------------------------------

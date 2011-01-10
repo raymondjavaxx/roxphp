@@ -37,7 +37,13 @@ class Rox_Http_Dispatcher {
 
 		$this->_loadController($params);
 
-		$controller = new $params['controller_class'](array('request' => $request));
+		$response = new Rox_Http_Response;
+
+		$controller = new $params['controller_class'](array(
+			'request' => $request,
+			'response' => $response
+		));
+
 		$controller->params = $params;
 
 		if (!method_exists($controller, $params['action_method']) ||
@@ -49,6 +55,8 @@ class Rox_Http_Dispatcher {
 		call_user_func_array(array($controller, $params['action_method']), $params['args']);
 		$controller->render();
 		$controller->afterFilter();
+
+		$controller->response->render();
 	}
 
 	/**
