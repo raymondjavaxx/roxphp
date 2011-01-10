@@ -52,7 +52,7 @@ class Rox_Http_Request_Normalizer {
 		$knownTypes = array('application/x-www-form-urlencoded', 'multipart/form-data');
 		if (!in_array($contentType, $knownTypes)) {
 			if (array_key_exists($contentType, self::$_config['body_decoders'])) {
-				$body = file_get_contents('php://input'));
+				$body = file_get_contents('php://input');
 				if (!empty($body)) {
 					$class = self::$_config['body_decoders'][$contentType];
 					$decoder = new $class;
