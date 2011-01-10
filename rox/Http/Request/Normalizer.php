@@ -56,7 +56,7 @@ class Rox_Http_Request_Normalizer {
 				if (!empty($body)) {
 					$class = self::$_config['body_decoders'][$contentType];
 					$decoder = new $class;
-					$request->data = array_merge($request->data, $decoder->decode($body);
+					$request->data = array_merge($request->data, $decoder->decode($body));
 				}
 			} else {
 				throw new Rox_Exception("Dispatcher doesn't know how to parse {$contentType}");
