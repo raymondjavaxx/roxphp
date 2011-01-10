@@ -50,11 +50,14 @@ class Rox_Http_Request_Normalizer {
 
 		// list of content types that PHP knows how to parse
 		$knownTypes = array('application/x-www-form-urlencoded', 'multipart/form-data');
-		if(!in_array($contentType, $knownTypes)) {
+		if (!in_array($contentType, $knownTypes)) {
 			if (array_key_exists($contentType, self::$_config['body_decoders'])) {
-				$class = self::$_config['body_decoders'][$contentType];
-				$decoder = new $class;
-				$request->data = array_merge($request->data, $decoder->decode(file_get_contents('php://input')));
+				$body = file_get_contents('php://input'));
+				if (!empty($body)) {
+					$class = self::$_config['body_decoders'][$contentType];
+					$decoder = new $class;
+					$request->data = array_merge($request->data, $decoder->decode($body);
+				}
 			} else {
 				throw new Rox_Exception("Dispatcher doesn't know how to parse {$contentType}");
 			}
