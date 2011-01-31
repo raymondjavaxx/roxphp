@@ -46,7 +46,7 @@ class Rox_ActiveRecord_Migration_ConnectionProxy extends Rox_ActiveRecord_Migrat
 
 			case 'renameColumn':
 				return array(
-					'method' => 'dropTable',
+					'method' => 'renameColumn',
 					'args' => array($args[1], $args[0])
 				);
 				break;
