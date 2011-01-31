@@ -96,7 +96,8 @@ class Rox_Template_Helper_Form extends Rox_Template_Helper {
 	}
 
 	public function fieldsFor($model) {
-		$helperInstance = new Rox_Helper_Form(array('is_child' => true));
+		$class = get_class($this);
+		$helperInstance = new $class(array('is_child' => true));
 		$helperInstance->setModel($model);
 		return $helperInstance;
 	}
