@@ -116,12 +116,25 @@ class Rox_Router {
 	 * Creates restful routes for controller
 	 *
 	 * @param string $name controller name
-	 * @param string $namespace (optional)
+	 * @param array $options
 	 * @return void
 	 */
-	public static function resource($name, $namespace = false) {
+	public static function resource($name, $options = array()) {
+		$defaults = array('namespace' => false, 'only' => array(), 'except' => array());
+		$options = array_merge($defaults, $options);
+
+		$whitelist = empty($options['only']) ? array('index', 'view', 'add', 'edit', 'delete') : $options['only'];
+		if (!empty($options['except'])) {
+			$whitelist = array_diff($whitelist, (array)$options['except']);
+		}
+
+		$whitelist = array_flip($whitelist);
+
 		if (strpos($name, '.') !== false) {
 			$resource = array();
+			if ($options['namespace'] !== false) {
+				$resource[] = $options['namespace'];
+			}
 
 			$controllers = explode('.', $name);
 			$lastController = array_pop($controllers);
@@ -134,19 +147,63 @@ class Rox_Router {
 			$resource[] = $lastController;
 
 			$resource = implode('/', $resource);
-			$controller = ($namespace === false) ? $lastController : "{$lastController}_{$name}";
+			$controller = ($options['namespace'] === false) ? $lastController : "{$options['namespace']}_{$lastController}";
 		} else {
-			$resource = ($namespace === false) ? $name : "{$namespace}/{$name}";
-			$controller = ($namespace === false) ? $name : "{$namespace}_{$name}";
+			$resource = ($options['namespace'] === false) ? $name : "{$options['namespace']}/{$name}";
+			$controller = ($options['namespace'] === false) ? $name : "{$options['namespace']}_{$name}";
 		}
 
-		self::connect("/{$resource}", array('controller' => $controller, 'action' => 'add', 'namespace' => $namespace), array('via' => 'POST'));
-		self::connect("/{$resource}", array('controller' => $controller, 'action' => 'index', 'namespace' => $namespace));
-		self::connect("/{$resource}/new", array('controller' => $controller, 'action' => 'add', 'namespace' => $namespace));
-		self::connect("/{$resource}/:id/edit", array('controller' => $controller, 'action' => 'edit', 'namespace' => $namespace));
-		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'edit', 'namespace' => $namespace),array('via' => 'PUT'));
-		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'delete', 'namespace' => $namespace),array('via' => 'DELETE'));
-		self::connect("/{$resource}/:id", array('controller' => $controller, 'action' => 'view', 'namespace' => $namespace));
+		if (isset($whitelist['add'])) {
+			self::connect("/{$resource}", array(
+				'controller' => $controller,
+				'action' => 'add',
+				'namespace' => $options['namespace']
+			), array( 'via' => 'POST'));
+
+			self::connect("/{$resource}/new", array(
+				'controller' => $controller,
+				'action' => 'add',
+				'namespace' => $options['namespace']
+			), array('via' => 'GET'));
+		}
+
+		if (isset($whitelist['index'])) {
+			self::connect("/{$resource}", array(
+				'controller' => $controller,
+				'action' => 'index',
+				'namespace' => $options['namespace']
+			));
+		}
+
+		if (isset($whitelist['edit'])) {
+			self::connect("/{$resource}/:id/edit", array(
+				'controller' => $controller,
+				'action' => 'edit',
+				'namespace' => $options['namespace']
+			));
+
+			self::connect("/{$resource}/:id", array(
+				'controller' => $controller,
+				'action' => 'edit',
+				'namespace' => $options['namespace']
+			), array('via' => 'PUT'));
+		}
+
+		if (isset($whitelist['delete'])) {
+			self::connect("/{$resource}/:id", array(
+				'controller' => $controller,
+				'action' => 'delete',
+				'namespace' => $options['namespace']
+			), array('via' => 'DELETE'));
+		}
+
+		if (isset($whitelist['view'])) {
+			self::connect("/{$resource}/:id", array(
+				'controller' => $controller,
+				'action' => 'view',
+				'namespace' => $options['namespace']
+			));
+		}
 	}
 
 	public static function parseUrl($url) {
