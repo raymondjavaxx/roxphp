@@ -61,4 +61,12 @@ class Rox_ActiveRecord_Migration {
 	public function dropDatabase($name) {
 		$this->_connection->dropDatabase($name);
 	}
+
+	public function addIndex($tableName, $columnNames, $options = array()) {
+		$this->_connection->addIndex($tableName, $columnNames, $options);
+	}
+
+	public function removeIndex($tableName, $columnNames, $options = array()) {
+		$this->_connection->removeIndex($tableName, $columnNames, $options);
+	}
 }

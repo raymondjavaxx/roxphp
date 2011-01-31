@@ -80,6 +80,38 @@ class Rox_ActiveRecord_Migration_Connection {
 		$this->_datasource()->execute("DROP DATABASE `{$name}`");
 	}
 
+	public function addIndex($tableName, $columnNames, $options = array()) {
+		$this->_log(" # creating index on {$tableName}.(" . implode(', ', (array)$columnNames) . ")");
+
+		$defaults = array(
+			'name' => 'idx_' . strtolower(implode('_', (array)$columnNames)),
+			'unique' => false
+		);
+
+		$options += $defaults;
+
+		$type = $options['unique'] ? 'UNIQUE' : 'INDEX';
+
+		$sql = sprintf("ALTER TABLE `%s` ADD %s `%s` (`%s`)", $tableName, $type,
+			$options['name'], implode('`, `', (array)$columnNames));
+
+		$this->_datasource()->execute($sql);
+	}
+
+	public function removeIndex($tableName, $columnNames, $options = array()) {
+		$this->_log(" # removing index on {$tableName}.(" . implode(', ', (array)$columnNames) . ")");
+
+		$defaults = array(
+			'name' => 'idx_' . strtolower(implode('_', (array)$columnNames)),
+			'unique' => false
+		);
+
+		$options += $defaults;
+
+		$sql = sprintf("ALTER TABLE `%s` DROP INDEX `%s`", $tableName, $options['name']);
+		$this->_datasource()->execute($sql);
+	}
+
 	protected function _columnInfo($table, $column) {
 		$sql = sprintf("SHOW COLUMNS FROM `%s` LIKE '%s'", $table, $column);
 		$rows = $this->_datasource()->query($sql);

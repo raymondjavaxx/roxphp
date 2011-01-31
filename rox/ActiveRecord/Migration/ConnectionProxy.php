@@ -51,6 +51,20 @@ class Rox_ActiveRecord_Migration_ConnectionProxy extends Rox_ActiveRecord_Migrat
 				);
 				break;
 
+			case 'addIndex':
+				return array(
+					'method' => 'removeIndex',
+					'args' => array($args[0], $args[1], $args[2])
+				);
+				break;
+
+			case 'removeIndex':
+				return array(
+					'method' => 'addIndex',
+					'args' => array($args[0], $args[1], $args[2])
+				);
+				break;
+
 			default:
 				throw new Rox_Exception("Irreversible migration command {$method}");
 				break;
