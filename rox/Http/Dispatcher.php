@@ -25,12 +25,12 @@ class Rox_Http_Dispatcher {
 	 * @param Rox_Http_Request $request
 	 * @throws Rox_Exception
 	 */
-	public function dispatch($request) {
+	public function dispatch(Rox_Http_Request $request) {
 		Rox_Http_Request_Normalizer::normalize($request);
 
 		$route = $request->getQuery('route', '/');
 
-		$params = Rox_Router::parseUrl($route);
+		$params = Rox_Router::parseUrl($route, $request);
 		if ($params === false) {
 			throw new Rox_Exception('No route matches request', 404);
 		}

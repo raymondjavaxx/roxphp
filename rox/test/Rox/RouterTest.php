@@ -22,7 +22,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		Rox_Router::connect('/:controller', array('action' => 'index'));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies');
+		$result = Rox_Router::parseUrl('/companies', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -35,7 +35,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
-		$result = Rox_Router::parseUrl('/companies');
+		$result = Rox_Router::parseUrl('/companies', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -61,7 +61,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
-		$result = Rox_Router::parseUrl('/companies/1');
+		$result = Rox_Router::parseUrl('/companies/1', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -74,7 +74,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies/1.json');
+		$result = Rox_Router::parseUrl('/companies/1.json', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -87,7 +87,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies/1/people/25.xml');
+		$result = Rox_Router::parseUrl('/companies/1/people/25.xml', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'people',
 			'controller_class' => 'PeopleController',
@@ -100,7 +100,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 	
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/users/edit/23');
+		$result = Rox_Router::parseUrl('/users/edit/23', new Rox_Http_Request);
 		$expected = array(
 			'controller' => 'users',
 			'controller_class' => 'UsersController',

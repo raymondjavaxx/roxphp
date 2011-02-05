@@ -39,13 +39,14 @@ class Rox_Route {
 		$this->pattern = preg_replace(array_keys($replacements), array_values($replacements), $this->pattern);
 	}
 
-	public function match($path) {
+	public function match($path, Rox_Http_Request $request = null) {
 		if ($this->pattern === null) {
 			$this->compile();
 		}
 
-		if (isset($this->config['options']['via']) &&
-			$this->config['options']['via'] != $_SERVER['REQUEST_METHOD']) {
+		if (isset($this->config['options']['via'])
+			&& $request !== null
+			&& $this->config['options']['via'] != $request->getMethod()) {
 			return false;
 		}
 

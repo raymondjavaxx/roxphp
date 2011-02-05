@@ -206,8 +206,8 @@ class Rox_Router {
 		}
 	}
 
-	public static function parseUrl($url) {
-		if ($params = self::_parseUrl($url)) {
+	public static function parseUrl($url, Rox_Http_Request $request = null) {
+		if ($params = self::_parseUrl($url, $request)) {
 			$defaults = array('action' => 'index', 'extension' => 'html', 'namespace' => false, 'args' => array());
 			$params += $defaults;
 
@@ -220,7 +220,7 @@ class Rox_Router {
 		return $params;
 	}
 
-	protected static function _parseUrl($url) {
+	protected static function _parseUrl($url, $request) {
 		$url = '/' . trim($url, '/');
 
 		if (isset(self::$_matches[$url])) {
@@ -228,7 +228,7 @@ class Rox_Router {
 		}
 
 		foreach (self::$_routes as $route) {
-			if ($params = $route->match($url)) {
+			if ($params = $route->match($url, $request)) {
 				return $params;
 			}
 		}
