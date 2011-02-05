@@ -33,7 +33,7 @@ class Rox_Route {
 		$replacements = array(
 			'/\\:controller/' => '(?P<controller>[a-z][a-z0-9_]{0,64})',
 			'/\\:action/' => '(?P<action>[a-z][a-z0-9_]{0,64})',
-			'(\\:([a-z0-9_]+))' => '(?P<\\1>[^\/.]+)'
+			'/\\:([a-z0-9_]+)/' => '(?P<\\1>[^\/.]+)'
 		);
 
 		$this->pattern = preg_replace(array_keys($replacements), array_values($replacements), $this->pattern);
