@@ -32,7 +32,7 @@ EOD;
 MIME-Version: 1.0
 From: ramon@example.org
 To: john@example.org
-Subject: Testing
+Subject: =?UTF-8?Q?Testing?=
 X-Mailer: RoxPHP Mailer
 Content-Type: multipart/alternative; boundary="boundary123"
 
