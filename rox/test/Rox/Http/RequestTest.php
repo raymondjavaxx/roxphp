@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(dirname(__FILE__)) . '/helper.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
 
-class Rox_RouterTest extends PHPUnit_Framework_TestCase {
+class Rox_Http_RequestTest extends PHPUnit_Framework_TestCase {
 
 	protected $_originalSuperGlobals = array();
 
