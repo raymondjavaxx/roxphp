@@ -19,8 +19,20 @@
  */
 class Rox_Http_Request {
 
+	/**
+	 * Request data
+	 *
+	 * @var array
+	 */
 	public $data = array();
 
+	/**
+	 * Retrieves request data
+	 *
+	 * @param string $key 
+	 * @param mixed $default 
+	 * @return mixed
+	 */
 	public function data($key = null, $default = null) {
 		if ($key === null) {
 			return $this->data;
@@ -30,7 +42,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::getPost()
+	 * Wrapper for <code>$_POST</code>
 	 * 
 	 * @param string $key
 	 * @param mixed $default
@@ -45,7 +57,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::getQuery()
+	 * Wrapper for <code>$_GET</code>
 	 * 
 	 * @param string $key
 	 * @param mixed $default
@@ -60,11 +72,11 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::getServer()
+	 * Wrapper for <code>$_SERVER</code>
 	 * 
-	 * @param mixed $key
+	 * @param string $key
 	 * @param mixed $default
-	 * @return
+	 * @return mixed
 	 */
 	public function getServer($key = null, $default = null) {
 		if ($key === null) {
@@ -75,7 +87,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::getMethod()
+	 * Returns the HTTP request method
 	 * 
 	 * @return string
 	 */
@@ -84,7 +96,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Return TRUE if the HTTP request method is POST
+	 * Return true if the HTTP request method is POST
 	 * 
 	 * @return boolean
 	 */
@@ -93,7 +105,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Return TRUE if the HTTP request method is GET
+	 * Return true if the HTTP request method is GET
 	 * 
 	 * @return boolean
 	 */
@@ -102,7 +114,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Return TRUE if the HTTP request method is PUT
+	 * Return true if the HTTP request method is PUT
 	 *
 	 * @return boolean
 	 */
@@ -111,7 +123,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Return TRUE if the HTTP request method is DELETE
+	 * Return true if the HTTP request method is DELETE
 	 *
 	 * @return boolean
 	 */
@@ -120,7 +132,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::isAjax()
+	 * Returns true if the page was requested via AJAX
 	 * 
 	 * @return boolean
 	 */
@@ -129,7 +141,7 @@ class Rox_Http_Request {
 	}
 
 	/**
-	 * Request::isSSL()
+	 * Returns true if the page was requested through SSL
 	 * 
 	 * @return boolean
 	 */
