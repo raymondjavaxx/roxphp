@@ -24,55 +24,54 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 *
 	 * @var string
 	 */
-	protected $_table;
+	protected static $_table;
 
 	/**
 	 * Attribute map
 	 *
 	 * @var array
 	 */
-	protected $_attributeMap;
+	protected static $_attributeMap;
 
 	/**
 	 * List of one-to-many associations
 	 *
 	 * @var array
 	 */
-	protected $_hasMany = array();
+	protected static $_hasMany = array();
 
 	/**
 	 * List of one-to-one associations
 	 *
 	 * @var array
 	 */
-	protected $_hasOne = array();
+	protected static $_hasOne = array();
 
 	/**
 	 * List of one-to-one associations
 	 *
 	 * @var array
 	 */
-	protected $_belongsTo = array();
+	protected static $_belongsTo = array();
 
 	/**
 	 * Timezone of magic timestamp attributes
 	 *
 	 * @var string
 	 */
-	protected $_timestampsTimezone = 'local';
+	protected static $_timestampsTimezone = 'local';
 
 	/**
-	 * Constructor
+	 * Returns the name of db table
 	 *
-	 * @param array $attributes
-	 * @return void
+	 * @return string
 	 */
-	public function __construct(array $attributes = null) {
-		parent::__construct($attributes);
-
-		if ($this->_table === null) {
-			$this->_table = Rox_Inflector::tableize(get_class($this));
+	public static function _table() {
+		if (static::$_table === null) {
+			static::$_table = Rox_Inflector::tableize(get_called_class());
 		}
+
+		return static::$_table;
 	}
 
 	/**
@@ -93,11 +92,6 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			case 'set':
 				$key = Rox_Inflector::underscore(substr($method, 3));
 				return $this->setData($key, isset($args[0]) ? $args[0] : null);
-		}
-
-		if (strpos($method, 'findBy') === 0) {
-			$key = Rox_Inflector::underscore(substr($method, 6));
-			return $this->findFirst(array('conditions' => array($key => $args[0])));
 		}
 
 		$assoc = $this->_association('belongs_to', $method);
@@ -125,6 +119,15 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		}
 
 		throw new Rox_Exception('Invalid method '.get_class($this).'::'.$method.'()');
+	}
+
+	public static function __callStatic($method, $args) {
+		if (strpos($method, 'findBy') === 0) {
+			$key = Rox_Inflector::underscore(substr($method, 6));
+			return static::findFirst(array('conditions' => array($key => $args[0])));
+		}
+
+		throw new Rox_Exception('Invalid static function ' . get_called_class() . '::' . $method . '()');
 	}
 
 	/**
@@ -156,12 +159,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	/**
 	 * Property overloading. Allows accessing model data as attributes.
 	 *
-	 * <code>
-	 *   $user = new User;
-	 *   $user->first_name = "John";
-	 *   $user->last_name = "Doe";
-	 *   $user->save();
-	 * </code>
+	 *    $user = new User;
+	 *    $user->first_name = "John";
+	 *    $user->last_name = "Doe";
+	 *    $user->save();
 	 *
 	 * @param string $var 
 	 */
@@ -186,7 +187,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	protected function _association($type, $name) {
 		static $associations;
 		if ($associations === null) {
-			$associations = $this->_normalizeAssociations();
+			$associations = static::_normalizeAssociations();
 		}
 
 		return isset($associations[$type][$name]) ? $associations[$type][$name] : false;
@@ -197,17 +198,17 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 *
 	 * @return array
 	 */
-	private function _normalizeAssociations() {
+	protected static function _normalizeAssociations() {
 		$associations = array('belongs_to' => array(), 'has_many' => array(), 'has_one' => array());
 		$rels = array('belongs_to' => '_belongsTo', 'has_many' => '_hasMany', 'has_one' => '_hasOne');
 		foreach ($rels as $type => $property) {
-			foreach ($this->{$property} as $name => $options) {
+			foreach (static::$$property as $name => $options) {
 				if (is_int($name) && is_string($options)) {
 					$name = $options;
 					$options = array();
 				}
 
-				$keyClass = ($type == 'belongs_to') ? $name : get_class($this);
+				$keyClass = ($type == 'belongs_to') ? $name : get_called_class();
 				$defaults = array(
 					'class' => Rox_Inflector::classify($name),
 					'key' => Rox_Inflector::underscore($keyClass) . '_id'
@@ -235,20 +236,13 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		$this->_updateMagicTimestamps();
 
 		$data = $this->getData();
-		if (empty($data)) {
-			return false;
-		}
-
 		$attributeMap = $this->_attributeMap();
-		foreach ($data as $k => $v) {
-			if (!array_key_exists($k, $attributeMap) || !in_array($k, $this->_modifiedAttributes)) {
-				unset($data[$k]);
-			}
-		}
 
-		unset($data[$this->_primaryKey]);
+		$modifiedAttributes = array_intersect($this->_modifiedAttributes, array_keys($attributeMap));
+		$data = array_intersect_key($data, array_flip($modifiedAttributes));
+		unset($data[static::$_primaryKey]);
 
-		$dataSource = $this->datasource();
+		$dataSource = static::datasource();
 
 		if ($this->_newRecord) {
 			foreach ($data as $f => $v) {
@@ -257,12 +251,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 			$attributes = '`' . implode('`, `', array_keys($data)) . '`';
 			$values = implode(', ', array_values($data));
-			$sql = sprintf(
-				"INSERT INTO `%s` (%s) VALUES (%s)",
-				$this->_table,
-				$attributes,
-				$values
-			);
+			$sql = sprintf("INSERT INTO `%s` (%s) VALUES (%s)", static::_table(), $attributes, $values);
 
 			$dataSource->execute($sql);
 			if ($dataSource->affectedRows() == 1) {
@@ -280,10 +269,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 			$sql = sprintf(
 				"UPDATE `%s` SET %s WHERE `%s` = %s",
-				$this->_table,
+				static::_table(),
 				implode(', ', $updateData),
-				$this->_primaryKey,
-				$this->smartQuote($this->_primaryKey, $this->getId())
+				static::$_primaryKey,
+				$this->smartQuote(static::$_primaryKey, $this->getId())
 			);
 
 			if ($dataSource->execute($sql) !== false) {
@@ -302,7 +291,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @return void
 	 */
 	protected function _updateMagicTimestamps() {
-		$timestamp = $this->_timestampsTimezone == 'local' ?
+		$timestamp = static::$_timestampsTimezone == 'local' ?
 			date('Y-m-d H:i:s') : gmdate('Y-m-d H:i:s');
 
 		if ($this->_newRecord && $this->hasAttribute('created_at') && empty($this->created_at)) {
@@ -320,16 +309,16 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param mixed $idOrConditions
 	 * @return boolean
 	 */
-	public function exists($idOrConditions = array()) {
+	public static function exists($idOrConditions = array()) {
 		if (!is_array($idOrConditions)) {
-			$idOrConditions = array($this->_primaryKey => $idOrConditions);
+			$idOrConditions = array(static::$_primaryKey => $idOrConditions);
 		}
 
-		$sql = sprintf("SELECT COUNT(*) AS `count` FROM `%s`", $this->_table);
-		$sql.= $this->_buildConditionsSQL($idOrConditions);
+		$sql = sprintf("SELECT COUNT(*) AS `count` FROM `%s`", static::_table());
+		$sql.= static::_buildConditionsSQL($idOrConditions);
 		$sql.= ' LIMIT 1';
 
-		$result = $this->datasource()->query($sql);
+		$result = static::datasource()->query($sql);
 		return $result[0]['count'] > 0;
 	}
 
@@ -339,12 +328,11 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array|string $conditions
 	 * @return integer
 	 */
-	public function findCount($conditions = array()) {
-		$sql = sprintf('SELECT COUNT(*) AS `count` FROM `%s`', $this->_table);
-		$sql.= $this->_buildConditionsSQL($conditions);
+	public static function findCount($conditions = array()) {
+		$sql = sprintf('SELECT COUNT(*) AS `count` FROM `%s`', static::_table());
+		$sql.= static::_buildConditionsSQL($conditions);
 
-		$dataSource = $this->datasource();
-		$result = $dataSource->query($sql);
+		$result = static::datasource()->query($sql);
 
 		return (integer)$result[0]['count'];
 	}
@@ -355,7 +343,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array $options  
 	 * @return array
 	 */
-	public function findAll($options = array()) {
+	public static function findAll($options = array()) {
 		$defaults = array(
 			'conditions' => array(),
 			'attributes' => null,
@@ -372,8 +360,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			$options['attributes'] = '`' . implode('`, `', $options['attributes']) . '`';
 		}
 
-		$sql = sprintf('SELECT %s FROM `%s`', $options['attributes'], $this->_table);
-		$sql.= $this->_buildConditionsSQL($options['conditions']);
+		$sql = sprintf('SELECT %s FROM `%s`', $options['attributes'], static::_table());
+		$sql.= static::_buildConditionsSQL($options['conditions']);
 
 		if (!empty($options['group'])) {
 			$sql .= ' GROUP BY ' . $options['group'];
@@ -387,7 +375,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			$sql .= ' LIMIT ' . $options['limit'];
 		}
 
-		$result = $this->findBySql($sql);
+		$result = static::findBySql($sql);
 		return $result;
 	}
 
@@ -397,7 +385,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array $options
 	 * @return Rox_ActiveRecord_PaginationResult
 	 */
-	public function paginate($options = array()) {
+	public static function paginate($options = array()) {
 		$defaultOptions = array(
 			'per_page'   => 10,
 			'page'       => 1,
@@ -413,12 +401,12 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		$currentPage = 1;
 		$items = array();
 
-		$total = $this->findCount($options['conditions']);
+		$total = static::findCount($options['conditions']);
 		if ($total > 0) {
 			$pages = (integer)ceil($total / $options['per_page']);
 			$currentPage = min(max(intval($options['page']), 1), $pages);
 			$limit = sprintf('%d, %d', ($currentPage - 1) * $options['per_page'], $options['per_page']);
-			$items = $this->findAll(array(
+			$items = static::findAll(array(
 				'conditions' => $options['conditions'],
 				'attributes' => $options['attributes'],
 				'order'      => $options['order'],
@@ -443,13 +431,13 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @return array|Rox_ActiveRecord
 	 * @throws Rox_ActiveRecord_RecordNotFound
 	 */
-	public function find($ids, $options = array()) {
+	public static function find($ids, $options = array()) {
 		$checkArray = is_array($ids);
 
 		$options = array_merge_recursive(array('attributes' => null, 'order' => null),
-			$options, array('conditions' => array($this->_primaryKey => $ids)));
+			$options, array('conditions' => array(static::$_primaryKey => $ids)));
 
-		$results = $this->findAll($options);
+		$results = static::findAll($options);
 		if ($checkArray) {
 			if (count($results) == count($ids)) {
 				return $results;
@@ -472,12 +460,12 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array $options 
 	 * @return Rox_ActiveRecord
 	 */
-	public function findFirst($options = array()) {
+	public static function findFirst($options = array()) {
 		$options = array_merge($options, array(
 			'limit' => 1
 		));
 
-		$results = $this->findAll($options);
+		$results = static::findAll($options);
 		return reset($results);
 	}
 
@@ -487,12 +475,12 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array $options
 	 * @return Rox_ActiveRecord
 	 */
-	public function findLast($options = array()) {
+	public static function findLast($options = array()) {
 		$options = array_merge($options, array(
-			'order' => '`' . $this->_primaryKey . '` DESC',
+			'order' => '`' . static::$_primaryKey . '` DESC',
 		));
 
-		return $this->findFirst($options);
+		return static::findFirst($options);
 	}
 
 	/**
@@ -501,10 +489,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param string $sql
 	 * @return array
 	 */
-	public function findBySql($sql) {
-		$rows = $this->datasource()->query($sql);
+	public static function findBySql($sql) {
+		$rows = static::datasource()->query($sql);
 
-		$className = get_class($this);
+		$className = get_called_class();
 
 		$results = array();
 		foreach ($rows as $row) {
@@ -531,12 +519,12 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 		$sql = sprintf(
 			"DELETE FROM `%s` WHERE `%s` = %s",
-			$this->_table,
-			$this->_primaryKey,
-			$this->smartQuote($this->_primaryKey, $this->getId())
+			static::_table(),
+			static::$_primaryKey,
+			$this->smartQuote(static::$_primaryKey, $this->getId())
 		);
 
-		$dataSource = $this->datasource();
+		$dataSource = static::datasource();
 		$dataSource->execute($sql);
 
 		$deleted = $dataSource->affectedRows() > 0;
@@ -553,8 +541,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param array|string $conditions 
 	 * @return void
 	 */
-	public function deleteAll($conditions = array()) {
-		$records = $this->findAll(array('conditions' => $conditions));
+	public static function deleteAll($conditions = array()) {
+		$records = static::findAll(array('conditions' => $conditions));
 		foreach ($records as $record) {
 			$record->delete();
 		}
@@ -567,14 +555,14 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public function smartQuote($attribute, $value) {
+	public static function smartQuote($attribute, $value) {
 		if (null === $value) {
 			return 'NULL';
 		}
 
 		$type = 'string';
 
-		$attributeMap = $this->_attributeMap();
+		$attributeMap = static::_attributeMap();
 		if (isset($attributeMap[$attribute])) {
 			$type = $attributeMap[$attribute];
 		}
@@ -590,7 +578,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			case 'date':
 			case 'datetime':
 			case 'binary':
-				return "'" . $this->datasource()->escape($value) . "'";
+				return "'" . static::datasource()->escape($value) . "'";
 
 			case 'float':
 				return (float)$value;
@@ -602,13 +590,13 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * 
 	 * @return array
 	 */
-	protected function _attributeMap() {
-		if ($this->_attributeMap === null) {
-			$db = $this->datasource();
-			$this->_attributeMap = $db->generateAttributeMapFromTable($this->_table);
+	protected static function _attributeMap() {
+		if (static::$_attributeMap === null) {
+			$db = static::datasource();
+			static::$_attributeMap = $db->generateAttributeMapFromTable(static::_table());
 		}
 
-		return $this->_attributeMap;	
+		return static::$_attributeMap;	
 	}
 
 	/**
@@ -618,7 +606,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @return boolean
 	 */
 	public function hasAttribute($attribute) {
-		return array_key_exists($attribute, $this->_attributeMap());
+		return array_key_exists($attribute, static::_attributeMap());
 	}
 
 	/**
@@ -626,8 +614,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 *
 	 * @return Rox_DataSource
 	 */
-	public function datasource() {
-		return Rox_ConnectionManager::getDataSource($this->_dataSourceName);
+	public static function datasource() {
+		return Rox_ConnectionManager::getDataSource(static::$_dataSourceName);
 	}
 
 	/**
@@ -636,7 +624,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param mixed $conditions
 	 * @return string
 	 */
-	protected function _buildConditionsSQL($conditions) {
+	protected static function _buildConditionsSQL($conditions) {
 		if (empty($conditions)) {
 			return null;
 		}
@@ -652,11 +640,11 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 				$normalizedConditions[] = '(' . $value . ')';
 			} else if (is_array($value)) {
 				foreach ($value as &$valueRef) {
-					$valueRef = $this->smartQuote($field, $valueRef);
+					$valueRef = static::smartQuote($field, $valueRef);
 				}
 				$normalizedConditions[] = '`' . $field . '` IN(' . implode(', ', $value) . ')';
 			} else {
-				$normalizedConditions[] = '`' . $field . '` = ' . $this->smartQuote($field, $value);
+				$normalizedConditions[] = '`' . $field . '` = ' . static::smartQuote($field, $value);
 			}
 		}
 
@@ -701,8 +689,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		}
 
 		if (!$this->_newRecord) {
-			$scopeConditions[] = sprintf("`%s` != %s", $this->_primaryKey,
-				$this->smartQuote($this->_primaryKey, $this->getId()));
+			$scopeConditions[] = sprintf("`%s` != %s", static::$_primaryKey,
+				$this->smartQuote(static::$_primaryKey, $this->getId()));
 		}
 
 		foreach ((array)$attributes as $attribute) {

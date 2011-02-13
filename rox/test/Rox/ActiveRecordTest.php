@@ -8,13 +8,9 @@ Rox_ConnectionManager::setConfig('rox-test', array(
 
 class User extends Rox_ActiveRecord {
 
-	protected $_dataSourceName = 'rox-test';
+	protected static $_dataSourceName = 'rox-test';
 
-	protected $_protectedAttributes = array('role');
-
-	public static function model($class = __CLASS__) {
-		return parent::model($class);
-	}
+	protected static $_protectedAttributes = array('role');
 
 	protected function _beforeSave() {
 		if ($this->_newRecord) {
@@ -31,6 +27,12 @@ class User extends Rox_ActiveRecord {
 class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
+		try {
+			$ds = Rox_ConnectionManager::getDataSource('rox-test');
+			$ds->execute("DROP TABLE `users`");
+		} catch(Exception $e) {
+		}
+
 		$sql = "CREATE TABLE `users` (";
 		$sql.= "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,";
 		$sql.= "`first_name` VARCHAR( 255 ) NOT NULL ,";
@@ -73,7 +75,7 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($user->save());
 		$this->assertTrue(is_numeric($user->id));
 
-		$user2 = User::model()->find($user->id);
+		$user2 = User::find($user->id);
 		$this->assertEquals($user->getData(), $user2->getData());
 	}
 
@@ -88,14 +90,14 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 			$user->save();
 		}
 
-		$users = User::model()->findAll();
+		$users = User::findAll();
 		$this->assertEquals(2, count($users));
 		$this->assertTrue($users[0] instanceof User);
 		//print_r($users);
 	}
 
 	public function testCreate() {
-		$jose = User::model()->create(array(
+		$jose = User::create(array(
 			'first_name' => 'Jose',
 			'last_name'  => 'Perez',
 			'email'      => 'jose@example.com',
@@ -104,6 +106,18 @@ class ActiveRecordTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertTrue($jose instanceof User);
 		$this->assertTrue(is_numeric($jose->getId()));
+	}
+
+	public function testFindBy() {
+		User::create(array(
+			'first_name' => 'Jose',
+			'last_name'  => 'Perez',
+			'email'      => 'jose@example.com',
+			'password'   => 'test'
+		));
+
+		$jose = User::findByEmail('jose@example.com');
+		$this->assertTrue($jose instanceof User);
 	}
 
 	public function testProtectedFields() {

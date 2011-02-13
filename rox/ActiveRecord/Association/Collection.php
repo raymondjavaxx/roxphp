@@ -28,15 +28,13 @@ class Rox_ActiveRecord_Association_Collection implements IteratorAggregate {
 	 */
 	protected $_model;
 
-	public function __construct($class, $scope) {
-		$this->_model = Rox_ActiveRecord::model($class);
+	public function __construct($model, $scope) {
+		$this->_model = $model;
 		$this->_scope = $scope;
 	}
 
 	public function build($attributes = array()) {
-		$class = get_class($this->_model);
-
-		$other = new $class;
+		$other = new $this->_model;
 		$other->setData($attributes);
 
 		foreach ($this->_scope as $attribute => $value) {
@@ -48,37 +46,37 @@ class Rox_ActiveRecord_Association_Collection implements IteratorAggregate {
 
 	public function find($ids, $options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->find($ids, $options);
+		return $this->_model::find($ids, $options);
 	}
 
 	public function findFirst($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->findFirst($options);
+		return $this->_model::findFirst($options);
 	}
 
 	public function findLast($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->findLast($options);
+		return $this->_model::findLast($options);
 	}
 
 	public function findAll($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->findAll($options);
+		return $this->_model::findAll($options);
 	}
 
 	public function deleteAll($conditions = array()) {
 		$conditions = array_merge((array)$conditions, $this->_scope);
-		$this->_model->deleteAll($conditions);
+		$this->_model::deleteAll($conditions);
 	}
 
 	public function findCount($conditions = array()) {
 		$conditions = array_merge((array)$conditions, $this->_scope);
-		return $this->_model->findCount($conditions);
+		return $this->_model::findCount($conditions);
 	}
 
 	public function paginate($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model->paginate($options);
+		return $this->_model::paginate($options);
 	}
 
 	public function getIterator() {

@@ -24,7 +24,7 @@ abstract class Rox_ActiveModel {
 	 *
 	 * @var string
 	 */
-	protected $_primaryKey = 'id';
+	protected static $_primaryKey = 'id';
 
 	/**
 	 * The name of DataSource used by this model
@@ -32,7 +32,7 @@ abstract class Rox_ActiveModel {
 	 * @see Rox_ConnectionManager::getDataSource()
 	 * @var string
 	 */
-	protected $_dataSourceName = 'default';
+	protected static $_dataSourceName = 'default';
 
 	/**
 	 * Object data
@@ -46,7 +46,7 @@ abstract class Rox_ActiveModel {
 	 *
 	 * @var array
 	 */
-	protected $_protectedAttributes = array('id');
+	protected static $_protectedAttributes = array('id');
 
 	/**
 	 * Array of modified attributes
@@ -82,21 +82,13 @@ abstract class Rox_ActiveModel {
 		}
 	}
 
-	public static function model($class = __CLASS__) {
-		static $instances = array();
-		if (!isset($instances[$class])) {
-			$instances[$class] = new $class;
-		}
-		return $instances[$class];
-	}
-
 	/**
 	 * Sets the record ID
 	 *
 	 * @param mixed $id 
 	 */
 	public function setId($id) {
-		$this->setData($this->_primaryKey, $id);
+		$this->setData(static::$_primaryKey, $id);
 	}
 
 	/**
@@ -105,7 +97,7 @@ abstract class Rox_ActiveModel {
 	 * @return mixed $id 
 	 */
 	public function getId() {
-		return $this->getData($this->_primaryKey);
+		return $this->getData(static::$_primaryKey);
 	}
 
 	/**
@@ -138,7 +130,7 @@ abstract class Rox_ActiveModel {
 	public function setData($attribute, $value = null) {
 		if (is_array($attribute)) {
 			foreach ($attribute as $k => $v) {
-				if (in_array($k, $this->_protectedAttributes)) {
+				if (in_array($k, static::$_protectedAttributes)) {
 					unset($attribute[$k]);
 				}
 			}
@@ -188,12 +180,10 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Property overloading. Allows accessing model data as attributes.
 	 *
-	 * <code>
-	 *   $user = new User;
-	 *   $user->first_name = "John";
-	 *   $user->last_name = "Doe";
-	 *   $user->save();
-	 * </code>
+	 *    $user = new User;
+	 *    $user->first_name = "John";
+	 *    $user->last_name = "Doe";
+	 *    $user->save();
 	 *
 	 * @param string $var 
 	 */
@@ -252,8 +242,8 @@ abstract class Rox_ActiveModel {
 	 * @param mixed $data
 	 * @return object
 	 */
-	public function create($data) {
-		$className = get_class($this);
+	public static function create($data) {
+		$className = get_called_class();
 		$object = new $className($data);
 		$object->save();
 		return $object;
