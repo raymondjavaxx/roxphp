@@ -19,15 +19,6 @@
  */
 class Rox_Router {
 
-	/**
-	 * Routing config
-	 *
-	 * @var array
-	 */
-	protected static $_config = array(
-		'prefixes' => array('admin')
-	);
-
 	protected static $_matches = array();
 	protected static $_routes = array();
 
@@ -55,15 +46,6 @@ class Rox_Router {
 	 */
 	public static function connectRoot($params) {
 		self::match('/', $params);
-	}
-
-	/**
-	 * Sets the configuration for the routing
-	 *
-	 * @param array $config 
-	 */
-	public static function setConfig(array $config) {
-		self::$_config = array_merge(self::$_config, $config);
 	}
 
 	/**
