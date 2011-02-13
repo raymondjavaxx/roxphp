@@ -23,6 +23,13 @@ class Rox_ActiveRecord_Migration_CreateTableOperation {
 	protected $_options = array('engine' => 'InnoDB');
 	protected $_columns;
 
+	/**
+	 * Constructor
+	 *
+	 * @param string $tableName 
+	 * @param array $options 
+	 *         - engine: Storage engine for table (optional, defaults to InnoDB)
+	 */
 	public function __construct($tableName, $options = array()) {
 		$this->_tableName = $tableName;
 		$this->_options = array_merge($this->_options, $options);

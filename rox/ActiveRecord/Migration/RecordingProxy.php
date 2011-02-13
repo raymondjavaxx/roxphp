@@ -19,10 +19,25 @@
  */
 class Rox_ActiveRecord_Migration_RecordingProxy {
 
+	/**
+	 * Target object
+	 *
+	 * @var object
+	 */
 	protected $_target;
 
+	/**
+	 * List of issued calls
+	 *
+	 * @var array
+	 */
 	protected $_calls = array();
 
+	/**
+	 * Contructor
+	 *
+	 * @param object $target 
+	 */
 	public function __construct($target = null) {
 		$this->_target = $target;
 	}
@@ -31,6 +46,11 @@ class Rox_ActiveRecord_Migration_RecordingProxy {
 		$this->_calls[] = compact('method', 'args');
 	}
 
+	/**
+	 * Returns the list of issued calls
+	 *
+	 * @return array
+	 */
 	public function calls() {
 		return $this->_calls;
 	}
