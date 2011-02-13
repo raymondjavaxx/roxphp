@@ -17,7 +17,7 @@
  *
  * @package Rox
  */
-class Rox_ActiveRecord_Migration {
+abstract class Rox_ActiveRecord_Migration {
 
 	/**
 	 * Connection
@@ -30,9 +30,31 @@ class Rox_ActiveRecord_Migration {
 		$this->_connection = new Rox_ActiveRecord_Migration_Connection;
 	}
 
-	public function up() {
-	}
+	/**
+	 * Abstract method to be implemented by sub-classes. All the db operations
+	 * must be performed inside this method. The method will be called automatically
+	 * when migrating "up"
+	 *
+	 *    class CreateUsersTable extends Rox_ActiveRecord_Migration {
+	 *        public function up() {
+	 *            $t = $this->createTable('users');
+	 *            $t->string('username');
+	 *            $t->string('password');
+	 *            $t->end();
+	 *
+	 *            $this->createIndex('users', 'username', array('unique' => true));
+	 *        }
+	 *    }
+	 *
+	 * @return void
+	 */
+	abstract public function up();
 
+	/**
+	 * Reverts the migration
+	 *
+	 * @return void
+	 */
 	public function down() {
 		$this->_connection = new Rox_ActiveRecord_Migration_ConnectionProxy($this->_connection);
 		$this->up();
