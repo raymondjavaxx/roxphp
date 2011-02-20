@@ -23,10 +23,12 @@ define('ROX_DEBUG', true);
  */
 define('ROX_APP_PATH', dirname(dirname(__FILE__)));
 
+define('ROX_LIBRARIES_PATH', dirname(ROX_APP_PATH).'/libraries');
+
 /**
  * Path to framework folder
  */
-define('ROX_FRAMEWORK_PATH', dirname(ROX_APP_PATH).'/rox');
+define('ROX_FRAMEWORK_PATH', ROX_LIBRARIES_PATH.'/rox');
 
 // Set include paths
 set_include_path(implode(PATH_SEPARATOR, array(
@@ -35,7 +37,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 	ROX_APP_PATH . '/helpers',
 	ROX_APP_PATH . '/mailers',
 	ROX_APP_PATH . '/vendors',
-	ROX_FRAMEWORK_PATH,
+	ROX_LIBRARIES_PATH,
 	// uncoment the line below preserve default include paths
 	// get_include_path()
 )));
@@ -44,12 +46,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // Load and set the exception handler
-require ROX_FRAMEWORK_PATH . '/Exception/Handler.php';
-Rox_Exception_Handler::register();
+require ROX_FRAMEWORK_PATH . '/exception/handler.php';
+\rox\exception\Handler::register();
 
 // Load and register the autoloader
 require ROX_FRAMEWORK_PATH . '/Loader.php';
-Rox_Loader::register();
+\rox\Loader::register();
 
 // Load DB configuration file and init
 require ROX_APP_PATH . '/config/database.php';

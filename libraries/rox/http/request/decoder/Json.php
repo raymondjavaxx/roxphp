@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http\request\decoder;
+
+use \Rox_Exception;
+
 /**
  * Rox_Http_Decoder_Json
  *
  * @package Rox
  */
-class Rox_Http_Decoder_Json {
+class Json {
 
 	public function decode($data) {
 		$result = json_decode($data, true);

@@ -12,12 +12,15 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\template\helper;
+use \Rox_Inflector;
+
 /**
  * Form Helper
  *
  * @package Rox
  */
-class Rox_Template_Helper_Form extends Rox_Template_Helper {
+class Form extends \rox\template\Helper {
 
 	/**
 	 * Holds the name of the current model

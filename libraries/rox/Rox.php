@@ -30,9 +30,10 @@ class Rox {
 	public static function getHelper($name) {
 		if (!isset(self::$_helperInstances[$name])) {
 			$className = self::_loadHelper($name);
-			if (!class_exists($className)) {
-				throw new Rox_Exception("Class '{$className}' not found");
-			}
+
+			//if (!class_exists($className)) {
+			//	throw new Rox_Exception("Class '{$className}' not found");
+			//}
 
 			self::$_helperInstances[$name] = new $className();
 		}
@@ -54,10 +55,10 @@ class Rox {
 			return $name . 'Helper';
 		}
 
-		$file = ROX_FRAMEWORK_PATH . "/Template/Helper/{$name}.php";
+		$file = ROX_FRAMEWORK_PATH . "/template/helper/{$name}.php";
 		if (file_exists($file)) {
 			require_once $file;
-			return 'Rox_Template_Helper_' . $name;
+			return '\rox\template\helper\\' . $name;
 		}
 
 		throw new Rox_Exception("Helper '{$name}' not found");

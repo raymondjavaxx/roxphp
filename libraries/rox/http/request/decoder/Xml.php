@@ -12,15 +12,19 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http\request\decoder;
+
+use \Rox_Exception;
+
 /**
  * Rox_Http_Decoder_Xml
  *
  * @package Rox
  */
-class Rox_Http_Decoder_Xml {
+class Xml {
 
 	public function decode($data) {
-		$dom = new DOMDocument();
+		$dom = new \DOMDocument();
 		$dom->preserveWhiteSpace = false;
 		if (!$dom->loadXML($data)) {
 			throw new Rox_Exception("Data is not valid XML");

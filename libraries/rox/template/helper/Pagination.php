@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\template\helper;
+use \Rox_ActiveRecord_PaginationResult;
+
+
 /**
  * Pagination Helper
  *
  * @package Rox
  */
-class Rox_Template_Helper_Pagination extends Rox_Template_Helper {
+class Pagination extends \rox\template\Helper {
 
 	/**
 	 * Generates the pagination nav

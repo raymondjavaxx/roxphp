@@ -12,12 +12,17 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http;
+
+use \rox\http\request\Normalizer;
+use \Rox_Router;
+
 /**
  * Dispatcher
  *
  * @package Rox
  */
-class Rox_Http_Dispatcher {
+class Dispatcher {
 
 	/**
 	 * Dispatches an HTTP request
@@ -25,19 +30,19 @@ class Rox_Http_Dispatcher {
 	 * @param Rox_Http_Request $request
 	 * @throws Rox_Exception
 	 */
-	public function dispatch(Rox_Http_Request $request) {
-		Rox_Http_Request_Normalizer::normalize($request);
+	public function dispatch(Request $request) {
+		Normalizer::normalize($request);
 
 		$route = $request->getQuery('route', '/');
 
 		$params = Rox_Router::parseUrl($route, $request);
 		if ($params === false) {
-			throw new Rox_Exception('No route matches request', 404);
+			throw new DispatcherException('No route matches request', 404);
 		}
 
 		$this->_loadController($params);
 
-		$response = new Rox_Http_Response;
+		$response = new Response;
 
 		$controller = new $params['controller_class'](array(
 			'request' => $request,
@@ -48,7 +53,7 @@ class Rox_Http_Dispatcher {
 
 		if (!method_exists($controller, $params['action_method']) ||
 			!is_callable(array($controller, $params['action_method']))) {
-			throw new Rox_Exception('Action does not exist or is not dispatchable', 404);
+			throw new DispatcherException('Action does not exist or is not dispatchable', 404);
 		}
 
 		$controller->beforeFilter();
@@ -74,7 +79,7 @@ class Rox_Http_Dispatcher {
 		}
 
 		if (!file_exists($path)) {
-			throw new Rox_Exception('Missing controller file' . $path, 404);
+			throw new DispatcherException('Missing controller file' . $path, 404);
 		}
 
 		require_once $path;

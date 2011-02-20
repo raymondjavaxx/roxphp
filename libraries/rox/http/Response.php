@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http;
+
+use \Rox_Exception;
+
 /**
  * HTTP Response class
  *
  * @package Rox
  */
-class Rox_Http_Response {
+class Response {
 
 	/**
 	 * Protocol version

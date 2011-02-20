@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  * Rox_Loader
  *
  * @package Rox
  */
-class Rox_Loader {
+class Loader {
 
 	/**
 	 * Register the autoloader function
@@ -25,7 +27,7 @@ class Rox_Loader {
 	 * @return void
 	 */
 	public static function register() {
-		spl_autoload_register(array('Rox_Loader', 'loadClass'));
+		spl_autoload_register(array(get_called_class(), 'loadClass'));
 	}
 
 	/**
@@ -39,6 +41,7 @@ class Rox_Loader {
 			$filename = implode(DIRECTORY_SEPARATOR, explode('_', substr($class, 4))) . '.php';
 			require_once ROX_FRAMEWORK_PATH . DIRECTORY_SEPARATOR . $filename;
 		} else {
+			$class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
 			$filename = implode(DIRECTORY_SEPARATOR, explode('_', $class)) . '.php';
 			require_once $filename;
 		}

@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\template;
+
 /**
  * Abstract helper class
  *
  * @package Rox
  */
-abstract class Rox_Template_Helper {
+abstract class Helper {
 
 	protected function _tag($name, $text, $attributes = array()) {
 		return sprintf('<%s%s>%s</%s>', $name, $this->_attributes($attributes), $text, $name);

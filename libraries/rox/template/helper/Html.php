@@ -12,12 +12,15 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\template\helper;
+use \Rox_Router;
+
 /**
  * HTML Helper
  *
  * @package Rox
  */
-class Rox_Template_Helper_Html extends Rox_Template_Helper {
+class Html extends \rox\template\Helper {
 
 	/**
 	 * Renders a link element for embeding favicons

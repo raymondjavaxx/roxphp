@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\exception;
+
+use \rox\template\View;
+
 /**
  * Exception Handler
  *
  * @package Rox
  */
-class Rox_Exception_Handler {
+class Handler {
 
 	/**
 	 * Exception handler
@@ -39,7 +43,7 @@ class Rox_Exception_Handler {
 	 * @return void
 	 */
 	public static function register() {
-		set_exception_handler(array('Rox_Exception_Handler', 'handle'));
+		set_exception_handler(array(get_called_class(), 'handle'));
 	}
 
 	/**
@@ -56,7 +60,7 @@ class Rox_Exception_Handler {
 			$viewName = 'unknown';
 		}
 
-		$view = new Rox_Template_View(array('exception' => $exception));
+		$view = new View(array('exception' => $exception));
 		echo $view->render('errors', $viewName, 'exception');
 	}
 }

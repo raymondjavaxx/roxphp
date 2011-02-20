@@ -12,17 +12,19 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http\request;
+
 /**
  * Rox_Http_Request_Normalizer
  *
  * @package Rox
  */
-class Rox_Http_Request_Normalizer {
+class Normalizer {
 
 	protected static $_config = array(
 		'body_decoders' => array(
-			'application/xml' => 'Rox_Http_Decoder_Xml',
-			'application/json' => 'Rox_Http_Decoder_Json'
+			'application/xml' => '\rox\http\request\decoder\Xml',
+			'application/json' => '\rox\http\request\decoder\Json'
 		)
 	);
 

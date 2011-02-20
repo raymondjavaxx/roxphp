@@ -12,6 +12,8 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+use \rox\http\Request;
+
 /**
  * Route
  *
@@ -39,7 +41,7 @@ class Rox_Route {
 		$this->pattern = preg_replace(array_keys($replacements), array_values($replacements), $this->pattern);
 	}
 
-	public function match($path, Rox_Http_Request $request = null) {
+	public function match($path, Request $request = null) {
 		if ($this->pattern === null) {
 			$this->compile();
 		}

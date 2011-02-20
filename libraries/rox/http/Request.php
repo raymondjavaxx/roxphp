@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\http;
+
 /**
  * Request
  *
  * @package Rox
  */
-class Rox_Http_Request {
+class Request {
 
 	/**
 	 * Request data

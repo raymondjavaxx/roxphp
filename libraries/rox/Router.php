@@ -12,6 +12,8 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+use \rox\http\Request;
+
 /**
  * Router
  *  
@@ -188,7 +190,7 @@ class Rox_Router {
 		}
 	}
 
-	public static function parseUrl($url, Rox_Http_Request $request = null) {
+	public static function parseUrl($url, Request $request = null) {
 		if ($params = self::_parseUrl($url, $request)) {
 			$defaults = array('action' => 'index', 'extension' => 'html', 'namespace' => false, 'args' => array());
 			$params += $defaults;

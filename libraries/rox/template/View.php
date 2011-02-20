@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\template;
+use \Rox_Exception;
+use \Rox;
+
 /**
  *  View class
  *
  * @package Rox
  */
-class Rox_Template_View {
+class View {
 
 	public $params = array('extension' => 'html');
 
