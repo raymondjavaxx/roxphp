@@ -12,14 +12,19 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
+use \rox\mailer\Message;
+use \rox\Inflector;
+
 /**
- * Rox_Mailer
+ * Mailer
  *
  * @package Rox
  */
-class Rox_Mailer {
+class Mailer {
 
-	const ADAPTER_SMTP = 'Rox_Mailer_Adapter_Smtp';
+	const ADAPTER_SMTP = '\rox\mailer\adapter\Smtp';
 
 	protected static $_config = array(
 		'adapter' => self::ADAPTER_SMTP
@@ -39,7 +44,7 @@ class Rox_Mailer {
 	protected $_templateVars = array();
 
 	public function __construct() {
-		$this->message = new Rox_Mailer_Message($this->defaults);
+		$this->message = new Message($this->defaults);
 		$this->message->setHeader(array('Date' => date(DATE_RFC2822)));
 	}
 
@@ -108,12 +113,12 @@ class Rox_Mailer {
 	 */
 	public static function send($mailerAndEmail) {
 		if (strpos($mailerAndEmail, '.') == false) {
-			throw new Rox_Exception('mailer and email should be separated by a period.');
+			throw new Exception('mailer and email should be separated by a period.');
 		}
 
 		list($mailer, $email) = explode('.', $mailerAndEmail);
-		$mailerClass = Rox_Inflector::camelize($mailer . '_mailer');
-		$emailMethod = Rox_Inflector::lowerCamelize($email);
+		$mailerClass = Inflector::camelize($mailer . '_mailer');
+		$emailMethod = Inflector::lowerCamelize($email);
 		$args = array_slice(func_get_args(), 1);
 
 		$mailerInstance = new $mailerClass;

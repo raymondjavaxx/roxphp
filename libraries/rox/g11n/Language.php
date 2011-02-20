@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\g11n;
+
+use \rox\Exception;
+
 /**
  * Language
  *
  * @package Rox
  */
-class Rox_Language {
+class Language {
 
 	/**
 	 * Locale instance
@@ -37,13 +41,13 @@ class Rox_Language {
 	 * Language::init()
 	 * 
 	 * @param Locale $locale
-	 * @throws Rox_Exception
+	 * @throws Exception
 	 */
 	public function init($locale = null) {
 		if (is_null($locale)) {
-			$locale = new Rox_Locale;
-		} else if (!($locale instanceof Rox_Locale)) {
-			throw new Rox_Exception('Param must be instance of Locale');
+			$locale = new Locale;
+		} else if (!($locale instanceof Locale)) {
+			throw new Exception('Param must be instance of Locale');
 		}
 
 		$this->_locale = $locale;
@@ -57,7 +61,7 @@ class Rox_Language {
 	public static function getInstance() {
 		static $instance;
 		if (!is_object($instance)) {
-			$instance = new Rox_Language;
+			$instance = new Language;
 		}
 
 		return $instance;
@@ -98,7 +102,7 @@ class Rox_Language {
 	    $path = ROX_APP_PATH . "/locale/" . $this->_locale->getTag() . "/{$name}.csv";
 		$fp = @fopen($path, 'r');
 		if ($fp === false) {
-			throw new Rox_Exception("Can't open locale file");
+			throw new Exception("Can't open locale file");
 		}
 
 		while (($data = fgetcsv($fp)) !== false) {

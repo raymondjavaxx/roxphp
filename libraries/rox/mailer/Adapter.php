@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\mailer;
+
 /**
  * Base class for mailer
  *
  * @package Rox
  */
-abstract class Rox_Mailer_Adapter {
+abstract class Adapter {
 
 	/**
 	 * Mailer options
@@ -39,8 +41,8 @@ abstract class Rox_Mailer_Adapter {
 	/**
 	 * Sends email message
 	 *
-	 * @param Rox_Mailer_Message
+	 * @param \rox\mailer\Message
 	 * @return mixed
 	 */
-	abstract public function send(Rox_Mailer_Message $message);
+	abstract public function send(Message $message);
 }

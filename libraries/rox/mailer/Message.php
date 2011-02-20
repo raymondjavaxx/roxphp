@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\mailer;
+
 /**
  * Mailer Message
  *
  * @package Rox
  */
-class Rox_Mailer_Message {
+class Message {
 
 	protected $_headers = array();
 
@@ -93,7 +95,7 @@ class Rox_Mailer_Message {
 			if (isset($email['name']) && isset($email['email'])) {
 				return self::_encodeTextInline($email['name']) . ' <' . $email['email'] . '>';
 			} else {
-				throw new Rox_Exception();
+				throw new Exception();
 			}
 		}
 

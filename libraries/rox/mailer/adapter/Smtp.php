@@ -12,12 +12,17 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\mailer\adapter;
+
+use \rox\mailer\Message;
+use \rox\mailer\Exception;
+
 /**
  * SMTP Mailer
  *
  * @package Rox
  */
-class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
+class Smtp extends \rox\mailer\Adapter {
 
 	/**
 	 * Connection resource
@@ -42,10 +47,10 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	/**
 	 * Sends email message
 	 *
-	 * @param Rox_Mailer_Message $message
+	 * @param \rox\mailer\Message $message
 	 * @return void
 	 */
-	public function send(Rox_Mailer_Message $message) {
+	public function send(Message $message) {
 		$this->_connect();
 
 		$this->_sendLine('EHLO roxphp', 250);
@@ -75,14 +80,14 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 * Connects to SMTP server
 	 * 
 	 * @return void
-	 * @throws Rox_Exception
+	 * @throws \rox\mailer\Exception
 	 */
 	protected function _connect() {
 		$this->_fp = @fsockopen($this->_config['host'], $this->_config['port'],
 			$errno, $errstr, $this->_config['timeout']);
 
 		if ($this->_fp === false) {
-			throw new Rox_Exception('Could not connect to host ' . $this->_config['host']);
+			throw new Exception('Could not connect to host ' . $this->_config['host']);
 		}
 
 		// consume the response
@@ -95,7 +100,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 	 * @param mixed $data
 	 * @param mixed $expectedCode
 	 * @return void
-	 * @throws Rox_Exception
+	 * @throws \rox\mailer\Exception
 	 */
 	protected function _sendData($data, $expectedCode = null) {
 		fputs($this->_fp, $data);
@@ -104,7 +109,7 @@ class Rox_Mailer_Adapter_Smtp extends Rox_Mailer_Adapter {
 			$response = $this->_getResponse();
 
 			if (strpos($response, (string)$expectedCode) === false) {
-				throw new Rox_Exception("Unexpected response '{$response}'");
+				throw new Exception("Unexpected response '{$response}'");
 			}
 		}
 	}

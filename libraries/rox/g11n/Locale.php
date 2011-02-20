@@ -12,6 +12,8 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\g11n;
+
 /**
  * Locale
  *
