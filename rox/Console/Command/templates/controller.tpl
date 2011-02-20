@@ -13,7 +13,7 @@ class {controller_class} extends ApplicationController {
 	 * @return void
 	 */
 	public function indexAction() {
-		${model_var_plural_name} = {model_class}::model()->paginate(array(
+		${model_var_plural_name} = {model_class}::paginate(array(
 			'page' => $this->request->getQuery('page', 1)
 		));
 
@@ -27,7 +27,7 @@ class {controller_class} extends ApplicationController {
 	 * @return void
 	 */
 	public function viewAction($id = null) {
-		${model_var_name} = {model_class}::model()->find($id);
+		${model_var_name} = {model_class}::find($id);
 		$this->set(compact('{model_var_name}'));
 	}
 
@@ -61,7 +61,7 @@ class {controller_class} extends ApplicationController {
 	 * @return void
 	 */
 	public function editAction($id = null) {
-		${model_var_name} = {model_class}::model()->find($id);
+		${model_var_name} = {model_class}::find($id);
 
 		if ($this->request->isPut()) {
 			$newData = $this->request->data('{model_name}');
@@ -84,7 +84,7 @@ class {controller_class} extends ApplicationController {
 	 */
 	public function deleteAction($id = null) {
 		if ($this->request->isDelete()) {
-			${model_var_name} = {model_class}::model()->find($id);
+			${model_var_name} = {model_class}::find($id);
 			${model_var_name}->delete();
 			$this->flash('success', 'The {friendly_model_name} has been deleted.');
 			$this->redirect('/{controller_name}');

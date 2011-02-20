@@ -84,21 +84,11 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @link http://us.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
 	 */
 	public function __call($method, $args) {
-		switch (substr($method, 0, 3)) {
-			case 'get':
-				$key = Rox_Inflector::underscore(substr($method, 3));
-				return $this->getData($key, isset($args[0]) ? $args[0] : null);
-
-			case 'set':
-				$key = Rox_Inflector::underscore(substr($method, 3));
-				return $this->setData($key, isset($args[0]) ? $args[0] : null);
-		}
-
 		$assoc = $this->_association('belongs_to', $method);
 		if ($assoc) {
 			$attributeName = '_' . $method;
 			if (!isset($this->{$attributeName})) {
-				$this->{$attributeName} = self::model($assoc['class'])->findFirst(array(
+				$this->{$attributeName} = $assoc['class']::findFirst(array(
 					'conditions' => array('id' => $this->{$assoc['key']})
 				));
 			}
@@ -110,7 +100,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		if ($assoc) {
 			$attributeName = '_' . $method;
 			if (!isset($this->{$attributeName})) {
-				$this->{$attributeName} = self::model($assoc['class'])->findFirst(array(
+				$this->{$attributeName} = $assoc['class']::findFirst(array(
 					'conditions' => array($assoc['key'] => $this->getId())
 				));
 			}
@@ -118,7 +108,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			return $this->{$attributeName};
 		}
 
-		throw new Rox_Exception('Invalid method '.get_class($this).'::'.$method.'()');
+		throw new Rox_Exception('Invalid method ' . get_class($this) . '::' . $method . '()');
 	}
 
 	public static function __callStatic($method, $args) {
@@ -291,8 +281,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @return void
 	 */
 	protected function _updateMagicTimestamps() {
-		$timestamp = static::$_timestampsTimezone == 'local' ?
-			date('Y-m-d H:i:s') : gmdate('Y-m-d H:i:s');
+		$timestamp = static::$_timestampsTimezone == 'local'
+			? date('Y-m-d H:i:s') : gmdate('Y-m-d H:i:s');
 
 		if ($this->_newRecord && $this->hasAttribute('created_at') && empty($this->created_at)) {
 			$this->created_at = $timestamp;
