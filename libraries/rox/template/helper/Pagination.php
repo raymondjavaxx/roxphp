@@ -13,8 +13,8 @@
  */
 
 namespace rox\template\helper;
-use \Rox_ActiveRecord_PaginationResult;
 
+use \rox\active_record\PaginationResult;
 
 /**
  * Pagination Helper
@@ -26,11 +26,11 @@ class Pagination extends \rox\template\Helper {
 	/**
 	 * Generates the pagination nav
 	 * 
-	 * @param Rox_ActiveRecord_PaginationResult $collection
+	 * @param \rox\active_record\PaginationResult $collection
 	 * @param array $options
 	 * @return string
 	 */
-	public function links(Rox_ActiveRecord_PaginationResult $collection, $options = array()) {
+	public function links(PaginationResult $collection, $options = array()) {
 		$defaults = array(
 			'class'          => 'pagination',
 			'next_class'     => 'next-page',

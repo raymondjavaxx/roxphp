@@ -12,15 +12,17 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  * Cache static class
  *
  * @package Rox
  */
-class Rox_Cache {
+class Cache {
 
-	const ADAPTER_FILE     = 'Rox_Cache_Adapter_File';
-	const ADAPTER_MEMCACHE = 'Rox_Cache_Adapter_Memcache';
+	const ADAPTER_FILE     = '\rox\cache\adapter\File';
+	const ADAPTER_MEMCACHE = '\rox\cache\adapter\Memcache';
 
 	protected static $_config = array(
 		'adapter' => self::ADAPTER_FILE

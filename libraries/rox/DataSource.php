@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  * Rox_DataSource
  *
  * @package Rox
  */
-class Rox_DataSource {
+class DataSource {
 
 	const DBMS_DATE_FORMAT     = 'Y-m-d';
 	const DBMS_DATETIME_FORMAT = 'Y-m-d H:i:s';

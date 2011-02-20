@@ -13,7 +13,9 @@
  */
 
 namespace rox\template\helper;
-use \Rox_Inflector;
+
+use \rox\Inflector;
+use \rox\Exception;
 
 /**
  * Form Helper
@@ -72,7 +74,7 @@ class Form extends \rox\template\Helper {
 		$method = (is_string($model) || $model->getId() === null) ? 'POST' : 'PUT';
 
 		if ($options['action'] === null) {
-			$controller = Rox_Inflector::pluralize($this->_currentModel);
+			$controller = Inflector::pluralize($this->_currentModel);
 			$options['action'] = (is_string($model) || $model->getId() === null) ? "/{$controller}" :
 				'/' . $controller . '/' . $model->getId();
 		}
@@ -86,10 +88,10 @@ class Form extends \rox\template\Helper {
 	public function setModel($model) {
 		$validModel = is_string($model) || (is_object($model) && $model instanceof  Rox_ActiveModel);
 		if (!$validModel) {
-			throw new Rox_Exception('Model should be string or a Rox_ActiveModel');
+			throw new Exception('Model should be string or a Rox_ActiveModel');
 		}
 
-		$modelName = Rox_Inflector::underscore(is_object($model) ? get_class($model) : $model);
+		$modelName = Inflector::underscore(is_object($model) ? get_class($model) : $model);
 		$this->_currentModel = $modelName;
 
 		if (is_object($model)) {
@@ -181,7 +183,7 @@ class Form extends \rox\template\Helper {
 				break;
 
 			default:
-				throw new Rox_Exception("Unknown type '{$options['type']}'");
+				throw new Exception("Unknown type '{$options['type']}'");
 				break;
 		}
 

@@ -21,7 +21,7 @@ define('ROX_DEBUG', true);
 /**
  * Path to application folder
  */
-define('ROX_APP_PATH', dirname(dirname(__FILE__)));
+define('ROX_APP_PATH', dirname(__DIR__));
 
 define('ROX_LIBRARIES_PATH', dirname(ROX_APP_PATH).'/libraries');
 

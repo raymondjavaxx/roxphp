@@ -8,12 +8,20 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright Copyright (c) 2008 - 2010 Ramon Torres
- * @package App
+ * @package Rox
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-// include the bootstrap file
-require dirname(__DIR__) . '/config/bootstrap.php';
+namespace rox\active_record;
 
-$dispatcher = new \rox\http\Dispatcher;
-$dispatcher->dispatch(new \rox\http\Request);
+/**
+ * RecordNotFound Exception
+ *
+ * @package Rox
+ */
+class RecordNotFoundException extends \rox\Exception {
+
+	public function __construct($message = 'Record not found') {
+		parent::__construct($message, 404);
+	}
+}

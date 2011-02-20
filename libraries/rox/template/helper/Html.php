@@ -16,6 +16,7 @@ namespace rox\template\helper;
 
 use \rox\Router;
 use \rox\Inflector;
+use \rox\ActiveModel;
 
 /**
  * HTML Helper
@@ -107,11 +108,11 @@ class Html extends \rox\template\Helper {
 	 * Creates an HTML link that points to the "view" path of a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
-	public function viewLink($text, Rox_ActiveModel $object, $options = array()) {
+	public function viewLink($text, ActiveModel $object, $options = array()) {
 		return $this->link($text, $this->viewPath($object, $options));
 	}
 
@@ -119,11 +120,11 @@ class Html extends \rox\template\Helper {
 	 * Creates an HTML link that points to the "edit" path of a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
-	public function editLink($text, Rox_ActiveModel $object, $options = array()) {
+	public function editLink($text, ActiveModel $object, $options = array()) {
 		return $this->link($text, $this->editPath($object, $options));
 	}
 
@@ -131,11 +132,11 @@ class Html extends \rox\template\Helper {
 	 * Creates an HTML link for deleting a record.
 	 *
 	 * @param string $text 
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
-	public function deleteLink($text, Rox_ActiveModel $object, $options = array()) {
+	public function deleteLink($text, ActiveModel $object, $options = array()) {
 		return $this->link($text, $this->deletePath($object, $options), array('class' => 'delete'));
 	}
 
@@ -145,11 +146,11 @@ class Html extends \rox\template\Helper {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/view/[Record ID]
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function viewUrl(Rox_ActiveModel $object, $absolute = false) {
+	public function viewUrl(ActiveModel $object, $absolute = false) {
 		return Router::url($this->viewPath($object), $absolute);
 	}
 
@@ -159,11 +160,11 @@ class Html extends \rox\template\Helper {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/edit/[Record ID]
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function editUrl(Rox_ActiveModel $object, $absolute = false) {
+	public function editUrl(ActiveModel $object, $absolute = false) {
 		return Router::url($this->editPath($object), $absolute);
 	}
 
@@ -173,18 +174,18 @@ class Html extends \rox\template\Helper {
 	 * If a record of class Account is passed
 	 * the returned url is: [...]/accounts/delete/[Record ID]
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param string $absolute 
 	 * @return string
 	 */
-	public function deleteUrl(Rox_ActiveModel $object, $absolute = false) {
+	public function deleteUrl(ActiveModel $object, $absolute = false) {
 		return Router::url($this->deletePath($object), $absolute);
 	}
 
 	/**
 	 * Returns the path for viewing a record.
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
@@ -196,7 +197,7 @@ class Html extends \rox\template\Helper {
 	/**
 	 * Returns the path for editing a record.
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
@@ -208,7 +209,7 @@ class Html extends \rox\template\Helper {
 	/**
 	 * Returns the path for deleting a record.
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @param array $options
 	 * @return string
 	 */
@@ -220,10 +221,10 @@ class Html extends \rox\template\Helper {
 	/**
 	 * Returns the controller name for a given ActiveModel instance.
 	 *
-	 * @param Rox_ActiveModel $object 
+	 * @param ActiveModel $object 
 	 * @return string
 	 */
-	protected static function _controllerNameFromModel(Rox_ActiveModel $object) {
+	protected static function _controllerNameFromModel(ActiveModel $object) {
 		static $results = array();
 		$class = get_class($object);
 		if (!isset($results[$class])) {

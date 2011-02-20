@@ -12,12 +12,17 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
+use \rox\Exception;
+use \rox\active_model\ErrorCollection;
+
 /**
- * Rox_ActiveModel class
+ * ActiveModel class
  *
  * @package Rox
  */
-abstract class Rox_ActiveModel {
+abstract class ActiveModel {
 
 	/**
 	 * Primary key
@@ -174,7 +179,7 @@ abstract class Rox_ActiveModel {
 			return $this->_data[$attribute];
 		}
 
-		throw new Rox_Exception("unknown attribute {$attribute}");
+		throw new Exception("unknown attribute {$attribute}");
 	}
 
 	/**
@@ -207,7 +212,7 @@ abstract class Rox_ActiveModel {
 	 */
 	public function valid() {
 		if ($this->_errors === null) {
-			$this->_errors = new Rox_ActiveModel_ErrorCollection;
+			$this->_errors = new ErrorCollection;
 		} else {
 			$this->_errors->clear();
 		}

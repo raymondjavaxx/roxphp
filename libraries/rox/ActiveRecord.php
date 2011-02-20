@@ -12,12 +12,21 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
+use \rox\ConnectionManager;
+use \rox\DataSource;
+use \rox\Inflector;
+use \rox\Exception;
+use \rox\active_record\AssociationCollection;
+use \rox\active_record\RecordNotFoundException;
+
 /**
- * Rox_ActiveRecord class
+ * ActiveRecord class
  *
  * @package Rox
  */
-abstract class Rox_ActiveRecord extends Rox_ActiveModel {
+abstract class ActiveRecord extends \rox\ActiveModel {
 
 	/**
 	 * Table name
@@ -68,7 +77,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 */
 	public static function _table() {
 		if (static::$_table === null) {
-			static::$_table = Rox_Inflector::tableize(get_called_class());
+			static::$_table = Inflector::tableize(get_called_class());
 		}
 
 		return static::$_table;
@@ -80,7 +89,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * @param string $method method name
 	 * @param array $args arguments
 	 * @return mixed
-	 * @throws Rox_Exception
+	 * @throws Exception
 	 * @link http://us.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
 	 */
 	public function __call($method, $args) {
@@ -108,16 +117,16 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			return $this->{$attributeName};
 		}
 
-		throw new Rox_Exception('Invalid method ' . get_class($this) . '::' . $method . '()');
+		throw new Exception('Invalid method ' . get_class($this) . '::' . $method . '()');
 	}
 
 	public static function __callStatic($method, $args) {
 		if (strpos($method, 'findBy') === 0) {
-			$key = Rox_Inflector::underscore(substr($method, 6));
+			$key = Inflector::underscore(substr($method, 6));
 			return static::findFirst(array('conditions' => array($key => $args[0])));
 		}
 
-		throw new Rox_Exception('Invalid static function ' . get_called_class() . '::' . $method . '()');
+		throw new Exception('Invalid static function ' . get_called_class() . '::' . $method . '()');
 	}
 
 	/**
@@ -140,10 +149,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		if ($assoc) {
 			$class = $assoc['class'];
 			$scope = array($assoc['key'] => $this->getId());
-			return $this->{$attribute} = new Rox_ActiveRecord_Association_Collection($class, $scope);
+			return $this->{$attribute} = new AssociationCollection($class, $scope);
 		}
 
-		throw new Rox_Exception("unknown attribute {$attribute}");
+		throw new Exception("unknown attribute {$attribute}");
 	}
 
 	/**
@@ -200,8 +209,8 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 				$keyClass = ($type == 'belongs_to') ? $name : get_called_class();
 				$defaults = array(
-					'class' => Rox_Inflector::classify($name),
-					'key' => Rox_Inflector::underscore($keyClass) . '_id'
+					'class' => Inflector::classify($name),
+					'key' => Inflector::underscore($keyClass) . '_id'
 				);
 
 				$options += $defaults;
@@ -313,7 +322,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::findCount()
+	 * ActiveRecord::findCount()
 	 *
 	 * @param array|string $conditions
 	 * @return integer
@@ -328,7 +337,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Rox_ActiveRecord::findAll()
+	 * ActiveRecord::findAll()
 	 *
 	 * @param array $options  
 	 * @return array
@@ -370,10 +379,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Rox_ActiveRecord::paginate()
+	 * ActiveRecord::paginate()
 	 * 
 	 * @param array $options
-	 * @return Rox_ActiveRecord_PaginationResult
+	 * @return ActiveRecord_PaginationResult
 	 */
 	public static function paginate($options = array()) {
 		$defaultOptions = array(
@@ -408,18 +417,18 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 		$nextPage = min($pages, $currentPage + 1);
 		$previousPage = max(1, $currentPage - 1);
 
-		$result = new Rox_ActiveRecord_PaginationResult($items, $pages, $currentPage,
+		$result = new PaginationResult($items, $pages, $currentPage,
 			$nextPage, $previousPage, $total);
 		return $result;
 	}
 
 	/**
-	 * Rox_ActiveRecord::find()
+	 * ActiveRecord::find()
 	 *
 	 * @param integer|string|array $ids
 	 * @param array $options
-	 * @return array|Rox_ActiveRecord
-	 * @throws Rox_ActiveRecord_RecordNotFound
+	 * @return array|ActiveRecord
+	 * @throws RecordNotFoundException
 	 */
 	public static function find($ids, $options = array()) {
 		$checkArray = is_array($ids);
@@ -432,23 +441,23 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			if (count($results) == count($ids)) {
 				return $results;
 			} else {
-				throw new Rox_ActiveRecord_RecordNotFound("Couldn't find all with IDs ({$ids})");
+				throw new RecordNotFoundException("Couldn't find all with IDs ({$ids})");
 			}
 		}
 
 		$result = reset($results);
 		if (!$result) {
-			throw new Rox_ActiveRecord_RecordNotFound("Couldn't find record with ID = {$ids}");
+			throw new RecordNotFoundException("Couldn't find record with ID = {$ids}");
 		}
 
 		return $result;
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::findFirst()
+	 * ActiveRecord::findFirst()
 	 *
 	 * @param array $options 
-	 * @return Rox_ActiveRecord
+	 * @return ActiveRecord
 	 */
 	public static function findFirst($options = array()) {
 		$options = array_merge($options, array(
@@ -460,10 +469,10 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::findLast()
+	 * ActiveRecord::findLast()
 	 * 
 	 * @param array $options
-	 * @return Rox_ActiveRecord
+	 * @return ActiveRecord
 	 */
 	public static function findLast($options = array()) {
 		$options = array_merge($options, array(
@@ -502,7 +511,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 */
 	public function delete() {
 		if ($this->_newRecord) {
-			throw new Rox_Exception("You can't delete new records");
+			throw new Exception("You can't delete new records");
 		}
 
 		$this->_beforeDelete();
@@ -576,7 +585,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_attributeMap()
+	 * ActiveRecord::_attributeMap()
 	 * 
 	 * @return array
 	 */
@@ -602,14 +611,14 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	/**
 	 * undocumented function
 	 *
-	 * @return Rox_DataSource
+	 * @return \rox\DataSource
 	 */
 	public static function datasource() {
-		return Rox_ConnectionManager::getDataSource(static::$_dataSourceName);
+		return ConnectionManager::getDataSource(static::$_dataSourceName);
 	}
 
 	/**
-	 * Rox_ActiveRecord_Abstract::_buildConditionsSQL()
+	 * ActiveRecord::_buildConditionsSQL()
 	 * 
 	 * @param mixed $conditions
 	 * @return string
@@ -650,7 +659,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 * Validates that specified attributes are unique in the model database table.
 	 *
 	 * <code>
-	 * class User extends Rox_ActiveRecord {
+	 * class User extends ActiveRecord {
 	 *     protected function _validate() {
 	 *         $this->_validatesUniquenessOf('username');
 	 *     }
