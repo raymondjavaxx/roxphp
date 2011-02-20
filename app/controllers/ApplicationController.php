@@ -17,7 +17,7 @@
  *
  * @package App
  */
-abstract class ApplicationController extends Rox_Controller {
+abstract class ApplicationController extends \rox\Controller {
 
 	/**
 	 * Commonly used helpers

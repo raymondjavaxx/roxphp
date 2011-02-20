@@ -12,6 +12,8 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 use \rox\http\Request;
 
 /**
@@ -19,7 +21,7 @@ use \rox\http\Request;
  *
  * @package Rox
  */
-class Rox_Route {
+class Route {
 
 	public $pattern;
 	public $config = array();

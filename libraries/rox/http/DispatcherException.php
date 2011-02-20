@@ -2,5 +2,5 @@
 
 namespace rox\http;
 
-class DispatcherException extends \Rox_Exception {
+class DispatcherException extends \rox\Exception {
 }

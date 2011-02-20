@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  *  Inflector
  * 
  * @package Rox
  */
-class Rox_Inflector {
+class Inflector {
 
 	/**
 	 * Plural rules
@@ -143,7 +145,7 @@ class Rox_Inflector {
 	}
 
 	/**
-	 * Rox_Inflector::underscore()
+	 * Inflector::underscore()
 	 * 
 	 * @param string $camelCasedWord
 	 * @return string
@@ -157,7 +159,7 @@ class Rox_Inflector {
 	}
 
 	/**
-	 * Rox_Inflector::tableize()
+	 * Inflector::tableize()
 	 * 
 	 * @param string $modelClassName
 	 * @return string

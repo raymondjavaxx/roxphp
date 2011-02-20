@@ -12,10 +12,12 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /*
  * Database configuration
  */
-Rox_ConnectionManager::setConfig('default', array(
+ConnectionManager::setConfig('default', array(
 	'host'     => '127.0.0.1',
 	'username' => 'root',
 	'password' => '',

@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox\log\adapter;
+
 /**
  * File adapter for Rox_Log
  * 
  * @package Rox
  */
-class Rox_Log_Adapter_File extends Rox_Log_Adapter {
+class File extends \rox\log\Adapter {
 
 	public function __construct($config = array()) {
 		$defaults = array('path' => ROX_APP_PATH . '/tmp/logs');

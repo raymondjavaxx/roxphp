@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
- *  Validator class
+ * Validator class
  *
  * @package Rox
  */
-class Rox_Validator {
+class Validator {
 
 	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|asia|cat|coop|edu|int|pro|tel|travel))$/i';
 

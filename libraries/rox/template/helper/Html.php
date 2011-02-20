@@ -13,7 +13,9 @@
  */
 
 namespace rox\template\helper;
-use \Rox_Router;
+
+use \rox\Router;
+use \rox\Inflector;
 
 /**
  * HTML Helper
@@ -31,7 +33,7 @@ class Html extends \rox\template\Helper {
 	public function favicon($path = '/favicon.ico') {
 		return $this->_selfClosingTag('link', array(
 			'rel' => 'shortcut icon',
-			'href' => Rox_Router::url($path),
+			'href' => Router::url($path),
 			'type' => 'image/x-icon'
 		));
 	}
@@ -44,7 +46,7 @@ class Html extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function image($path, $attributes = array()) {
-		$attributes = array('src' => Rox_Router::url('/img/' . $path), 'alt' => '') + $attributes;
+		$attributes = array('src' => Router::url('/img/' . $path), 'alt' => '') + $attributes;
 		return $this->_selfClosingTag('img', $attributes);
 	}
 
@@ -70,7 +72,7 @@ class Html extends \rox\template\Helper {
 		return $this->_selfClosingTag('link', array(
 			'rel' => 'stylesheet',
 			'type' => 'text/css',
-			'href' => Rox_Router::url('/css/' . $file . '.css'),
+			'href' => Router::url('/css/' . $file . '.css'),
 			'media' => $media
 		));
 	}
@@ -84,7 +86,7 @@ class Html extends \rox\template\Helper {
 	public function javascript($file) {
 		return $this->_tag('script', '', array(
 			'type' => 'text/javascript',
-			'src' => Rox_Router::url('/js/' . $file . '.js')
+			'src' => Router::url('/js/' . $file . '.js')
 		));
 	}
 
@@ -97,7 +99,7 @@ class Html extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function link($text, $path, $attributes = array()) {
-		$attributes = array('href' => Rox_Router::url($path)) + $attributes;
+		$attributes = array('href' => Router::url($path)) + $attributes;
 		return $this->_tag('a', $text, $attributes);
 	}
 
@@ -148,7 +150,7 @@ class Html extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function viewUrl(Rox_ActiveModel $object, $absolute = false) {
-		return Rox_Router::url($this->viewPath($object), $absolute);
+		return Router::url($this->viewPath($object), $absolute);
 	}
 
 	/**
@@ -162,7 +164,7 @@ class Html extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function editUrl(Rox_ActiveModel $object, $absolute = false) {
-		return Rox_Router::url($this->editPath($object), $absolute);
+		return Router::url($this->editPath($object), $absolute);
 	}
 
 	/**
@@ -176,7 +178,7 @@ class Html extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function deleteUrl(Rox_ActiveModel $object, $absolute = false) {
-		return Rox_Router::url($this->deletePath($object), $absolute);
+		return Router::url($this->deletePath($object), $absolute);
 	}
 
 	/**
@@ -225,7 +227,7 @@ class Html extends \rox\template\Helper {
 		static $results = array();
 		$class = get_class($object);
 		if (!isset($results[$class])) {
-			$results[$class] = Rox_Inflector::underscore(Rox_Inflector::pluralize($class));
+			$results[$class] = Inflector::underscore(Inflector::pluralize($class));
 		}
 		return $results[$class];
 	}

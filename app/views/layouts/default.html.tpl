@@ -10,7 +10,7 @@
 	<div id="wrapper">
 		<div id="header">
 			<p>
-				<a href="<?php echo Rox_Router::url('/'); ?>">
+				<a href="<?php echo \rox\Router::url('/'); ?>">
 				<?php echo $html->image('rox_logo.png'); ?></a>
 			</p>
 		</div>

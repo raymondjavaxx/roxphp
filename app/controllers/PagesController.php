@@ -11,7 +11,7 @@
  * @package App
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
+use \rox\Log;
 /**
  * PagesController
  *

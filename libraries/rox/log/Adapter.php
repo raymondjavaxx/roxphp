@@ -11,13 +11,15 @@
  * @package Rox
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
- 
+
+namespace rox\log;
+
 /**
  * Abstract adapter for Rox_Log
  * 
  * @package Rox
  */
-abstract class Rox_Log_Adapter {
+abstract class Adapter {
 
 	protected $_config = array();
 

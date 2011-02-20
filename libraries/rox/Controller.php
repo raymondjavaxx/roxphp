@@ -12,12 +12,14 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  * Controller
  *
  * @package Rox
  */
-class Rox_Controller {
+class Controller {
 
 	/**
 	 * Page title
@@ -94,7 +96,7 @@ class Rox_Controller {
 		$this->set('rox_page_title', $this->pageTitle);
 
 		foreach ($this->helpers as $helper) {
-			$helperName = Rox_Inflector::lowerCamelize($helper);
+			$helperName = Inflector::lowerCamelize($helper);
 			$this->set($helperName, Rox::getHelper($helper));
 		}
 

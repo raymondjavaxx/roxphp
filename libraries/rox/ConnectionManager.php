@@ -12,12 +12,16 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
+use \rox\DataSource;
+
 /**
  * ConnectionManager
  *
  * @package Rox
  */
-class Rox_ConnectionManager {
+class ConnectionManager {
 
 	/**
 	 * DataSource instances
@@ -66,10 +70,10 @@ class Rox_ConnectionManager {
 	 */
 	protected static function _instantiateDataSource($name) {
 		if (!isset(self::$_configs[$name])) {
-			throw new Rox_Exception('Configuration entry not found for ' . $name);
+			throw new Exception('Configuration entry not found for ' . $name);
 		}
 
-		$dataSource = new Rox_DataSource(self::$_configs[$name]);
+		$dataSource = new Datasource(self::$_configs[$name]);
 		$dataSource->connect();
 
 		self::$_dataSources[$name] = $dataSource;

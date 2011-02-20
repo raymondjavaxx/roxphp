@@ -12,6 +12,10 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
+use \rox\Exception;
+
 /**
  * Rox class
  *
@@ -47,7 +51,7 @@ class Rox {
 	 * @param string $name
 	 */
 	protected static function _loadHelper($name) {
-		$name = Rox_Inflector::camelize($name);
+		$name = Inflector::camelize($name);
 
 		$file = ROX_APP_PATH . "/helpers/{$name}Helper.php";
 		if (file_exists($file)) {
@@ -61,6 +65,6 @@ class Rox {
 			return '\rox\template\helper\\' . $name;
 		}
 
-		throw new Rox_Exception("Helper '{$name}' not found");
+		throw new Exception("Helper '{$name}' not found");
 	}
 }

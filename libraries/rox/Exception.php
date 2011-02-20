@@ -12,10 +12,12 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
- * Rox_Exception
+ * Exception
  *
  * @package Rox
  */
-class Rox_Exception extends Exception {
+class Exception extends \Exception {
 }

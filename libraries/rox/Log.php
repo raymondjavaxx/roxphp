@@ -12,17 +12,17 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 /**
  * Logger class
  * 
  * @package Rox
  */
-class Rox_Log {
-
-	const ADAPTER_FILE = 'Rox_Log_Adapter_File';
+class Log {
 
 	protected static $_config = array(
-		'adapter' => self::ADAPTER_FILE
+		'adapter' => '\rox\log\adapter\File'
 	);
 
 	protected static $_adapter;

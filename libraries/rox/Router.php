@@ -12,6 +12,8 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace rox;
+
 use \rox\http\Request;
 
 /**
@@ -19,7 +21,7 @@ use \rox\http\Request;
  *  
  * @package Rox
  */
-class Rox_Router {
+class Router {
 
 	protected static $_matches = array();
 	protected static $_routes = array();
@@ -37,7 +39,7 @@ class Rox_Router {
 	 * @return void
 	 */
 	public static function connect($template, $params, $options = array()) {
-		self::$_routes[] = new Rox_Route(compact('template', 'params', 'options'));
+		self::$_routes[] = new Route(compact('template', 'params', 'options'));
 	}
 
 	/**
@@ -125,7 +127,7 @@ class Rox_Router {
 
 			foreach ($controllers as $key => $value) {
 				$resource[] = $value;
-				$resource[] = ':' . Rox_Inflector::singularize($value) . '_id';
+				$resource[] = ':' . Inflector::singularize($value) . '_id';
 			}
 
 			$resource[] = $lastController;
@@ -195,8 +197,8 @@ class Rox_Router {
 			$defaults = array('action' => 'index', 'extension' => 'html', 'namespace' => false, 'args' => array());
 			$params += $defaults;
 
-			$params['action_method'] = Rox_Inflector::lowerCamelize($params['action']) . 'Action';
-			$params['controller_class'] = Rox_Inflector::camelize($params['controller']) . 'Controller';
+			$params['action_method'] = Inflector::lowerCamelize($params['action']) . 'Action';
+			$params['controller_class'] = Inflector::camelize($params['controller']) . 'Controller';
 
 			return $params;
 		}

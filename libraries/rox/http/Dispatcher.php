@@ -15,7 +15,7 @@
 namespace rox\http;
 
 use \rox\http\request\Normalizer;
-use \Rox_Router;
+use \rox\Router;
 
 /**
  * Dispatcher
@@ -35,7 +35,7 @@ class Dispatcher {
 
 		$route = $request->getQuery('route', '/');
 
-		$params = Rox_Router::parseUrl($route, $request);
+		$params = Router::parseUrl($route, $request);
 		if ($params === false) {
 			throw new DispatcherException('No route matches request', 404);
 		}

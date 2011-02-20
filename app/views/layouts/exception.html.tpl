@@ -13,8 +13,8 @@
 	<div id="wrapper">
 		<div id="header">
 			<p>
-				<a href="<?php echo Rox_Router::url('/'); ?>">
-				<img src="<?php echo Rox_Router::url('/img/rox_logo.png'); ?>" alt="RoxPHP" /></a>
+				<a href="<?php echo \rox\Router::url('/'); ?>">
+				<img src="<?php echo \rox\Router::url('/img/rox_logo.png'); ?>" alt="RoxPHP" /></a>
 			</p>
 		</div>
 		<div id="container">
