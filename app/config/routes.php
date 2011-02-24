@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox;
+use \rox\Router;
 
 // Connect the homepage
 Router::connectRoot(array('controller' => 'pages', 'action' => 'home'));
