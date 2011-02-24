@@ -36,7 +36,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 	ROX_APP_PATH . '/controllers',
 	ROX_APP_PATH . '/helpers',
 	ROX_APP_PATH . '/mailers',
-	ROX_APP_PATH . '/vendors',
+	ROX_APP_PATH . '/libraries',
 	ROX_LIBRARIES_PATH,
 	// uncoment the line below preserve default include paths
 	// get_include_path()
