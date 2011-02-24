@@ -27,9 +27,3 @@ Router::connect('/:controller/:id', array('action' => 'view'), array('via' => 'G
 Router::connect('/:controller/:id/edit', array('action' => 'edit'), array('via' => 'GET'));
 Router::connect('/:controller/:id', array('action' => 'edit'), array('via' => 'PUT'));
 Router::connect('/:controller/:id', array('action' => 'delete'), array('via' => 'DELETE'));
-
-// Legacy routes
-//Rox_Router::connect('/:controller/:action/:id', array());
-//Rox_Router::connect('/:controller/:action/:id/:param1/:param2', array());
-//Rox_Router::connect('/:controller/:action', array());
-//Rox_Router::connect('/:controller', array('action' => 'index'));
