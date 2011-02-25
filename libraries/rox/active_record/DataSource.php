@@ -15,7 +15,7 @@
 namespace rox\active_record;
 
 /**
- * Rox_DataSource
+ * DataSource
  *
  * @package Rox
  */
@@ -105,7 +105,7 @@ class DataSource {
 	}
 
 	/**
-	 * Rox_DataSource::describe()
+	 * DataSource::describe()
 	 *
 	 * @param mixed $table
 	 * @return array
@@ -115,7 +115,7 @@ class DataSource {
 	}
 
 	/**
-	 * Rox_DataSource::generateFieldMapFromTable()
+	 * DataSource::generateFieldMapFromTable()
 	 * 
 	 * @param string $table
 	 * @return array
@@ -130,7 +130,7 @@ class DataSource {
 	}
 
 	/**
-	 * Rox_DataSource::_generateFieldMapFromTable()
+	 * DataSource::_generateFieldMapFromTable()
 	 * 
 	 * @param string $table
 	 * @return array
@@ -243,7 +243,7 @@ class DataSource {
 	}
 
 	/**
-	 * Rox_DataSource::lastInsertedID()
+	 * DataSource::lastInsertedID()
 	 *
 	 * @return mixed
 	 */

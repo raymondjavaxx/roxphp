@@ -45,14 +45,14 @@ class Controller {
 	/**
 	 * Request object
 	 *
-	 * @var Rox_Http_Request
+	 * @var \rox\http\Request
 	 */
 	public $request;
 
 	/**
 	 * Response object
 	 *
-	 * @var Rox_Http_Response
+	 * @var \rox\http\response
 	 */
 	public $response;
 

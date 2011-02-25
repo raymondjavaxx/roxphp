@@ -22,7 +22,7 @@ use \rox\Exception;
  *
  * @package Rox
  */
-class Rox_ActiveRecord_Migration_CreateTableOperation {
+class CreateTableOperation {
 
 	protected $_tableName;
 	protected $_options = array('engine' => 'InnoDB');

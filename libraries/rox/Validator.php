@@ -24,7 +24,7 @@ class Validator {
 	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|asia|cat|coop|edu|int|pro|tel|travel))$/i';
 
 	/**
-	 * Rox_Validator::regexMatch()
+	 * Validator::regexMatch()
 	 *
 	 * @param string $pattern
 	 * @param string $subject
@@ -35,7 +35,7 @@ class Validator {
 	}
 
 	/**
-	 * Rox_Validator::email()
+	 * Validator::email()
 	 *
 	 * @param string $subject
 	 * @return boolean
@@ -55,7 +55,7 @@ class Validator {
 	}
 
 	/**
-	 * Rox_Validator::minLength()
+	 * Validator::minLength()
 	 *
 	 * @param string $subject
 	 * @param integer $min
@@ -66,7 +66,7 @@ class Validator {
 	}
 
 	/**
-	 * Rox_Validator::maxLength()
+	 * Validator::maxLength()
 	 *
 	 * @param string $subject
 	 * @param integer $max
@@ -77,7 +77,7 @@ class Validator {
 	}
 
 	/**
-	 * Rox_Validator::notEmpty()
+	 * Validator::notEmpty()
 	 *
 	 * @param string $subject
 	 * @return boolean
@@ -88,7 +88,7 @@ class Validator {
 	}
 
 	/**
-	 * Rox_Validator::between()
+	 * Validator::between()
 	 *
 	 * @param string $subject
 	 * @param integer $min
@@ -136,8 +136,8 @@ class Validator {
 	 * If you want to restrict the credit card type you can pass it as the
 	 * seccond argument:
 	 *
-	 * Rox_Validator::creditCard(..., 'VISA')
-	 * Rox_Validator::creditCard(..., array('VISA', 'AMEX'))
+	 * Validator::creditCard(..., 'VISA')
+	 * Validator::creditCard(..., array('VISA', 'AMEX'))
 	 *
 	 * @param string $number
 	 * @param string|array $type

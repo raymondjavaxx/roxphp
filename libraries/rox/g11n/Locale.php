@@ -19,7 +19,7 @@ namespace rox\g11n;
  *
  * @package Rox
  */
-class Rox_Locale {
+class Locale {
 
 	/**
 	 * Locale tag

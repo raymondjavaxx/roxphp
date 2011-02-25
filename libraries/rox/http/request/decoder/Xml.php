@@ -14,10 +14,10 @@
 
 namespace rox\http\request\decoder;
 
-use \Rox_Exception;
+use \rox\Exception;
 
 /**
- * Rox_Http_Decoder_Xml
+ * XML Decoder
  *
  * @package Rox
  */
@@ -27,7 +27,7 @@ class Xml {
 		$dom = new \DOMDocument();
 		$dom->preserveWhiteSpace = false;
 		if (!$dom->loadXML($data)) {
-			throw new Rox_Exception("Data is not valid XML");
+			throw new Exception("Data is not valid XML");
 		}
 
 		$result = array();

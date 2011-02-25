@@ -24,9 +24,9 @@ class AssociationCollection implements \IteratorAggregate {
 	protected $_scope = array();
 
 	/**
-	 * Model instance
+	 * Model name
 	 *
-	 * @var Rox_ActiveRecord
+	 * @var string
 	 */
 	protected $_model;
 

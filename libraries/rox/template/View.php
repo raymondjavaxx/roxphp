@@ -13,7 +13,7 @@
  */
 
 namespace rox\template;
-use \Rox_Exception;
+use \Exception;
 use \Rox;
 
 /**
@@ -60,19 +60,19 @@ class View {
 	public function render($path, $name, $layout = 'default') {
 		$this->_view = "{$this->_viewsPath}/{$path}/{$name}.{$this->params['extension']}.tpl";
 		if (!file_exists($this->_view)) {
-			throw new Rox_Exception("View doesn't exist", 404);
+			throw new Exception("View doesn't exist", 404);
 		}
 
 		$this->_layout = "{$this->_layoutsPath}/{$layout}.{$this->params['extension']}.tpl";
 		if (!file_exists($this->_layout)) {
-			throw new Rox_Exception("Layout doesn't exist", 404);
+			throw new Exception("Layout doesn't exist", 404);
 		}
 
 		return $this->_render();
 	}
 
 	/**
-	 * Backend for Rox_Template_View::render()
+	 * Backend for \rox\template\View::render()
 	 *
 	 * @return string
 	 */

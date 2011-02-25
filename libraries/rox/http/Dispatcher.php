@@ -27,8 +27,8 @@ class Dispatcher {
 	/**
 	 * Dispatches an HTTP request
 	 *
-	 * @param Rox_Http_Request $request
-	 * @throws Rox_Exception
+	 * @param \rox\http\Request $request
+	 * @throws \rox\http\DispatcherException
 	 */
 	public function dispatch(Request $request) {
 		Normalizer::normalize($request);
@@ -68,7 +68,7 @@ class Dispatcher {
 	 * Loads controller by class name
 	 *
 	 * @param string $name
-	 * @throws Rox_Exception
+	 * @throws \rox\http\DispatcherException
 	 */
 	protected function _loadController($params) {
 		$path = ROX_APP_PATH . "/controllers";

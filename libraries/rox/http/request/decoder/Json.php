@@ -14,10 +14,10 @@
 
 namespace rox\http\request\decoder;
 
-use \Rox_Exception;
+use \rox\Exception;
 
 /**
- * Rox_Http_Decoder_Json
+ * JSON Decoder
  *
  * @package Rox
  */
@@ -26,7 +26,7 @@ class Json {
 	public function decode($data) {
 		$result = json_decode($data, true);
 		if ($result === null) {
-			throw new Rox_Exception("Data is not valid JSON");
+			throw new Exception("Data is not valid JSON");
 		}
 
 		return $result;

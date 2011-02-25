@@ -14,7 +14,7 @@
 
 namespace rox\http;
 
-use \Rox_Exception;
+use \rox\Exception;
 
 /**
  * HTTP Response class
@@ -119,7 +119,7 @@ class Response {
 
 	protected function _statusHeader() {
 		if (!isset($this->_statuses[$this->status])) {
-			throw new Rox_Exception('Invalid status code');
+			throw new Exception('Invalid status code');
 		}
 
 		return "{$this->protocol} {$this->status} {$this->_statuses[$this->status]}";

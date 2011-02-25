@@ -53,7 +53,7 @@ class Router {
 	}
 
 	/**
-	 * Rox_Router::url()
+	 * Router::url()
 	 *
 	 * @param string $path
 	 * @return string

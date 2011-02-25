@@ -38,7 +38,7 @@ class Handler {
 	}
 
 	/**
-	 * Registers Rox_Exception_Handler class as exception handler
+	 * Registers \rox\exception\Handler class as exception handler
 	 *
 	 * @return void
 	 */

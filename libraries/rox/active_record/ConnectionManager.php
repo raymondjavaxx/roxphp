@@ -64,7 +64,7 @@ class ConnectionManager {
 	 *
 	 * @param string $name
 	 * @return void
-	 * @throws Rox_Exception
+	 * @throws \rox\active_record\Exception
 	 */
 	protected static function _instantiateDataSource($name) {
 		if (!isset(self::$_configs[$name])) {

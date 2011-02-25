@@ -14,8 +14,10 @@
 
 namespace rox\http\request;
 
+use \rox\Exception;
+
 /**
- * Rox_Http_Request_Normalizer
+ * Request normalizer
  *
  * @package Rox
  */
@@ -61,7 +63,7 @@ class Normalizer {
 					$request->data = array_merge($request->data, $decoder->decode($body));
 				}
 			} else {
-				throw new Rox_Exception("Dispatcher doesn't know how to parse {$contentType}");
+				throw new Exception("Dispatcher doesn't know how to parse {$contentType}");
 			}
 		}
 		

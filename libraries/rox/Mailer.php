@@ -105,7 +105,7 @@ class Mailer {
 	}
 
 	/**
-	 * Rox_Mailer::send()
+	 * Mailer::send()
 	 * 
 	 * @param string $mailerAndEmail
 	 * @param ...

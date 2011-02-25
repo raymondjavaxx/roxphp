@@ -24,7 +24,7 @@ abstract class Migration {
 	/**
 	 * Connection
 	 *
-	 * @var Rox_ActiveRecord_Migration_Connection
+	 * @var \rox\active_record\migration\Connection
 	 */
 	protected $_connection;
 
@@ -37,7 +37,7 @@ abstract class Migration {
 	 * must be performed inside this method. The method will be called automatically
 	 * when migrating "up"
 	 *
-	 *    class CreateUsersTable extends Rox_ActiveRecord_Migration {
+	 *    class CreateUsersTable extends \rox\active_record\Migration {
 	 *        public function up() {
 	 *            $t = $this->createTable('users');
 	 *            $t->string('username');
@@ -69,8 +69,7 @@ abstract class Migration {
 	 * @param string $tableName name of table to be created
 	 * @param array $options
 	 *         - engine: Storage engine for table (optional, defaults to InnoDB)
-	 * @return Rox_ActiveRecord_Migration_CreateTableOperation
-	 * @see Rox_ActiveRecord_Migration_CreateTableOperation
+	 * @return \rox\active_record\migration\CreateTableOperation
 	 */
 	public function createTable($tableName, $options = array()) {
 		return $this->_connection->createTable($tableName, $options);

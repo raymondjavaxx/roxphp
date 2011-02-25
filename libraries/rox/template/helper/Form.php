@@ -14,8 +14,10 @@
 
 namespace rox\template\helper;
 
+use \rox\Router;
 use \rox\Inflector;
 use \rox\Exception;
+use \rox\ActiveModel;
 
 /**
  * Form Helper
@@ -61,9 +63,9 @@ class Form extends \rox\template\Helper {
 	}
 
 	/**
-	 * Rox_Helper_Form::forModel()
+	 * \rox\template\helper\Form::forModel()
 	 *
-	 * @param Rox_ActiveModel|string $model 
+	 * @param \rox\ActiveRecord|string $model 
 	 * @param array $options 
 	 * @return string
 	 */
@@ -86,9 +88,9 @@ class Form extends \rox\template\Helper {
 	}
 
 	public function setModel($model) {
-		$validModel = is_string($model) || (is_object($model) && $model instanceof  Rox_ActiveModel);
+		$validModel = is_string($model) || (is_object($model) && $model instanceof  ActiveModel);
 		if (!$validModel) {
-			throw new Exception('Model should be string or a Rox_ActiveModel');
+			throw new Exception('Model should be string or a \rox\ActiveModel');
 		}
 
 		$modelName = Inflector::underscore(is_object($model) ? get_class($model) : $model);
@@ -116,7 +118,7 @@ class Form extends \rox\template\Helper {
 	 * @return string
 	 */
 	public function create($action, $attributes = array()) {
-		$attributes['action'] = Rox_Router::url($action);
+		$attributes['action'] = Router::url($action);
 		$attributes = array_merge(array('method' => 'post'), $attributes);
 		return sprintf('<form%s>', $this->_attributes($attributes));
 	}
@@ -394,7 +396,7 @@ class Form extends \rox\template\Helper {
 	}
 
 	/**
-	 * Rox_Helper_Form::end()
+	 * \rox\template\helper\Form::end()
 	 *
 	 * @return string
 	 */

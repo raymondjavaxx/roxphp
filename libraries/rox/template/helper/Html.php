@@ -52,7 +52,7 @@ class Html extends \rox\template\Helper {
 	}
 
 	/**
-	 * Alias for Rox_Helper_Html::image()
+	 * Alias for \rox\template\helper\Html::image()
 	 *
 	 * @param string $path
 	 * @param array $attributes

@@ -15,7 +15,7 @@
 namespace rox;
 
 /**
- * Rox_Loader
+ * Loader
  *
  * @package Rox
  */

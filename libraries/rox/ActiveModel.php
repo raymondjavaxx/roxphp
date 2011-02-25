@@ -34,7 +34,7 @@ abstract class ActiveModel {
 	/**
 	 * The name of DataSource used by this model
 	 *
-	 * @see Rox_ConnectionManager::getDataSource()
+	 * @see ConnectionManager::getDataSource()
 	 * @var string
 	 */
 	protected static $_dataSourceName = 'default';
@@ -71,7 +71,7 @@ abstract class ActiveModel {
 	/**
 	 * Validation errors
 	 *
-	 * @var Rox_ActiveModel_ErrorCollection
+	 * @var \rox\active_record\ErrorCollection
 	 */
 	protected $_errors;
 

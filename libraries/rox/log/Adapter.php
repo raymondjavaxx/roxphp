@@ -15,7 +15,7 @@
 namespace rox\log;
 
 /**
- * Abstract adapter for Rox_Log
+ * Abstract adapter for \rox\Log
  * 
  * @package Rox
  */
