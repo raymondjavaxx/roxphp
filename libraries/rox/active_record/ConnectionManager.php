@@ -12,9 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox;
-
-use \rox\DataSource;
+namespace rox\active_record;
 
 /**
  * ConnectionManager
@@ -40,7 +38,7 @@ class ConnectionManager {
 	/**
 	 * Returns a singleton instance of a datasource
 	 *
-	 * @return Night_DataSource
+	 * @return \rox\active_record\DataSource
 	 */
 	public static function getDataSource($name = 'default') {
 		if (!isset(self::$_dataSources[$name])) {

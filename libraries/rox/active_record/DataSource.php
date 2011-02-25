@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox;
+namespace rox\active_record;
 
 /**
  * Rox_DataSource
@@ -20,9 +20,6 @@ namespace rox;
  * @package Rox
  */
 class DataSource {
-
-	const DBMS_DATE_FORMAT     = 'Y-m-d';
-	const DBMS_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
 	/**
 	 * DB Link Identifier
@@ -64,18 +61,18 @@ class DataSource {
 	 * Connects to database server
 	 *
 	 * @return void
-	 * @throws Rox_Exception
+	 * @throws Exception
 	 */
 	public function connect() {
 		$this->_link = mysql_connect($this->_settings['host'],
 			$this->_settings['username'], $this->_settings['password']);
 
 		if (false === $this->_link) {
-			throw new Rox_Exception('Could not connect to DB server - ' . mysql_error());
+			throw new Exception('Could not connect to DB server - ' . mysql_error());
 		}
 
 		if (mysql_select_db($this->_settings['database'], $this->_link) == false) {
-			throw new Rox_Exception('Could not select DB - ' . mysql_error($this->_link));
+			throw new Exception('Could not select DB - ' . mysql_error($this->_link));
 		}
 	}
 
@@ -208,12 +205,12 @@ class DataSource {
 	 *
 	 * @param string $sql
 	 * @return resource
-	 * @throws Rox_Exception
+	 * @throws Exception
 	 */
 	public function execute($sql) {
 		$result = mysql_query($sql, $this->_link);
 		if ($result === false) {
-			throw new Rox_Exception(mysql_error($this->_link), mysql_errno($this->_link));
+			throw new Exception(mysql_error($this->_link), mysql_errno($this->_link));
 		}
 		return $result;
 	}
@@ -262,25 +259,5 @@ class DataSource {
 	 */
 	public function affectedRows() {
 		return mysql_affected_rows($this->_link);
-	}
-
-	/**
-	 * Date formater
-	 * 
-	 * @param string $date
-	 * @return string
-	 */
-	public function formatDate($date) {
-		return date(self::DBMS_DATE_FORMAT, strtotime($date));
-	}
-
-	/**
-	 * DateTime formater
-	 * 
-	 * @param string $dateTime
-	 * @return string
-	 */
-	public function formatDateTime($dateTime) {
-		return date(self::DBMS_DATETIME_FORMAT, strtotime($dateTime));
 	}
 }

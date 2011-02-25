@@ -19,7 +19,7 @@ namespace rox\active_record;
  *
  * @package Rox
  */
-class RecordNotFoundException extends \rox\Exception {
+class RecordNotFoundException extends \rox\active_record\Exception {
 
 	public function __construct($message = 'Record not found') {
 		parent::__construct($message, 404);

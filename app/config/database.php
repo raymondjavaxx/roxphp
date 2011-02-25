@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-use \rox\ConnectionManager;
+use \rox\active_record\ConnectionManager;
 
 /*
  * Database configuration

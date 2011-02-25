@@ -14,12 +14,11 @@
 
 namespace rox;
 
-use \rox\ConnectionManager;
-use \rox\DataSource;
 use \rox\Inflector;
 use \rox\Exception;
 use \rox\active_record\AssociationCollection;
 use \rox\active_record\RecordNotFoundException;
+use \rox\active_record\ConnectionManager;
 
 /**
  * ActiveRecord class
