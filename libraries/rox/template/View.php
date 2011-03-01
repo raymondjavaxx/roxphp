@@ -93,10 +93,11 @@ class View {
 	 * undocumented function
 	 *
 	 * @param string $name 
+	 * @param array $vars
 	 * @return string
 	 */
-	public function element($name) {
-		extract($this->_vars, EXTR_SKIP);
+	public function element($name, $vars = array()) {
+		extract($vars + $this->_vars, EXTR_SKIP);
 
 		ob_start();
 		include "{$this->_viewsPath}/elements/{$name}.tpl";
