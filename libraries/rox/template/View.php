@@ -13,8 +13,8 @@
  */
 
 namespace rox\template;
-use \Exception;
-use \Rox;
+use rox\Exception;
+use rox\Rox;
 
 /**
  *  View class
