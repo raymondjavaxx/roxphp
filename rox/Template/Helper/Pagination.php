@@ -92,7 +92,7 @@ class Rox_Template_Helper_Pagination extends Rox_Template_Helper {
 
 		$vars = array_merge($_GET, array('page' => $page));
 		unset($vars['route']);
-		$href = '?' . htmlspecialchars(http_build_query($vars));
+		$href = '?' . http_build_query($vars);
 
 		return $this->_tag('a', $text, compact('href') + $attributes);
 	}
