@@ -1,17 +1,38 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
+namespace rox\test\active_model;
 
-class Rox_ActiveModel_ErrorCollectionTest extends PHPUnit_Framework_TestCase {
+require_once dirname(__DIR__) . '/helper.php';
+
+use \rox\active_model\ErrorCollection;
+
+/**
+ * Test case for \rox\active_model\ErrorCollection
+ *
+ * @package \rox\test
+ */
+class ErrorCollectionTest extends \PHPUnit_Framework_TestCase {
 
 	public function testAdd() {
-		$collection = new Rox_ActiveModel_ErrorCollection;
+		$collection = new ErrorCollection;
 		$collection->add('username', 'Invalid username');
 		$result = $collection->toArray();
 		$expected = array('username' => 'Invalid username');
 		$this->assertSame($expected, $result);
 
-		$collection = new Rox_ActiveModel_ErrorCollection;
+		$collection = new ErrorCollection;
 		$collection->add('email');
 		$result = $collection->toArray();
 		$expected = array('email' => 'Email is invalid');
@@ -19,7 +40,7 @@ class Rox_ActiveModel_ErrorCollectionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testClear() {
-		$collection = new Rox_ActiveModel_ErrorCollection;
+		$collection = new ErrorCollection;
 
 		$collection->add('username', 'Invalid username');
 		$result = $collection->toArray();

@@ -1,11 +1,32 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
+namespace rox\test\mailer;
 
-class Rox_Mailer_MessageTest extends PHPUnit_Framework_TestCase {
+require_once dirname(__DIR__) . '/helper.php';
+
+use \rox\mailer\Message;
+
+/**
+ * Test case for \rox\mailer\Message
+ *
+ * @package \rox\test
+ */
+class MessageTest extends \PHPUnit_Framework_TestCase {
 
 	public function testSerialize() {
-		$message = new Rox_Mailer_Message(array(
+		$message = new Message(array(
 			'from' => 'ramon@example.org',
 			'to' => 'john@example.org',
 			'subject' => 'Testing'

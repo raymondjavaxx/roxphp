@@ -1,8 +1,29 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(dirname(__FILE__))) . '/helper.php';
+namespace rox\test\http;
 
-class Rox_Http_RequestTest extends PHPUnit_Framework_TestCase {
+require_once dirname(__DIR__) . '/helper.php';
+
+use \rox\http\Request;
+
+/**
+ * Test case for \rox\http\Request
+ *
+ * @package \rox\test
+ */
+class RequestTest extends \PHPUnit_Framework_TestCase {
 
 	protected $_originalSuperGlobals = array();
 
@@ -18,7 +39,7 @@ class Rox_Http_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsAjax() {
-		$request = new Rox_Http_Request;
+		$request = new Request;
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 		$this->assertTrue($request->isAjax());
 
@@ -30,7 +51,7 @@ class Rox_Http_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsSSL() {
-		$request = new Rox_Http_Request;
+		$request = new Request;
 		$_SERVER['HTTPS'] = true;
 		$this->assertTrue($request->isSSL());
 
@@ -46,7 +67,7 @@ class Rox_Http_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsIphone() {
-		$request = new Rox_Http_Request;
+		$request = new Request;
 		$_SERVER['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A537a Safari/419.3";
 		$this->assertTrue($request->isIphone());
 

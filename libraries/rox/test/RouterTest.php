@@ -1,8 +1,30 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(__FILE__)) . '/helper.php';
+namespace rox\test;
 
-class Rox_RouterTest extends PHPUnit_Framework_TestCase {
+require_once __DIR__ . '/helper.php';
+
+use \rox\Router;
+use \rox\http\Request;
+
+/**
+ * Test case for \rox\Router
+ *
+ * @package \rox\test
+ */
+class RouterTest extends \PHPUnit_Framework_TestCase {
 
 	protected $_originalSuperGlobals = array();
 
@@ -15,14 +37,14 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testParseUrl() {
-		Rox_Router::resource('companies');
-		Rox_Router::resource('companies.people');
-		Rox_Router::connect('/:controller/:action/:id', array());
-		Rox_Router::connect('/:controller/:action', array());
-		Rox_Router::connect('/:controller', array('action' => 'index'));
+		Router::resource('companies');
+		Router::resource('companies.people');
+		Router::connect('/:controller/:action/:id', array());
+		Router::connect('/:controller/:action', array());
+		Router::connect('/:controller', array('action' => 'index'));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies', new Rox_Http_Request);
+		$result = Router::parseUrl('/companies', new Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -35,7 +57,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
-		$result = Rox_Router::parseUrl('/companies', new Rox_Http_Request);
+		$result = Router::parseUrl('/companies', new Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -48,7 +70,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
-		$result = Rox_Router::parseUrl('/companies/1');
+		$result = Router::parseUrl('/companies/1');
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -61,7 +83,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
-		$result = Rox_Router::parseUrl('/companies/1', new Rox_Http_Request);
+		$result = Router::parseUrl('/companies/1', new Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -74,7 +96,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies/1.json', new Rox_Http_Request);
+		$result = Router::parseUrl('/companies/1.json', new Request);
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -87,7 +109,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/companies/1/people/25.xml', new Rox_Http_Request);
+		$result = Router::parseUrl('/companies/1/people/25.xml', new Request);
 		$expected = array(
 			'controller' => 'people',
 			'controller_class' => 'PeopleController',
@@ -100,7 +122,7 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 	
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Rox_Router::parseUrl('/users/edit/23', new Rox_Http_Request);
+		$result = Router::parseUrl('/users/edit/23', new Request);
 		$expected = array(
 			'controller' => 'users',
 			'controller_class' => 'UsersController',
@@ -115,13 +137,13 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 
 	public function testBase() {
 		$_SERVER['PHP_SELF'] = '/folder/app/webroot/index.php';
-		$result = Rox_Router::base();
+		$result = Router::base();
 		$this->assertSame('/folder', $result);
 	}
 
 	public function testGetBaseUrl() {
 		$_SERVER['HTTP_HOST'] = 'example.org';
-		$result = Rox_Router::getBaseUrl();
+		$result = Router::getBaseUrl();
 		$this->assertSame('http://example.org', $result);
 	}
 
@@ -129,10 +151,10 @@ class Rox_RouterTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['PHP_SELF'] = '/folder/app/webroot/index.php';
 		$_SERVER['HTTP_HOST'] = 'example.org';
 
-		$result = Rox_Router::url('/articles');
+		$result = Router::url('/articles');
 		$this->assertSame('/folder/articles', $result);
 
-		$result = Rox_Router::url('/articles', true);
+		$result = Router::url('/articles', true);
 		$this->assertSame('http://example.org/folder/articles', $result);
 	}
 }

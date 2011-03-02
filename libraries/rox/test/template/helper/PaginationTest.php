@@ -1,13 +1,30 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/helper.php';
+namespace rox\test\template;
+
+require_once dirname(dirname(__DIR__)) . '/helper.php';
+
+use \rox\template\helper\Pagination;
+use \rox\active_record\PaginationResult;
 
 /**
  * Test case for Pagination Helper
  *
- * @package Rox_Test
+ * @package \rox\test
  */
-class Rox_Template_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
+class PaginationTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * Tests the Rox_Helper_Pagination::links() method
@@ -22,8 +39,8 @@ class Rox_Template_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   next page     = 2
 		   previous page = 1
 		 */
-		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 3, 1, 2, 1, 40);
-		$paginationHelper = new Rox_Template_Helper_Pagination;
+		$paginationResult = new PaginationResult(array(), 3, 1, 2, 1, 40);
+		$paginationHelper = new Pagination;
 
 		$result   = $paginationHelper->links($paginationResult);
 		$expected = '<div class="pagination"><em>1</em> <a href="?page=2">2</a> <a href="?page=3">3</a> <a href="?page=2" rel="next" class="next-page">Next &raquo;</a></div>';
@@ -44,8 +61,8 @@ class Rox_Template_Helper_PaginationTest extends PHPUnit_Framework_TestCase {
 		   next page     = 4
 		   previous page = 2
 		 */
-		$paginationResult = new Rox_ActiveRecord_PaginationResult(array(), 20, 3, 4, 2, 40);
-		$paginationHelper = new Rox_Template_Helper_Pagination;
+		$paginationResult = new PaginationResult(array(), 20, 3, 4, 2, 40);
+		$paginationHelper = new Pagination;
 
 		$result = $paginationHelper->links($paginationResult, array(
 			'class'          => 'my-custom-pagination-class',

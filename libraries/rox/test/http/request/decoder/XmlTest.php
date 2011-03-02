@@ -1,8 +1,29 @@
 <?php
+/**
+ * RoxPHP
+ *
+ * Copyright (C) 2008 - 2011 Ramon Torres
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @package \rox\test
+ * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/helper.php';
+namespace rox\test\http\request\decoder;
 
-class Rox_Http_Decoder_XmlTest extends PHPUnit_Framework_TestCase {
+require_once dirname(dirname(dirname(__DIR__))) . '/helper.php';
+
+use \rox\http\request\decoder\Xml;
+
+/**
+ * Test case for \rox\http\request\decoder\Xml
+ *
+ * @package \rox\test
+ */
+class XmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testDecode() {
 		$xml = <<<EOD
@@ -13,7 +34,7 @@ class Rox_Http_Decoder_XmlTest extends PHPUnit_Framework_TestCase {
 </country>
 EOD;
 
-		$decoder = new Rox_Http_Decoder_Xml;
+		$decoder = new Xml;
 		$result = $decoder->decode($xml);
 
 		$expected = array('country' => array('tax'  => 0.2, 'code' => 'FR'));
@@ -33,7 +54,7 @@ EOD;
 </comment>
 EOD;
 
-		$decoder = new Rox_Http_Decoder_Xml;
+		$decoder = new Xml;
 		$result = $decoder->decode($xml);
 
 		$expected = array(
