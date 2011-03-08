@@ -53,7 +53,7 @@ EOD;
 MIME-Version: 1.0
 From: ramon@example.org
 To: john@example.org
-Subject: =?UTF-8?Q?Testing?=
+Subject: Testing
 X-Mailer: RoxPHP Mailer
 Content-Type: multipart/alternative; boundary="boundary123"
 
@@ -68,9 +68,9 @@ Cin=C3=A9ma
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dapi=
-bus aliquet porttitor.</p>
-<p>t vehicula varius velit, eu sagittis nibh auctor vitae.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dapi bus a=\r
+liquet porttitor.</p>=0A<p>t vehicula varius velit, eu sagittis nibh auctor=\r
+ vitae.</p>
 --boundary123
 Content-Type: application/octet-stream
 Content-Disposition: attachment; filename="pixel.png"

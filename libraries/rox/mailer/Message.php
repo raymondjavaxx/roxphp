@@ -119,7 +119,7 @@ class Message {
 	}
 
 	public function addQuotedPrintablePart($contentType, $data, $headers = array()) {
-		$this->addPart($contentType, self::_encodeText($data), array(
+		$this->addPart($contentType, quoted_printable_encode($data), array(
 			'Content-Transfer-Encoding' => 'quoted-printable'
 		));
 	}
@@ -195,29 +195,8 @@ class Message {
 		return (string)$email;
 	}
 
-	/**
-	 * Encodes text to Quoted-printable
-	 *
-	 * @param string $text 
-	 * @return string
-	 */
-	protected static function _encodeText($text) {
-		$chars  = str_split($text);
-		foreach ($chars as &$char) {
-			if ($char == '=' || ord($char) > 127) {
-				$char = '=' . strtoupper(bin2hex($char));
-			}
-		}
-
-		$lines = explode("\n", implode('', $chars));
-		foreach ($lines as &$line) {
-			$line = wordwrap($line, 70, "=\n");
-		}
-
-		return implode("\n", $lines);
-	}
-
 	protected static function _encodeTextInline($text) {
-		return '=?UTF-8?Q?' . self::_encodeText($text) . '?=';
+		$encoded = quoted_printable_encode($text);
+		return $encoded == $text ? $text : '=?UTF-8?Q?' . $encoded . '?=';
 	}
 }
