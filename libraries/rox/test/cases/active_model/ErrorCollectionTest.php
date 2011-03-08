@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\test\active_model;
+namespace rox\test\cases\active_model;
 
 require_once dirname(__DIR__) . '/helper.php';
 

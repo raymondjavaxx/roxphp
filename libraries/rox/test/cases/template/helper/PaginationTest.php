@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\test\template;
+namespace rox\test\cases\template\helper;
 
 require_once dirname(dirname(__DIR__)) . '/helper.php';
 

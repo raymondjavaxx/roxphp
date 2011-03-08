@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\test\mailer\adapter;
+namespace rox\test\cases\mailer\adapter;
 
 require_once dirname(dirname(__DIR__)) . '/helper.php';
 
