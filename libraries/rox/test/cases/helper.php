@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
 
-define('ROX_FRAMEWORK_PATH', dirname(dirname(__DIR__)));
+define('ROX_FRAMEWORK_PATH', dirname(dirname(dirname(__DIR__))));
 
 set_include_path(implode(PATH_SEPARATOR, array(
 	ROX_FRAMEWORK_PATH,

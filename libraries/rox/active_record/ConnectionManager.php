@@ -56,7 +56,8 @@ class ConnectionManager {
 	 * @return void
 	 */
 	public static function setConfig($name, $config) {
-		self::$_configs[$name] = $config;
+		$default = array('class' => '\rox\active_record\DataSource');
+		self::$_configs[$name] = $config + $default;
 	}
 
 	/**
@@ -71,7 +72,8 @@ class ConnectionManager {
 			throw new Exception('Configuration entry not found for ' . $name);
 		}
 
-		$dataSource = new Datasource(self::$_configs[$name]);
+		$class = self::$_configs[$name]['class'];
+		$dataSource = new $class(self::$_configs[$name]);
 		$dataSource->connect();
 
 		self::$_dataSources[$name] = $dataSource;
