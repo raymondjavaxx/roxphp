@@ -151,7 +151,7 @@ class Controller {
 		$defaults = array('status' => 301);
 		$options += $defaults;
 
-		$location = preg_match('/^([a-z0-9]+):\/\//', $url) === 1 ? $url : Rox_Router::url($url);
+		$location = preg_match('/^([a-z0-9]+):\/\//', $url) === 1 ? $url : Router::url($url);
 
 		$this->response->status = $options['status'];
 		$this->response->header('Location', $location);
