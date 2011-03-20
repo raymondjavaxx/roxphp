@@ -35,9 +35,19 @@ class Loader {
 	 *
 	 * @param string $class class name
 	 * @return void
+	 * @link http://groups.google.com/group/php-standards/web/psr-0-final-proposal
 	 */
 	public static function loadClass($class) {
-		$filename = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-		require_once $filename;
+		$class = ltrim($class, '\\');
+		$fileName  = '';
+		$namespace = '';
+		if ($lastNsPos = strripos($class, '\\')) {
+			$namespace = substr($class, 0, $lastNsPos);
+			$class = substr($class, $lastNsPos + 1);
+			$fileName  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+		}
+
+		$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+		require_once $fileName;
 	}
 }
