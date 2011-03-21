@@ -2,18 +2,18 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 - 2011 Ramon Torres
+ * Copyright (C) 2008 - 2010 Ramon Torres
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres
  * @package App
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 // include the bootstrap file
-require dirname(__DIR__) . '/config/bootstrap.php';
+require dirname(dirname(__FILE__)) . '/config/bootstrap.php';
 
-$dispatcher = new \rox\http\Dispatcher;
-$dispatcher->dispatch(new \rox\http\Request);
+$dispatcher = new Rox_Http_Dispatcher;
+$dispatcher->dispatch(new Rox_Http_Request);

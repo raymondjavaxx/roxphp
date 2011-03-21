@@ -70,8 +70,6 @@ abstract class Rox_ActiveModel {
 	 */
 	protected $_errors;
 
-    protected $_behaviors;
-
 	/**
 	 * Constructor
 	 *
@@ -95,7 +93,7 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Sets the record ID
 	 *
-	 * @param mixed $id
+	 * @param mixed $id 
 	 */
 	public function setId($id) {
 		$this->setData($this->_primaryKey, $id);
@@ -104,7 +102,7 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Returns the record ID
 	 *
-	 * @return mixed $id
+	 * @return mixed $id 
 	 */
 	public function getId() {
 		return $this->getData($this->_primaryKey);
@@ -176,7 +174,7 @@ abstract class Rox_ActiveModel {
 	 *   echo $user->first_name;
 	 * </code>
 	 *
-	 * @param string $var
+	 * @param string $var 
 	 * @return mixed
 	 */
 	public function __get($attribute) {
@@ -197,7 +195,7 @@ abstract class Rox_ActiveModel {
 	 *   $user->save();
 	 * </code>
 	 *
-	 * @param string $var
+	 * @param string $var 
 	 */
 	public function __set($attribute, $value) {
 		if (strpos($attribute, '_') === 0) {
@@ -264,7 +262,7 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Updates the passed attributes and saves the record.
 	 *
-	 * @param array $attributes
+	 * @param array $attributes 
 	 * @return boolean
 	 */
 	public function updateAttributes($attributes) {
@@ -279,8 +277,8 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Validates that specified attributes are not empty
 	 *
-	 * @param string|array $attributeNames
-	 * @param string $message
+	 * @param string|array $attributeNames 
+	 * @param string $message 
 	 * @return void
 	 */
 	protected function _validatesPresenceOf($attributeNames, $message = "cannot be left blank") {
@@ -294,8 +292,8 @@ abstract class Rox_ActiveModel {
 	/**
 	 * Validates the acceptance of agreements checkboxes
 	 *
-	 * @param string|array $attributeNames
-	 * @param string $message
+	 * @param string|array $attributeNames 
+	 * @param string $message 
 	 * @return void
 	 */
 	protected function _validatesAcceptanceOf($attributeNames, $message = 'must be accepted') {

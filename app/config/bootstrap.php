@@ -2,12 +2,12 @@
 /**
  * RoxPHP
  *
- * Copyright (C) 2008 - 2011 Ramon Torres
+ * Copyright (C) 2008 - 2010 Ramon Torres
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright (c) 2008 - 2011 Ramon Torres
+ * @copyright Copyright (c) 2008 - 2010 Ramon Torres
  * @package App
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -21,14 +21,12 @@ define('ROX_DEBUG', true);
 /**
  * Path to application folder
  */
-define('ROX_APP_PATH', dirname(__DIR__));
-
-define('ROX_LIBRARIES_PATH', dirname(ROX_APP_PATH).'/libraries');
+define('ROX_APP_PATH', dirname(dirname(__FILE__)));
 
 /**
  * Path to framework folder
  */
-define('ROX_FRAMEWORK_PATH', ROX_LIBRARIES_PATH.'/rox');
+define('ROX_FRAMEWORK_PATH', dirname(ROX_APP_PATH).'/rox');
 
 // Set include paths
 set_include_path(implode(PATH_SEPARATOR, array(
@@ -36,8 +34,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
 	ROX_APP_PATH . '/controllers',
 	ROX_APP_PATH . '/helpers',
 	ROX_APP_PATH . '/mailers',
-	ROX_APP_PATH . '/libraries',
-	ROX_LIBRARIES_PATH,
+	ROX_APP_PATH . '/vendors',
+	ROX_FRAMEWORK_PATH,
 	// uncoment the line below preserve default include paths
 	// get_include_path()
 )));
@@ -46,12 +44,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // Load and set the exception handler
-require ROX_FRAMEWORK_PATH . '/exception/handler.php';
-\rox\exception\Handler::register();
+require ROX_FRAMEWORK_PATH . '/Exception/Handler.php';
+Rox_Exception_Handler::register();
 
 // Load and register the autoloader
 require ROX_FRAMEWORK_PATH . '/Loader.php';
-\rox\Loader::register();
+Rox_Loader::register();
 
 // Load DB configuration file and init
 require ROX_APP_PATH . '/config/database.php';
