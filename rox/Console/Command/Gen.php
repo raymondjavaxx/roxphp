@@ -274,6 +274,8 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
             $folder = Rox_Inflector::tableize($name);
             $this->_writeFile("/views/{$folder}/{$template}.html.tpl", $data);
         }
+
+        $this->_copyFiles();
     }
 
     protected function _generateMigration($name) {
@@ -462,5 +464,35 @@ class Rox_Console_Command_Gen extends Rox_Console_Command {
 
 		return $data;
 	}
+
+    protected function _copyFiles(){
+        $template_dirs = array(
+            'behaviors'=>'/models/behaviors/',
+            'layouts'=>'/views/layouts/',
+            'elements'=>'/views/elements/',
+            'css'=>'/webroot/css/',
+            'js'=>'/webroot/js/',
+            'img'=>'/webroot/img/',
+            'swf'=>'/webroot/swf/',
+            'files'=>'/webroot/files/',
+            'helpers'=>'/helpers/',
+            'vendors'=>'/vendors/'
+        );
+
+        foreach($template_dirs as $dir=>$path){
+            if(is_dir($fullpath = ROX_FRAMEWORK_PATH.'/Console/Command/templates/'.$this->templateDir.'/views/'.$dir)){
+                $this->out(" -- Copying $dir --");
+                $dh = opendir($fullpath) or die("couldn't open directory");
+
+                while (!(($file = readdir($dh)) === false )) {
+                    if($file == "."  || $file == "..")
+                        continue;
+                    copy($fullpath."/".$file, ROX_APP_PATH.$path.$file);
+                }
+
+                closedir($dh);
+            }
+        }
+    }
 
 }

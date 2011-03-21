@@ -82,6 +82,7 @@ class Rox_Template_View {
 
 		ob_start();
 		require $this->_layout;
+		
 		return ob_get_clean();
 	}
 

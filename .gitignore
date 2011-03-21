@@ -1,3 +1,4 @@
 /app/tmp/
 /app/vendors/
 /app/config/migrations/*.php
+/nbproject/private/

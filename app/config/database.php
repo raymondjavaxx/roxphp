@@ -16,8 +16,8 @@
  * Database configuration
  */
 Rox_ConnectionManager::setConfig('default', array(
-	'host'     => '127.0.0.1',
+	'host'     => 'localhost',
 	'username' => 'root',
-	'password' => '',
-	'database' => 'rox_app'
+	'password' => 'root',
+	'database' => 'rox_test'
 ));

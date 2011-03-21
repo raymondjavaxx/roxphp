@@ -54,6 +54,13 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 */
 	protected $_belongsTo = array();
 
+    /**
+     * List of HABTM relationships
+     * @var array
+     * currently does nothing, but is needed for future compatibility
+     */
+    protected $_hasAndBelongsToMany = array();
+
 	/**
 	 * Timezone of magic timestamp attributes
 	 *
@@ -135,7 +142,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 *   echo $user->first_name;
 	 * </code>
 	 *
-	 * @param string $var 
+	 * @param string $var
 	 * @return mixed
 	 */
 	public function __get($attribute) {
@@ -163,7 +170,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	 *   $user->save();
 	 * </code>
 	 *
-	 * @param string $var 
+	 * @param string $var
 	 */
 	public function __set($attribute, $value) {
 		if (strpos($attribute, '_') === 0) {
@@ -352,7 +359,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	/**
 	 * Rox_ActiveRecord::findAll()
 	 *
-	 * @param array $options  
+	 * @param array $options
 	 * @return array
 	 */
 	public function findAll($options = array()) {
@@ -393,7 +400,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 	/**
 	 * Rox_ActiveRecord::paginate()
-	 * 
+	 *
 	 * @param array $options
 	 * @return Rox_ActiveRecord_PaginationResult
 	 */
@@ -469,7 +476,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	/**
 	 * Rox_ActiveRecord_Abstract::findFirst()
 	 *
-	 * @param array $options 
+	 * @param array $options
 	 * @return Rox_ActiveRecord
 	 */
 	public function findFirst($options = array()) {
@@ -483,7 +490,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 	/**
 	 * Rox_ActiveRecord_Abstract::findLast()
-	 * 
+	 *
 	 * @param array $options
 	 * @return Rox_ActiveRecord
 	 */
@@ -497,7 +504,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 	/**
 	 * Finds records by SQL
-	 * 
+	 *
 	 * @param string $sql
 	 * @return array
 	 */
@@ -550,7 +557,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	/**
 	 * Finds and deletes all records that match $conditions
 	 *
-	 * @param array|string $conditions 
+	 * @param array|string $conditions
 	 * @return void
 	 */
 	public function deleteAll($conditions = array()) {
@@ -561,7 +568,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 	}
 
 	/**
-	 * Quotes and escapes values to be used in SQL queries  
+	 * Quotes and escapes values to be used in SQL queries
 	 *
 	 * @param string $attribute
 	 * @param mixed $value
@@ -599,7 +606,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 	/**
 	 * Rox_ActiveRecord_Abstract::_attributeMap()
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function _attributeMap() {
@@ -608,7 +615,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 			$this->_attributeMap = $db->generateAttributeMapFromTable($this->_table);
 		}
 
-		return $this->_attributeMap;	
+		return $this->_attributeMap;
 	}
 
 	/**
@@ -632,7 +639,7 @@ abstract class Rox_ActiveRecord extends Rox_ActiveModel {
 
 	/**
 	 * Rox_ActiveRecord_Abstract::_buildConditionsSQL()
-	 * 
+	 *
 	 * @param mixed $conditions
 	 * @return string
 	 */
