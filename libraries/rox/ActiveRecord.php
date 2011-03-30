@@ -19,6 +19,7 @@ use \rox\Exception;
 use \rox\active_record\AssociationCollection;
 use \rox\active_record\RecordNotFoundException;
 use \rox\active_record\ConnectionManager;
+use \rox\active_record\PaginationResult;
 
 /**
  * ActiveRecord class

@@ -15,7 +15,7 @@
 namespace rox\console\command;
 
 use \rox\Inflector;
-use \rox\ConnectionManager;
+use \rox\active_record\ConnectionManager;
 
 /**
  * undocumented class

@@ -14,14 +14,14 @@
 
 namespace rox\console\command;
 
-use \rox\active_record\Migrator;
+use \rox\active_record\migration\Migrator;
 
 /**
  * undocumented class
  *
  * @package default
  */
-class Db extends \rox\coneole\Command {
+class Db extends \rox\console\Command {
 
 	public function header() {
 		$this->hr();

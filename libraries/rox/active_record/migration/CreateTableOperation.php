@@ -14,7 +14,7 @@
 
 namespace rox\active_record\migration;
 
-use \rox\ConnectionManager;
+use \rox\active_record\ConnectionManager;
 use \rox\Exception;
 
 /**
