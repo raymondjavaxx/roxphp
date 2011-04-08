@@ -77,7 +77,8 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 	 */
 	public static function _table() {
 		if (static::$_table === null) {
-			static::$_table = Inflector::tableize(get_called_class());
+			$table = Inflector::tableize(get_called_class());
+			static::$_table = &$table;
 		}
 
 		return static::$_table;
@@ -592,7 +593,8 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 	protected static function _attributeMap() {
 		if (static::$_attributeMap === null) {
 			$db = static::datasource();
-			static::$_attributeMap = $db->generateAttributeMapFromTable(static::_table());
+			$attributeMap = $db->generateAttributeMapFromTable(static::_table());
+			static::$_attributeMap = &$attributeMap;
 		}
 
 		return static::$_attributeMap;	
