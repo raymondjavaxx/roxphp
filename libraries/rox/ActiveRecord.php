@@ -75,12 +75,19 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 	 *
 	 * @return string
 	 */
-	public static function _table() {
-		if (static::$_table === null) {
-			static::$_table = Inflector::tableize(get_called_class());
+	protected static function _table() {
+		static $cache = array();
+
+		if (static::$_table !== null) {
+			return static::$_table;
 		}
 
-		return static::$_table;
+		$class = get_called_class();
+		if (!isset($cache[$class])) {
+			$cache[$class] = Inflector::tableize($class);
+		}
+
+		return $cache[$class];
 	}
 
 	/**
