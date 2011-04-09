@@ -121,21 +121,6 @@ class DataSource {
 	 * @return array
 	 */
 	public function generateAttributeMapFromTable($table) {
-		static $mapCache = array();
-		if (!isset($mapCache[$table])) {
-			$mapCache[$table] = $this->_generateFieldMapFromTable($table);
-		}
-
-		return $mapCache[$table];
-	}
-
-	/**
-	 * DataSource::_generateFieldMapFromTable()
-	 * 
-	 * @param string $table
-	 * @return array
-	 */
-	protected function _generateFieldMapFromTable($table) {
 		$fieldMap = array();
 
 		$columns = $this->describe($table);
