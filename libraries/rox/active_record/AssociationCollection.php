@@ -48,37 +48,44 @@ class AssociationCollection implements \IteratorAggregate {
 
 	public function find($ids, $options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model::find($ids, $options);
+		$model = $this->_model;
+		return $model::find($ids, $options);
 	}
 
 	public function findFirst($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model::findFirst($options);
+		$model = $this->_model;
+		return $model::findFirst($options);
 	}
 
 	public function findLast($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model::findLast($options);
+		$model = $this->_model;
+		return $model::findLast($options);
 	}
 
 	public function findAll($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model::findAll($options);
+		$model = $this->_model;
+		return $model::findAll($options);
 	}
 
 	public function deleteAll($conditions = array()) {
 		$conditions = array_merge((array)$conditions, $this->_scope);
-		$this->_model::deleteAll($conditions);
+		$model = $this->_model;
+		$model::deleteAll($conditions);
 	}
 
 	public function findCount($conditions = array()) {
 		$conditions = array_merge((array)$conditions, $this->_scope);
-		return $this->_model::findCount($conditions);
+		$model = $this->_model;
+		return $model::findCount($conditions);
 	}
 
 	public function paginate($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
-		return $this->_model::paginate($options);
+		$model = $this->_model;
+		return $model::paginate($options);
 	}
 
 	public function getIterator() {
