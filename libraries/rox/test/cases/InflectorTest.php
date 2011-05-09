@@ -14,8 +14,6 @@
 
 namespace rox\test\cases;
 
-require_once __DIR__ . '/helper.php';
-
 use \rox\Inflector;
 
 /**
