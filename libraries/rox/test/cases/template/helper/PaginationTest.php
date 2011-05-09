@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\template\helper;
 
-require_once dirname(dirname(__DIR__)) . '/helper.php';
-
 use \rox\template\helper\Pagination;
 use \rox\active_record\PaginationResult;
 
