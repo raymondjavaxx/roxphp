@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\active_model;
 
-require_once dirname(__DIR__) . '/helper.php';
-
 use \rox\active_model\ErrorCollection;
 
 /**

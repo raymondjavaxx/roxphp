@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\mailer\adapter;
 
-require_once dirname(dirname(__DIR__)) . '/helper.php';
-
 use \rox\mailer\Message;
 use \rox\mailer\adapter\Smtp;
 

@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\http\request\decoder;
 
-require_once dirname(dirname(dirname(__DIR__))) . '/helper.php';
-
 use \rox\http\request\decoder\Json;
 
 /**

@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\mailer;
 
-require_once dirname(__DIR__) . '/helper.php';
-
 use \rox\mailer\Message;
 
 /**
