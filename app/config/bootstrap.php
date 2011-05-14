@@ -46,7 +46,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
 // Load and set the exception handler
-require ROX_FRAMEWORK_PATH . '/exception/handler.php';
+require ROX_FRAMEWORK_PATH . '/exception/Handler.php';
 \rox\exception\Handler::register();
 
 // Load and register the autoloader

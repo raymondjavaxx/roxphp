@@ -14,8 +14,6 @@
 
 namespace rox\test\cases\g11n;
 
-require_once dirname(__DIR__) . '/helper.php';
-
 use \rox\g11n\Locale;
 
 class LocaleMock extends Locale {

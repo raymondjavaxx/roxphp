@@ -225,10 +225,15 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 	/**
 	 * Saves the model
 	 *
+	 * @param $options array
+	 *         - validate: bool, whether or not to validate before saving (defaults to true)
 	 * @return boolean
 	 */
-	public function save() {
-		if (!$this->valid()) {
+	public function save($options = array()) {
+		$defaults = array('validate' => true);
+		$options += $defaults;
+
+		if ($options['validate'] && !$this->valid()) {
 			return false;
 		}
 

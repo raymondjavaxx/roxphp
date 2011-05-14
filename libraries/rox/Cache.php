@@ -68,6 +68,30 @@ class Cache {
 	}
 
 	/**
+	 * Retrieves data by key or executes $callback in case of cache miss. Data returned
+	 * by $callback is then cached.
+	 *
+	 *     \rox\Cache::fetch('my_key', '+1 hour', function(){
+	 *         // some expensive operation
+	 *         return $results;
+	 *     });
+	 *
+	 * @param string $key 
+	 * @param string $expires expiration time in seconds or strtotime() compatible string
+	 * @param \Closure $callback closure to be executed on cache miss
+	 * @return mixed
+	 */
+	public static function fetch($key, $expires, \Closure $callback) {
+		$data = static::read($key);
+		if ($data === false) {
+			$data = $callback->__invoke();
+			static::write($key, $data, $expires);
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Deletes a cache entry
 	 * 
 	 * @param string $key The cache key
