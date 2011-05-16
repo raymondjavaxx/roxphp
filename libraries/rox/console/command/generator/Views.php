@@ -24,10 +24,17 @@ use \rox\active_record\ConnectionManager;
  */
 class Views extends Generator {
 
-	public function generate($name) {
-		$tableName = Inflector::tableize($name);
-		$datasource = ConnectionManager::getDataSource();
-		$attributes = $datasource->generateAttributeMapFromTable($tableName);
+	public function generate($name, $colDefs = array()) {
+		if (empty($colDefs)) {
+			$tableName = Inflector::tableize($name);
+			$datasource = ConnectionManager::getDataSource();
+			$attributes = $datasource->generateAttributeMapFromTable($tableName);
+		} else {
+			$columns = Migration::parseColumnDefinitions($colDefs);
+			$names = array_map(function($col) { return $col['name']; }, $columns);
+			$types = array_map(function($col) { return $col['type']; }, $columns);
+			$attributes = array_combine($names, $types);
+		}
 
 		$templates = array('add', 'edit', 'index', 'view');
 

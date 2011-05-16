@@ -31,6 +31,11 @@ class Gen extends \rox\console\Command {
 
 	public function run($argc, $argv) {
 		switch ($argv[2]) {
+			case 'scaffold':
+				$generator = new generator\Scaffold($this);
+				$generator->generate($argv[3], array_slice($argv, 4));
+				break;
+
 			case 'controller':
 				$generator = new generator\Controller($this);
 				$generator->generate($argv[3]);
