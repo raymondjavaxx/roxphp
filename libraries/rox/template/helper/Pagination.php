@@ -49,7 +49,7 @@ class Pagination extends \rox\template\Helper {
 		if ($collection->getPreviousPage() != $currentPage) {
 			$output[] = $this->_link($collection->getPreviousPage(), $options['prev_label'], array(
 				'rel' => 'prev',
-				'class' => $options['next_class']
+				'class' => $options['prev_class']
 			));
 		}
 
