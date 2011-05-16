@@ -23,6 +23,17 @@ use \rox\console\command\generator\Migration;
  */
 class MigrationTest extends \PHPUnit_Framework_TestCase {
 
+	public function testInferMigrationType() {
+		$result = Migration::inferMigrationType('create_articles');
+		$this->assertEquals('create_table', $result);
+
+		$result = Migration::inferMigrationType('add_slug_to_articles');
+		$this->assertEquals('add_columns', $result);
+
+		$result = Migration::inferMigrationType('create_indexes_on_articles_slugs');
+		$this->assertEquals('other', $result);
+	}
+
 	public function testInferTableName() {
 		$result = Migration::inferTableName('create_articles');
 		$this->assertEquals('articles', $result);

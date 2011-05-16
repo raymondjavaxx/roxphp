@@ -34,12 +34,13 @@ class Migration extends Generator {
 			}
 		}
 
+		$type = static::inferMigrationType($name);
+		$class = Inflector::camelize($name);
 		$table = static::inferTableName($name);
 		$columns = static::parseColumnDefinitions($colDefs);
 		$indexes = static::extractIndexes($columns);
-		$class = Inflector::camelize($name);
 
-		$vars = compact('class', 'columns', 'indexes', 'table');
+		$vars = compact('type', 'class', 'table', 'columns', 'indexes');
 		$data = $this->_renderTemplate('migration', $vars, true);
 
 		$this->_writeFile("/config/migrations/{$version}_{$name}.php", $data);
@@ -63,6 +64,25 @@ class Migration extends Generator {
 		}
 
 		return $table;
+	}
+
+	public static function inferMigrationType($migrationName) {
+		$patterns = array(
+			'/create_(.*)_on_(.*)$/' => 'other',
+			'/add_(.*)_indexes_to_(.*)$/' => 'other',
+			'/create_(?<table>[a-z_]+)_table$/' => 'create_table',
+			'/create_(?<table>[a-z_]+)$/' => 'create_table',
+			'/add_(.*)_to_(?<table>[a-z_]+)_table$/' => 'add_columns',
+			'/add_(.*)_to_(?<table>[a-z_]+)$/' => 'add_columns'
+		);
+
+		foreach ($patterns as $pattern => $type) {
+			if (preg_match($pattern, $migrationName, $matches) === 1) {
+				return $type;
+			}
+		}
+
+		return 'other';
 	}
 
 	public static function parseColumnDefinitions($colDefs) {
