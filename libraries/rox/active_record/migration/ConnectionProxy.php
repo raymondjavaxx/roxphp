@@ -19,7 +19,7 @@ namespace rox\active_record\migration;
  *
  * @package Rox
  */
-class ConnectionProxy extends \rox\active_record\RecordingProxy {
+class ConnectionProxy extends \rox\active_record\migration\RecordingProxy {
 
 	public function inverse() {
 		$calls = array_reverse($this->_calls);
