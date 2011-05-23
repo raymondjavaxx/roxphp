@@ -119,7 +119,15 @@ class Message {
 	}
 
 	public function addQuotedPrintablePart($contentType, $data, $headers = array()) {
-		$this->addPart($contentType, quoted_printable_encode($data), array(
+		$encodedData = explode("\n", quoted_printable_encode($data));
+
+		foreach ($encodedData as &$line) {
+			if (strpos($line, '.') === 0) {
+				$line = '.' . $line;
+			}
+		}
+
+		$this->addPart($contentType, implode("\n", $encodedData), array(
 			'Content-Transfer-Encoding' => 'quoted-printable'
 		));
 	}
