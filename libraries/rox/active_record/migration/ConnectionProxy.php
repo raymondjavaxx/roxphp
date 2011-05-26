@@ -49,7 +49,7 @@ class ConnectionProxy extends \rox\active_record\migration\RecordingProxy {
 			case 'renameColumn':
 				return array(
 					'method' => 'renameColumn',
-					'args' => array($args[1], $args[0])
+					'args' => array($args[0], $args[2], $args[1])
 				);
 				break;
 
