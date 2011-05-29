@@ -109,7 +109,7 @@ class Router {
 		$defaults = array('namespace' => false, 'only' => array(), 'except' => array());
 		$options = array_merge($defaults, $options);
 
-		$whitelist = empty($options['only']) ? array('index', 'view', 'add', 'edit', 'delete') : $options['only'];
+		$whitelist = empty($options['only']) ? array('index', 'view', 'add', 'edit', 'delete') : (array)$options['only'];
 		if (!empty($options['except'])) {
 			$whitelist = array_diff($whitelist, (array)$options['except']);
 		}
