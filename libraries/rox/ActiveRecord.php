@@ -150,7 +150,8 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 		if ($assoc) {
 			$class = $assoc['class'];
 			$scope = array($assoc['key'] => $this->getId());
-			return $this->{$attribute} = new AssociationCollection($class, $scope);
+			$through = (isset($assoc['through_model'])) ? $assoc['through_model'] : NULL;
+			return $this->{$attribute} = new AssociationCollection($class, $scope, $through);
 		}
 
 		throw new Exception("unknown attribute {$attribute}");
@@ -189,7 +190,6 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 		if ($associations === null) {
 			$associations = static::_normalizeAssociations();
 		}
-
 		return isset($associations[$type][$name]) ? $associations[$type][$name] : false;
 	}
 
@@ -209,6 +209,10 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 				}
 
 				$keyClass = ($type == 'belongs_to') ? $name : get_called_class();
+				
+				if($type == 'has_many' || $type == 'has_one' AND (isset($options['through']))) 
+					$options['through_model'] = Inflector::classify($options['through']);
+				
 				$defaults = array(
 					'class' => Inflector::classify($name),
 					'key' => Inflector::underscore($keyClass) . '_id'
@@ -358,7 +362,7 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 		);
 
 		$options += $defaults;
-
+		
 		if (empty($options['attributes'])) {
 			$options['attributes'] = '*';
 		} else if (is_array($options['attributes'])) {

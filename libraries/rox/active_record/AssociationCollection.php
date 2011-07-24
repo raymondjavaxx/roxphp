@@ -13,6 +13,7 @@
  */
 
 namespace rox\active_record;
+use rox\Inflector;
 
 /**
  * Collection Assoc.
@@ -22,6 +23,8 @@ namespace rox\active_record;
 class AssociationCollection implements \IteratorAggregate {
 
 	protected $_scope = array();
+	
+	protected $_through;
 
 	/**
 	 * Model name
@@ -30,9 +33,10 @@ class AssociationCollection implements \IteratorAggregate {
 	 */
 	protected $_model;
 
-	public function __construct($model, $scope) {
+	public function __construct($model, $scope, $through=NULL) {
 		$this->_model = $model;
 		$this->_scope = $scope;
+		$this->_through = $through;
 	}
 
 	public function build($attributes = array()) {
@@ -67,6 +71,11 @@ class AssociationCollection implements \IteratorAggregate {
 	public function findAll($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		$model = $this->_model;
+		
+		if($this->_through){
+			$through_model = $this->_through;
+			return self::_handleThrough($through_model::findAll($options), $model, $this->_scope);
+		}
 		return $model::findAll($options);
 	}
 
@@ -90,5 +99,16 @@ class AssociationCollection implements \IteratorAggregate {
 
 	public function getIterator() {
 		return new \ArrayIterator($this->findAll());
+	}
+	
+	private function _handleThrough($through, $model, $scope){
+		$model_var = Inflector::singularize(Inflector::tableize($model));
+		
+		$assoc = array();
+		foreach($through as $item){
+			$assoc[] = $model::find($item->{$model_var . '_id'});
+		}
+		
+		return $assoc;
 	}
 }
