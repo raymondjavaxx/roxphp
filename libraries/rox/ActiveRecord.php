@@ -209,10 +209,11 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 				}
 
 				$keyClass = ($type == 'belongs_to') ? $name : get_called_class();
-				
-				if($type == 'has_many' || $type == 'has_one' AND (isset($options['through']))) 
+
+				if ($type == 'has_many' || $type == 'has_one' && (isset($options['through']))) {
 					$options['through_model'] = Inflector::classify($options['through']);
-				
+				}
+
 				$defaults = array(
 					'class' => Inflector::classify($name),
 					'key' => Inflector::underscore($keyClass) . '_id'
