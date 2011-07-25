@@ -1,5 +1,4 @@
 /app/tmp/
 /app/vendors/
 /app/config/migrations/*.php
-
 .DS_Store

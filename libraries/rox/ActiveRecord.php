@@ -150,7 +150,7 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 		if ($assoc) {
 			$class = $assoc['class'];
 			$scope = array($assoc['key'] => $this->getId());
-			$through = (isset($assoc['through_model'])) ? $assoc['through_model'] : NULL;
+			$through = (isset($assoc['through_model'])) ? $assoc['through_model'] : null;
 			return $this->{$attribute} = new AssociationCollection($class, $scope, $through);
 		}
 

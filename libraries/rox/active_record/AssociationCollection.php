@@ -33,7 +33,7 @@ class AssociationCollection implements \IteratorAggregate {
 	 */
 	protected $_model;
 
-	public function __construct($model, $scope, $through=NULL) {
+	public function __construct($model, $scope, $through = null) {
 		$this->_model = $model;
 		$this->_scope = $scope;
 		$this->_through = $through;
@@ -71,11 +71,12 @@ class AssociationCollection implements \IteratorAggregate {
 	public function findAll($options = array()) {
 		$options = array_merge_recursive($options, array('conditions' => $this->_scope));
 		$model = $this->_model;
-		
-		if($this->_through){
+
+		if ($this->_through) {
 			$through_model = $this->_through;
 			return self::_handleThrough($through_model::findAll($options), $model, $this->_scope);
 		}
+
 		return $model::findAll($options);
 	}
 
