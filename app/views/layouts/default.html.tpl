@@ -26,7 +26,7 @@
 			<p>Powered by <a href="http://roxphp.com">RoxPHP</a></p>
 		</div>
 	</div>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 	<?php echo $html->javascript('common') ?>
 </body>
 </html>
