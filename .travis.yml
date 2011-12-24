@@ -2,7 +2,7 @@ language: php
 php:
   - 5.3
 before_script:
-  - sh pyrus install phpunit/DbUnit
+  - pyrus install phpunit/DbUnit
   - phpenv rehash
   - sh -c "mysql -e 'create database IF NOT EXISTS rox_test;'"
  
