@@ -68,19 +68,4 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 		$request = new Request;
 		$this->assertFalse($request->isSSL());
 	}
-
-	public function testIsIphone() {
-		$_SERVER['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A537a Safari/419.3";
-		$request = new Request;
-		$this->assertTrue($request->isIphone());
-
-		$_SERVER['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A100a Safari/419.3";
-		$request = new Request;
-		$this->assertTrue($request->isIphone());
-
-		// Firefox on Windows 7
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 GTB6 (.NET CLR 3.5.30729)';
-		$request = new Request;
-		$this->assertFalse($request->isIphone());
-	}
 }
