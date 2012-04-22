@@ -42,7 +42,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		Router::connect('/:controller', array('action' => 'index'));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Router::parseUrl('/companies', new Request);
+		$result = Router::parseUrl('/companies', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -55,7 +55,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
-		$result = Router::parseUrl('/companies', new Request);
+		$result = Router::parseUrl('/companies', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -81,7 +81,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
-		$result = Router::parseUrl('/companies/1', new Request);
+		$result = Router::parseUrl('/companies/1', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -94,7 +94,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Router::parseUrl('/companies/1.json', new Request);
+		$result = Router::parseUrl('/companies/1.json', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'companies',
 			'controller_class' => 'CompaniesController',
@@ -107,7 +107,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Router::parseUrl('/companies/1/people/25.xml', new Request);
+		$result = Router::parseUrl('/companies/1/people/25.xml', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'people',
 			'controller_class' => 'PeopleController',
@@ -120,7 +120,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $result);
 	
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$result = Router::parseUrl('/users/edit/23', new Request);
+		$result = Router::parseUrl('/users/edit/23', Request::fromGlobals());
 		$expected = array(
 			'controller' => 'users',
 			'controller_class' => 'UsersController',

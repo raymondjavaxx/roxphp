@@ -14,7 +14,6 @@
 
 namespace rox\http;
 
-use \rox\http\request\Normalizer;
 use \rox\Router;
 
 /**
@@ -31,9 +30,7 @@ class Dispatcher {
 	 * @throws \rox\http\DispatcherException
 	 */
 	public function dispatch(Request $request) {
-		Normalizer::normalize($request);
-
-		$route = $request->getQuery('route', '/');
+		$route = $request->query->get('route', '/');
 
 		$params = Router::parseUrl($route, $request);
 		if ($params === false) {

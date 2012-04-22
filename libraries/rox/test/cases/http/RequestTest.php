@@ -52,20 +52,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testIsSSL() {
 		$_SERVER['HTTPS'] = true;
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertTrue($request->isSSL());
 
 		$_SERVER['HTTPS'] = false;
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertFalse($request->isSSL());
 
-		// I <3 You IIS...
+		// For Microsoft server
 		$_SERVER['HTTPS'] = 'on';
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertTrue($request->isSSL());
 
 		$_SERVER['HTTPS'] = 'off';
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertFalse($request->isSSL());
 	}
 }

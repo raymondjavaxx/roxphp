@@ -15,5 +15,8 @@
 // include the bootstrap file
 require dirname(__DIR__) . '/config/bootstrap.php';
 
-$dispatcher = new \rox\http\Dispatcher;
-$dispatcher->dispatch(new \rox\http\Request);
+use \rox\http\Dispatcher;
+use \rox\http\Request;
+
+$dispatcher = new Dispatcher;
+$dispatcher->dispatch(Request::fromGlobals());

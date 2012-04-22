@@ -22,19 +22,31 @@ class ParamCollection implements \ArrayAccess {
 		$this->_data = $data;
 	}
 
+	public function all() {
+		return $this->_data;
+	}
+
+	public function get($key, $default = null) {
+		return isset($this->_data[$key]) ? $this->_data[$key] : $default;
+	}
+
+	public function set($key, $value) {
+		$this->_data[$key] = $value;
+	}
+
 	public function offsetExists($offset) {
 		return isset($this->_data[$offset]);
 	}
 
 	public function offsetGet($offset) {
-		return isset($this->_data[$offset]) ? $this->_data[$offset] : null;
+		return $this->get($offset);
 	}
 
-	public function offsetSet($offset , $value) {
-		throw new Exception("Collection is read-only");
+	public function offsetSet($offset, $value) {
+		$this->set($offset, $value);
 	}
 
 	public function offsetUnset($offset) {
-		throw new Exception("Collection is read-only");
+		unset($this->_data[$offset]);
 	}
 }

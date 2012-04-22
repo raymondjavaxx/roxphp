@@ -16,6 +16,7 @@ namespace rox\http;
 
 use \rox\http\request\ParamCollection;
 use \rox\http\request\ServerParamCollection;
+use \rox\http\request\Normalizer;
 
 /**
  * Request
@@ -25,75 +26,56 @@ use \rox\http\request\ServerParamCollection;
 class Request {
 
 	/**
-	 * Request data
+	 * Request params
 	 *
-	 * @var array
+	 * @var \rox\http\request\ParamCollection
 	 */
-	public $data = array();
+	public $data;
 
+	/**
+	 * Server params
+	 *
+	 * @var \rox\http\request\ServerParamCollection
+	 */
 	public $server;
 
+	/**
+	 * HTTP request headers
+	 *
+	 * @var \rox\http\request\ParamCollection
+	 */
 	public $headers;
 
-	public function __construct() {
-		$this->server = new ServerParamCollection($_SERVER);
+	/**
+	 * HTTP request method
+	 *
+	 * @var string
+	 */
+	protected $_method;
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $query 
+	 * @param array $data 
+	 * @param array $server 
+	 */
+	public function __construct($query = array(), $data = array(), $server = array()) {
+		$this->query   = new ServerParamCollection($query);
+		$this->data    = new ServerParamCollection($data);
+		$this->server  = new ServerParamCollection($server);
 		$this->headers = new ParamCollection($this->server->getHeaders());
 	}
 
 	/**
-	 * Retrieves request data
+	 * Creates a new request object
 	 *
-	 * @param string $key 
-	 * @param mixed $default 
-	 * @return mixed
+	 * @return \rox\http\Request
 	 */
-	public function data($key = null, $default = null) {
-		if ($key === null) {
-			return $this->data;
-		}
-
-		return isset($this->data[$key]) ? $this->data[$key] : $default;
-	}
-
-	/**
-	 * Wrapper for <code>$_POST</code>
-	 * 
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function getPost($key = null, $default = null) {
-		if ($key === null) {
-			return $_POST;
-		}
-
-		return isset($_POST[$key]) ? $_POST[$key] : $default;
-	}
-
-	/**
-	 * Wrapper for <code>$_GET</code>
-	 * 
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function getQuery($key = null, $default = null) {
-		if ($key === null) {
-			return $_GET;
-		}
-
-		return isset($_GET[$key]) ? $_GET[$key] : $default;
-	}
-
-	/**
-	 * Wrapper for <code>$_SERVER</code>
-	 * 
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function getServer($key, $default = null) {
-		return isset($this->server[$key]) ? $this->server[$key] : $default;
+	public static function fromGlobals() {
+		$request = new static($_GET, $_POST, $_SERVER);
+		Normalizer::normalize($request);
+		return $request;
 	}
 
 	/**
@@ -102,7 +84,23 @@ class Request {
 	 * @return string
 	 */
 	public function method() {
-		return $this->getServer('REQUEST_METHOD');
+		if ($this->_method === null) {
+			$this->_method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
+			if ($this->_method === 'POST') {
+				$this->_method = strtoupper($this->data->get('_method', 'POST'));
+			}
+		}
+
+		return $this->_method;
+	}
+
+	/**
+	 * Returns the raw request body
+	 *
+	 * @return string
+	 */
+	public function rawBody() {
+		return file_get_contents('php://input');
 	}
 
 	/**
@@ -166,7 +164,59 @@ class Request {
 	 * @return boolean
 	 */
 	public function isSSL() {
-		$ssl = $this->getServer('HTTPS');
-		return $ssl === true || $ssl == 'on';
+		$ssl = $this->server->get('HTTPS');
+		return $ssl === true || $ssl === 'on';
+	}
+
+	// ------------------------------------------------
+	//  Deprecated
+	// -----------------------------------------------
+
+	/**
+	 * Retrieves request data
+	 *
+	 * @param string $key 
+	 * @param mixed $default 
+	 * @return mixed
+	 * @deprecated
+	 */
+	public function data($key, $default = null) {
+		return $this->data->get($key, $default);
+	}
+
+	/**
+	 * Wrapper for <code>$_POST</code>
+	 * 
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 * @deprecated
+	 */
+	public function getPost($key = null, $default = null) {
+		$this->data($key, $default);
+	}
+
+	/**
+	 * Wrapper for <code>$_GET</code>
+	 * 
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 * @deprecated
+	 */
+	public function getQuery($key, $default = null) {
+		return $this->query->get($key, $default);
+	}
+
+	/**
+	 * Wrapper for <code>$_SERVER</code>
+	 * 
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 * @deprecated
+	 */
+	public function getServer($key, $default = null) {
+		return $this->server->get($key, $default);
 	}
 }
