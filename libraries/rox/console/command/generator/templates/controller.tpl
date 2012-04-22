@@ -41,7 +41,7 @@ class {controller_class} extends ApplicationController {
 		${model_var_name} = new {model_class};
 
 		if ($this->request->isPost()) {
-			${model_var_name}->setData($this->request->data('{model_name}'));
+			${model_var_name}->setData($this->request->data['{model_name}']);
 			if (${model_var_name}->save()) {
 				$this->flash('success', 'The {friendly_model_name} has been created.');
 				$this->redirect('/{controller_name}/' . ${model_var_name}->id);
@@ -64,7 +64,7 @@ class {controller_class} extends ApplicationController {
 		${model_var_name} = {model_class}::find($id);
 
 		if ($this->request->isPut()) {
-			$newData = $this->request->data('{model_name}');
+			$newData = $this->request->data['{model_name}'];
 			if (${model_var_name}->updateAttributes($newData)) {
 				$this->flash('success', 'The {friendly_model_name} has been updated.');
 				$this->redirect('/{controller_name}/' . ${model_var_name}->id);
