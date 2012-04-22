@@ -12,9 +12,11 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\http;
+namespace rox\action;
 
 use \rox\Router;
+use \rox\http\Request;
+use \rox\http\Response;
 
 /**
  * Dispatcher

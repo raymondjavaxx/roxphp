@@ -12,7 +12,11 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox;
+namespace rox\action;
+
+use \rox\Rox;
+use \rox\Inflector;
+use \rox\Router;
 
 /**
  * Controller
