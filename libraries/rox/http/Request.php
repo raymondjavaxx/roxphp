@@ -101,8 +101,18 @@ class Request {
 	 * 
 	 * @return string
 	 */
-	public function getMethod() {
+	public function method() {
 		return $this->getServer('REQUEST_METHOD');
+	}
+
+	/**
+	 * Check if the request method matches a given HTTP method
+	 *
+	 * @param string $method 
+	 * @return boolean
+	 */
+	public function is($method) {
+		return (strcmp($this->method(), $method) === 0);
 	}
 
 	/**
@@ -111,7 +121,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isPost() {
-		return $this->getMethod() == 'POST';
+		return $this->is('POST');
 	}
 
 	/**
@@ -120,7 +130,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isGet() {
-		return $this->getMethod() == 'GET';
+		return $this->is('GET');
 	}
 
 	/**
@@ -129,7 +139,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isPut() {
-		return $this->getMethod() == 'PUT';
+		return $this->is('PUT');
 	}
 
 	/**
@@ -138,7 +148,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isDelete() {
-		return $this->getMethod() == 'DELETE';
+		return $this->is('DELETE');
 	}
 
 	/**
@@ -159,14 +169,4 @@ class Request {
 		$ssl = $this->getServer('HTTPS');
 		return $ssl === true || $ssl == 'on';
 	}
-
-	/**
-	 * Detects iPhone/iPod touch
-	 * 
-	 * @return boolean
-	 */
-	public function isIphone() {
-		return preg_match('/iP[hone|od]/', (string)$this->headers['user-agent']) === 1;
-	}
-
 }

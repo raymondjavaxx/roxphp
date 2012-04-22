@@ -50,7 +50,7 @@ class Route {
 
 		if (isset($this->config['options']['via'])
 			&& $request !== null
-			&& $this->config['options']['via'] != $request->getMethod()) {
+			&& $this->config['options']['via'] != $request->method()) {
 			return false;
 		}
 
