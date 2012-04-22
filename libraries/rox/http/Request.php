@@ -14,6 +14,9 @@
 
 namespace rox\http;
 
+use \rox\http\request\ParamCollection;
+use \rox\http\request\ServerParamCollection;
+
 /**
  * Request
  *
@@ -27,6 +30,15 @@ class Request {
 	 * @var array
 	 */
 	public $data = array();
+
+	public $server;
+
+	public $headers;
+
+	public function __construct() {
+		$this->server = new ServerParamCollection($_SERVER);
+		$this->headers = new ParamCollection($this->server->getHeaders());
+	}
 
 	/**
 	 * Retrieves request data
@@ -80,12 +92,8 @@ class Request {
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function getServer($key = null, $default = null) {
-		if ($key === null) {
-			return $_SERVER;
-		}
-
-		return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;		
+	public function getServer($key, $default = null) {
+		return isset($this->server[$key]) ? $this->server[$key] : $default;
 	}
 
 	/**
@@ -139,7 +147,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isAjax() {
-		return $this->getServer('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest';
+		return $this->headers['x-requested-with'] === 'XMLHttpRequest';
 	}
 
 	/**
@@ -158,7 +166,7 @@ class Request {
 	 * @return boolean
 	 */
 	public function isIphone() {
-		return preg_match('/iP[hone|od]/', $this->getServer('HTTP_USER_AGENT', '')) === 1;
+		return preg_match('/iP[hone|od]/', (string)$this->headers['user-agent']) === 1;
 	}
 
 }
