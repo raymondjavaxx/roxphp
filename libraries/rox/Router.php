@@ -31,6 +31,19 @@ class Router {
 	}
 
 	/**
+	 * Nicer version of Router::connect()
+	 *
+	 * @param string $method HTTP method
+	 * @param string $template URI template
+	 * @param string $params
+	 * @param string $options
+	 * @return void
+	 */
+	public static function on($method, $template, $params, $options = array()) {
+		static::connect($template, $params, $options + array('via' => $method));
+	}
+
+	/**
 	 * Connects a route
 	 *
 	 * @param string $template 
