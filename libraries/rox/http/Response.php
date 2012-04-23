@@ -14,8 +14,6 @@
 
 namespace rox\http;
 
-use \rox\Exception;
-
 /**
  * HTTP Response class
  *
@@ -38,7 +36,7 @@ class Response {
 	public $status = 200;
 
 	/**
-	 * Http headers
+	 * HTTP headers
 	 *
 	 * @var string
 	 */
@@ -49,8 +47,14 @@ class Response {
 	 *
 	 * @var string
 	 */
-	public $body;
+	public $body = '';
 
+	/**
+	 * HTTP Status-Codes/Reason-Phrases
+	 *
+	 * @var array
+	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1.1
+	 */
 	protected $_statuses = array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -102,12 +106,24 @@ class Response {
 		505 => 'HTTP Version Not Supported'
 	);
 
+	/**
+	 * Adds a header to be sent when flushing out the response to the client
+	 *
+	 * @param string $name 
+	 * @param string $value
+	 * @return void
+	 */
 	public function header($name, $value) {
 		$this->headers[$name] = $value;
 	}
 
+	/**
+	 * Flushes the response to the client
+	 *
+	 * @return void
+	 */
 	public function render() {
-		header($this->_statusHeader(), true);
+		header($this->_statusLine(), true);
 
 		foreach ($this->headers as $key => $value) {
 			$header = "{$key}: {$value}";
@@ -117,7 +133,14 @@ class Response {
 		echo $this->body;
 	}
 
-	protected function _statusHeader() {
+	/**
+	 * Generates the HTTP Status-Line
+	 *
+	 * @return string
+	 * @throws \rox\http\Exception
+	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1
+	 */
+	protected function _statusLine() {
 		if (!isset($this->_statuses[$this->status])) {
 			throw new Exception('Invalid status code');
 		}
