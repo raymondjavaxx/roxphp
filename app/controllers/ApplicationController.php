@@ -25,4 +25,13 @@ abstract class ApplicationController extends \rox\action\Controller {
 	 * @var array
 	 */
 	public $helpers = array('Form', 'Html', 'Pagination');
+
+	/**
+	 * Called before the action gets invoked
+	 *
+	 * @return void
+	 */
+	public function beforeFilter() {
+		# code...
+	}
 }
