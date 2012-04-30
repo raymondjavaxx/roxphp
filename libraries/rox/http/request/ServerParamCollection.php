@@ -19,7 +19,7 @@ class ServerParamCollection extends ParamCollection {
 	public function getHeaders() {
 		$headers = array();
 
-		foreach ($_SERVER as $key => $value) {
+		foreach ($this->_data as $key => $value) {
 			if (strpos($key, 'HTTP_') === 0) {
 				$header = str_replace('_', '-', strtolower(substr($key, 5)));
 				$headers[$header] = $value;
