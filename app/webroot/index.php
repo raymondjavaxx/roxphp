@@ -19,4 +19,5 @@ use \rox\action\Dispatcher;
 use \rox\http\Request;
 
 $dispatcher = new Dispatcher;
-$dispatcher->dispatch(Request::fromGlobals());
+$response = $dispatcher->dispatch(Request::fromGlobals());
+$response->render();

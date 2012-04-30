@@ -29,6 +29,7 @@ class Dispatcher {
 	 * Dispatches an HTTP request
 	 *
 	 * @param \rox\http\Request $request
+	 * @return \rox\http\Response
 	 * @throws \rox\http\DispatcherException
 	 */
 	public function dispatch(Request $request) {
@@ -60,7 +61,7 @@ class Dispatcher {
 		$controller->render();
 		$controller->afterFilter();
 
-		$controller->response->render();
+		return $controller->response;
 	}
 
 	/**
