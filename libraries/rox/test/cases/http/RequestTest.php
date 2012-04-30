@@ -38,15 +38,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testIsAjax() {
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertTrue($request->isAjax());
 
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'randomthing';
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertFalse($request->isAjax());
 
 		unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-		$request = new Request;
+		$request = Request::fromGlobals();
 		$this->assertFalse($request->isAjax());
 	}
 
