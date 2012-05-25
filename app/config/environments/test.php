@@ -1,0 +1,3 @@
+<?php
+
+// Testing specific configuration

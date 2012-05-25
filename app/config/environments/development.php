@@ -1,0 +1,3 @@
+<?php
+
+// Development specific configuration

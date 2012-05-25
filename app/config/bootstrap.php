@@ -54,6 +54,7 @@ require ROX_FRAMEWORK_PATH . '/Loader.php';
 \rox\Loader::register();
 
 // Load DB configuration file and init
+require ROX_APP_PATH . '/config/environment.php';
 require ROX_APP_PATH . '/config/database.php';
 require ROX_APP_PATH . '/config/routes.php';
 require ROX_APP_PATH . '/config/init.php';

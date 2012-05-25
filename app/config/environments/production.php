@@ -1,0 +1,3 @@
+<?php
+
+// Production specific configuration

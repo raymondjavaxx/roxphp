@@ -1,0 +1,3 @@
+<?php
+
+// Staging specific configuration
