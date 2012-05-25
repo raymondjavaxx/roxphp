@@ -54,7 +54,7 @@ class Normalizer {
 		if (!empty($raw)) {
 			$class = self::$_config['decoders'][$contentType];
 			$decoder = new $class;
-			$request->data = new ParamCollection($decoder->decode($body));
+			$request->data = new ParamCollection($decoder->decode($raw));
 		}
 	}
 }
