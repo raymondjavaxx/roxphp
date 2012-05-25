@@ -180,7 +180,11 @@ class Request {
 	 * @return mixed
 	 * @deprecated
 	 */
-	public function data($key, $default = null) {
+	public function data($key = null, $default = null) {
+		if ($key === null) {
+			return $this->data->all();
+		}
+
 		return $this->data->get($key, $default);
 	}
 

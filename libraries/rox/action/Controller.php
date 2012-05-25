@@ -113,6 +113,7 @@ class Controller {
 		$viewName = $this->params['action'];
 
 		$view = new \rox\template\View($this->_viewVars);
+		$view->response = $this->response;
 		$view->params = $this->params;
 
 		$this->response->body = $view->render($viewPath, $viewName, $this->layout);

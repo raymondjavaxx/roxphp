@@ -23,6 +23,8 @@ use rox\Rox;
  */
 class View {
 
+	public $response;
+
 	public $params = array('extension' => 'html');
 
 	protected $_vars = array();
