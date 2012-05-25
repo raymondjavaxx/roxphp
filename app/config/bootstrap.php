@@ -45,9 +45,11 @@ set_include_path(implode(PATH_SEPARATOR, array(
 // Set error reporting level
 error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
 
-// Load and set the exception handler
-require ROX_FRAMEWORK_PATH . '/exception/Handler.php';
-\rox\exception\Handler::register();
+if (PHP_SAPI !== 'cli') {
+	// Load and set the exception handler
+	require ROX_FRAMEWORK_PATH . '/exception/Handler.php';
+	\rox\exception\Handler::register();
+}
 
 // Load and register the autoloader
 require ROX_FRAMEWORK_PATH . '/Loader.php';
