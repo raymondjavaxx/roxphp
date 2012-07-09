@@ -13,12 +13,6 @@
  */
 
 /**
- * Determines wheter debug mode is enabled. On debug mode, errors
- * and exceptions are displayed to the user.
- */
-define('ROX_DEBUG', true);
-
-/**
  * Path to application folder
  */
 define('ROX_APP_PATH', dirname(__DIR__));
@@ -43,7 +37,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 // Set error reporting level
-error_reporting(ROX_DEBUG ? E_ALL | E_STRICT : 0);
+error_reporting(0);
 
 if (PHP_SAPI !== 'cli') {
 	// Load and set the exception handler
