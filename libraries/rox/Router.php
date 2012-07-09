@@ -152,56 +152,36 @@ class Router {
 			$controller = ($options['namespace'] === false) ? $name : "{$options['namespace']}_{$name}";
 		}
 
-		if (isset($whitelist['add'])) {
-			self::connect("/{$resource}", array(
-				'controller' => $controller,
-				'action' => 'add',
-				'namespace' => $options['namespace']
-			), array( 'via' => 'POST'));
+		$map = array(
+			'add' => array(
+				array('method' => 'GET', 'template' => "/{$resource}/new"),
+				array('method' => 'POST', 'template' => "/{$resource}")
+			),
+			'index' => array(
+				array('method' => 'GET', 'template' => "/{$resource}")
+			),
+			'edit' => array(
+				array('method' => 'GET', 'template' => "/{$resource}/:id/edit"),
+				array('method' => 'PUT', 'template' => "/{$resource}/:id")
+			),
+			'delete' => array(
+				array('method' => 'DELETE', 'template' => "/{$resource}/:id")
+			),
+			'view' => array(
+				array('method' => 'GET', 'template' => "/{$resource}/:id")
+			),
+		);
 
-			self::connect("/{$resource}/new", array(
-				'controller' => $controller,
-				'action' => 'add',
-				'namespace' => $options['namespace']
-			), array('via' => 'GET'));
-		}
-
-		if (isset($whitelist['index'])) {
-			self::connect("/{$resource}", array(
-				'controller' => $controller,
-				'action' => 'index',
-				'namespace' => $options['namespace']
-			));
-		}
-
-		if (isset($whitelist['edit'])) {
-			self::connect("/{$resource}/:id/edit", array(
-				'controller' => $controller,
-				'action' => 'edit',
-				'namespace' => $options['namespace']
-			));
-
-			self::connect("/{$resource}/:id", array(
-				'controller' => $controller,
-				'action' => 'edit',
-				'namespace' => $options['namespace']
-			), array('via' => 'PUT'));
-		}
-
-		if (isset($whitelist['delete'])) {
-			self::connect("/{$resource}/:id", array(
-				'controller' => $controller,
-				'action' => 'delete',
-				'namespace' => $options['namespace']
-			), array('via' => 'DELETE'));
-		}
-
-		if (isset($whitelist['view'])) {
-			self::connect("/{$resource}/:id", array(
-				'controller' => $controller,
-				'action' => 'view',
-				'namespace' => $options['namespace']
-			));
+		foreach ($map as $action => $specs) {
+			if (isset($whitelist[$action])) {
+				foreach ($specs as $spec) {
+					static::on($spec['method'], $spec['template'], array(
+						'controller' => $controller,
+						'action'     => $action,
+						'namespace'  => $options['namespace']
+					));
+				}
+			}
 		}
 	}
 
