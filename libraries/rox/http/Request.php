@@ -197,7 +197,7 @@ class Request {
 	 * @deprecated
 	 */
 	public function getPost($key = null, $default = null) {
-		$this->data($key, $default);
+		return $this->data($key, $default);
 	}
 
 	/**
