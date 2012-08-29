@@ -21,7 +21,7 @@ namespace rox;
  */
 class Validator {
 
-	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|asia|cat|coop|edu|int|pro|tel|travel))$/i';
+	const VALID_EMAIL_PATTERN = '/^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|asia|cat|coop|edu|int|pro|tel|travel|xxx))$/i';
 
 	/**
 	 * Validator::regexMatch()

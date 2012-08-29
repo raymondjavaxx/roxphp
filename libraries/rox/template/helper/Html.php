@@ -79,16 +79,33 @@ class Html extends \rox\template\Helper {
 	}
 
 	/**
-	 * undocumented function
+	 * Helper method for including JavaScript.
 	 *
-	 * @param string $file 
+	 * @param string $file The name of the file without the extension and relative to webroot/js folder.
+	 * @param array $options
+	 *              - `'defer'`: Include the `defer` HTML5 attribute (defaults to `false`)
+	 *              - `'async'`: Include the `async` HTML5 attribute (defaults to `false`)
 	 * @return string
 	 */
-	public function javascript($file) {
-		return $this->_tag('script', '', array(
+	public function javascript($file, $options = array()) {
+		$defaults = array('defer' => false, 'async' => false);
+		$options += $defaults;
+
+		$attributes = array();
+		if ($options['defer']) {
+			$attributes['defer'] = 'defer';
+		}
+
+		if ($options['async']) {
+			$attributes['async'] = 'async';
+		}
+
+		$attributes = array_merge(array(
 			'type' => 'text/javascript',
 			'src' => Router::url('/js/' . $file . '.js')
-		));
+		), $attributes);
+
+		return $this->_tag('script', '', $attributes);
 	}
 
 	/**
