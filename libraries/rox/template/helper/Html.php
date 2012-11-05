@@ -100,11 +100,7 @@ class Html extends \rox\template\Helper {
 			$attributes['async'] = 'async';
 		}
 
-		$attributes = array_merge(array(
-			'type' => 'text/javascript',
-			'src' => Router::url('/js/' . $file . '.js')
-		), $attributes);
-
+		$attributes = array_merge(array('src' => Router::url('/js/' . $file . '.js')), $attributes);
 		return $this->_tag('script', '', $attributes);
 	}
 
