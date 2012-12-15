@@ -46,9 +46,9 @@ if (PHP_SAPI !== 'cli') {
 }
 
 // Treat errors as exceptions
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-	throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
-});
+// set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+// 	throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
+// });
 
 // Load and register the autoloader
 require ROX_FRAMEWORK_PATH . '/Loader.php';
