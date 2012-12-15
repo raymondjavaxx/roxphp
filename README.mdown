@@ -1,3 +1,20 @@
+# RoxPHP
+
 RoxPHP is a minimalist web application framework for PHP5 that allows you to quickly build web apps. The framework follows the [MVC architecture](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) and comes with an implementation of the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record) inspired by Ruby on Rails' [activerecord](http://github.com/rails/rails/tree/master/activerecord/).
 
 [![Build Status](https://secure.travis-ci.org/raymondjavaxx/roxphp.png)](http://travis-ci.org/raymondjavaxx/roxphp)
+
+## Requirements
+
+* PHP 5.3 or greater
+* Apache 2 mod_Rewrite
+* MySQL 5
+
+## Links
+
+* [Getting started guide](https://github.com/raymondjavaxx/roxphp/wiki/Getting-started)
+* [Contributors](https://github.com/raymondjavaxx/roxphp/graphs/contributors)
+
+## License
+
+Licensed under [The MIT License](https://github.com/raymondjavaxx/roxphp/blob/master/libraries/rox/LICENSE.txt).
