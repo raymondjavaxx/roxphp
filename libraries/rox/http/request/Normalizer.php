@@ -31,30 +31,23 @@ class Normalizer {
 		)
 	);
 
-	protected static $_knownTypes = array(
-		'multipart/form-data',
-		'application/x-www-form-urlencoded'
-	);
-
 	public static function config($config) {
 		self::$_config = array_merge(self::$_config, $config);
 	}
 
 	public static function normalize(Request $request) {
 		list($contentType) = explode(';', $request->server->get('CONTENT_TYPE', ''));
-		if (empty($contentType) || in_array($contentType, static::$_knownTypes)) {
+		if (empty($contentType)) {
 			return false;
 		}
 
-		if (!isset(static::$_config['decoders'][$contentType])) {
-			throw new Exception("Dispatcher doesn't know how to parse {$contentType}");
-		}
-
-		$raw = $request->rawBody();
-		if (!empty($raw)) {
-			$class = self::$_config['decoders'][$contentType];
-			$decoder = new $class;
-			$request->data = new ParamCollection($decoder->decode($raw));
+		if (isset(static::$_config['decoders'][$contentType])) {
+			$raw = $request->rawBody();
+			if (!empty($raw)) {
+				$class = self::$_config['decoders'][$contentType];
+				$decoder = new $class;
+				$request->data = new ParamCollection($decoder->decode($raw));
+			}
 		}
 	}
 }
