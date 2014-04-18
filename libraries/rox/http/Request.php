@@ -164,6 +164,11 @@ class Request {
 	 * @return boolean
 	 */
 	public function isSSL() {
+		if ($this->headers['x-forwarded-proto'] === 'https') {
+			// SSL terminated by load balancer/reverse proxy
+			return true;
+		}
+
 		$ssl = $this->server->get('HTTPS');
 		return $ssl === true || $ssl === 'on';
 	}

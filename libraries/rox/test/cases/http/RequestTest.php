@@ -68,4 +68,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 		$request = Request::fromGlobals();
 		$this->assertFalse($request->isSSL());
 	}
+
+	public function testIsSSLOnReverseProxy() {
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+		$request = Request::fromGlobals();
+		$this->assertTrue($request->isSSL());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+		$request = Request::fromGlobals();
+		$this->assertFalse($request->isSSL());
+	}
 }
