@@ -1,13 +1,26 @@
-$(document).ready(function() {
-	$('a.delete').click(function(){
-		if (confirm('Are you sure you want to delete this?')) {
-			$('<form method="post"><input type="hidden" name="_method" value="DELETE"/></form>')
-				.attr('action', this.href)
-				.appendTo('body')
-				.submit();
-			return false;
-		}
+(function () {
+	var deleteLinkHandler = function (e) {
+		e.preventDefault();
 
-		return false;
+		var form = document.createElement('form');
+		form.method = 'post';
+		form.action = this.href;
+
+		var input = document.createElement('input');
+		input.type = 'hidden';
+		input.name = '_method';
+		input.value = 'DELETE';
+
+		form.appendChild(input);
+
+		document.getElementsByTagName('body')[0].appendChild(form);
+		form.submit();
+	};
+
+	document.addEventListener('DOMContentLoaded', function () {
+		var links = document.querySelectorAll('a.delete')
+		for (var i = 0; i < links.length; i++) {
+			links[i].addEventListener('click', deleteLinkHandler);
+		}
 	});
-});
+})();
