@@ -26,7 +26,7 @@ class DataSource {
 	}
 
 	public function escape($string) {
-		return addslashes($string);
+		return "'" . addslashes($string) . "'";
 	}
 
 	public function lastInsertedID() {

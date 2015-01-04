@@ -14,6 +14,9 @@
 
 namespace rox\active_record;
 
+use \PDO;
+use \PDOException;
+
 /**
  * DataSource
  *
@@ -22,18 +25,11 @@ namespace rox\active_record;
 class DataSource {
 
 	/**
-	 * DB Link Identifier
+	 * Database connection
 	 * 
-	 * @var resource
+	 * @var \DBO
 	 */
-	protected $_link = null;
-
-	/**
-	 * Last result
-	 *
-	 * @var resource
-	 */
-	protected $_result = null;
+	protected $connection;
 
 	/**
 	 * Default connection settings
@@ -44,8 +40,16 @@ class DataSource {
 		'host'     => '127.0.0.1',
 		'username' => 'root',
 		'password' => '',
-		'database' => ''
+		'database' => '',
+		'charset'  => 'utf8'
 	);
+
+	public function dsn() {
+		$database = $this->_settings['database'];
+		$host     = $this->_settings['host'];
+		$charset  = $this->_settings['charset'];
+		return sprintf("mysql:dbname=%s;host=%s;charset=%s", $database, $host, $charset);
+	}
 
 	/**
 	 * Class Constructor
@@ -64,15 +68,13 @@ class DataSource {
 	 * @throws Exception
 	 */
 	public function connect() {
-		$this->_link = mysql_connect($this->_settings['host'],
-			$this->_settings['username'], $this->_settings['password']);
+		$username = $this->_settings['username'];
+		$password = $this->_settings['password'];
 
-		if (false === $this->_link) {
-			throw new Exception('Could not connect to DB server - ' . mysql_error());
-		}
-
-		if (mysql_select_db($this->_settings['database'], $this->_link) == false) {
-			throw new Exception('Could not select DB - ' . mysql_error($this->_link));
+		try {
+			$this->connection = new PDO($this->dsn(), $username, $password);	
+		} catch (PDOException $e) {
+			throw new Exception('Connection failed: ' . $e->getMessage());
 		}
 	}
 
@@ -82,7 +84,12 @@ class DataSource {
 	 * @return boolean
 	 */
 	public function disconnect() {
-		return mysql_close($this->_link);
+		if (is_object($this->connection)) {
+			$this->connection = null;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -91,13 +98,13 @@ class DataSource {
 	 * @return array
 	 */
 	public function listTables() {
-		$result = $this->execute('SHOW TABLES');
-		if (!$result) {
+		$results = $this->connection->query('SHOW TABLES');
+		if (!$results) {
 			return array();
 		}
 
 		$tables = array();
-		while ($row = mysql_fetch_row($result)) {
+		foreach ($results as $row) { 
 			$tables[] = $row[0];
 		}
 
@@ -107,11 +114,11 @@ class DataSource {
 	/**
 	 * DataSource::describe()
 	 *
-	 * @param mixed $table
+	 * @param string $table
 	 * @return array
 	 */
 	public function describe($table) {
-		return $this->query('DESCRIBE ' . $table);
+		return $this->query(sprintf('DESCRIBE `%s`', $table));
 	}
 
 	/**
@@ -153,7 +160,7 @@ class DataSource {
 	 * @return string
 	 */
 	public function escape($value) {
-		return mysql_real_escape_string($value, $this->_link);
+		return $this->connection->quote($value);
 	}
 
 	/**
@@ -163,40 +170,34 @@ class DataSource {
 	 * @return array
 	 */
 	public function query($sql) {
-		$this->_result = $this->execute($sql);
-		if (!$this->_result) {
+		$res = $this->connection->query($sql);
+		if ($res === false) {
 			return array();
 		}
 
-		return $this->fetchAll();
-	}
-
-	/**
-	 * Fetches results of the last query
-	 *
-	 * @return array
-	 */
-	public function fetchAll() {
-		$data = array();
-		while ($_data = mysql_fetch_assoc($this->_result)) {
-			$data[] = $_data;
+		$rows = array();
+		foreach ($res as $row) {
+			$rows[] = $row;
 		}
 
-		return $data;
+		return $rows;
 	}
 
 	/**
 	 * Performs a raw SQL query
 	 *
 	 * @param string $sql
-	 * @return resource
+	 * @return integer
 	 * @throws Exception
 	 */
 	public function execute($sql) {
-		$result = mysql_query($sql, $this->_link);
+		$result = $this->connection->exec($sql);
+
 		if ($result === false) {
-			throw new Exception(mysql_error($this->_link), mysql_errno($this->_link));
+			$info = $this->connection->errorInfo();
+			throw new Exception($info[2], $info[1]);
 		}
+
 		return $result;
 	}
 
@@ -206,7 +207,7 @@ class DataSource {
 	 * @return boolean
 	 */
 	public function beginTransaction() {
-		return $this->execute('BEGIN');
+		return $this->connection->beginTransaction();
 	}
 
 	/**
@@ -215,7 +216,7 @@ class DataSource {
 	 * @return boolean
 	 */
 	public function commitTransaction() {
-		return $this->execute('COMMIT');
+		return $this->connection->commit();
 	}
 
 	/**
@@ -224,7 +225,7 @@ class DataSource {
 	 * @return boolean
 	 */
 	public function rollbackTransaction() {
-		return $this->execute('ROLLBACK');
+		return $this->connection->rollback();
 	}
 
 	/**
@@ -233,16 +234,6 @@ class DataSource {
 	 * @return mixed
 	 */
 	public function lastInsertedID() {
-		$result = $this->query('SELECT LAST_INSERT_ID() AS `id`');
-		return $result[0]['id'];
-	}
-
-	/**
-	 * Returns the number of the affected rows in previous operation
-	 *
-	 * @return integer
-	 */
-	public function affectedRows() {
-		return mysql_affected_rows($this->_link);
+		return $this->connection->lastInsertId();
 	}
 }

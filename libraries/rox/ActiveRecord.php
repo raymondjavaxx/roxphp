@@ -263,8 +263,8 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 			$values = implode(', ', array_values($data));
 			$sql = sprintf("INSERT INTO `%s` (%s) VALUES (%s)", static::_table(), $attributes, $values);
 
-			$dataSource->execute($sql);
-			if ($dataSource->affectedRows() == 1) {
+			$affectedRows = $dataSource->execute($sql);
+			if ($affectedRows == 1) {
 				$this->setId($dataSource->lastInsertedID());
 				$this->_resetModifiedAttributesFlags();
 				$this->_newRecord = false;
@@ -535,9 +535,9 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 		);
 
 		$dataSource = static::datasource();
-		$dataSource->execute($sql);
+		$affectedRows = $dataSource->execute($sql);
 
-		$deleted = $dataSource->affectedRows() > 0;
+		$deleted = $affectedRows > 0;
 		if ($deleted) {
 			$this->_afterDelete();
 		}
@@ -588,7 +588,7 @@ abstract class ActiveRecord extends \rox\ActiveModel {
 			case 'date':
 			case 'datetime':
 			case 'binary':
-				return "'" . static::datasource()->escape($value) . "'";
+				return static::datasource()->escape($value);
 
 			case 'float':
 				return (float)$value;
