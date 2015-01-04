@@ -32,15 +32,15 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase {
 
 	public function testJavascript() {
 		$result = $this->htmlHelper->javascript('test');
-		$matcher = array('tag' => 'script');
-		$this->assertTag($matcher, $result);
+		$expected = '<script src="/folder/js/test.js"></script>';
+		$this->assertEquals($expected, $result);
 
 		$result = $this->htmlHelper->javascript('test', array('defer' => true));
-		$matcher = array('tag' => 'script', 'attributes' => array('defer' => 'defer'));
-		$this->assertTag($matcher, $result);
+		$expected = '<script src="/folder/js/test.js" defer="defer"></script>';
+		$this->assertEquals($expected, $result);
 
 		$result = $this->htmlHelper->javascript('test', array('defer' => true, 'async' => true));
-		$matcher = array('tag' => 'script', 'attributes' => array('defer' => 'defer', 'async' => 'async'));
-		$this->assertTag($matcher, $result);
+		$expected = '<script src="/folder/js/test.js" defer="defer" async="async"></script>';
+		$this->assertEquals($expected, $result);
 	}
 }

@@ -69,60 +69,15 @@ class PaginationTest extends \PHPUnit_Framework_TestCase {
 			'max_items'      => 10
 		));
 
-		$matcher = array(
-			'tag' => 'div',
-			'attributes' => array(
-				'class' => 'my-custom-pagination-class'
-			)
-		);
+		$this->assertContains('<div class="my-custom-pagination-class">', $result);
 
-		$this->assertTag($matcher, $result);
-	
-		// Next page link
-		$matcher = array(
-			'tag' => 'a',
-			'parent' => array('tag' => 'div'),
-			'content' => 'My Prev Label'
-		);
+		$this->assertContains('<a href="?page=2" rel="prev" class="prev-page">My Prev Label</a>', $result);
 
-		$this->assertTag($matcher, $result);
-
-		// Previous page link
-		$matcher = array(
-			'tag' => 'a',
-			'parent' => array('tag' => 'div'),
-			'content' => 'My Next Label'
-		);
-
-		$this->assertTag($matcher, $result);
+		$this->assertContains('<a href="?page=4" rel="next" class="next-page">My Next Label</a>', $result);
 
 		// Last page link
-		$matcher = array(
-			'tag' => 'a',
-			'parent' => array('tag' => 'div'),
-			'content' => '20',
-			'attributes' => array(
-				'href' => '?page=20'
-			)
-		);
+		$this->assertContains('<a href="?page=20">20</a>', $result);
 
-		$this->assertTag($matcher, $result);
-
-		$matcher = array(
-			'tag' => 'div',
-			'child' => array(
-				'tag'     => 'span',
-				'content' => '...',
-			)
-		);
-
-		$this->assertTag($matcher, $result);
-
-		$matcher = array(
-			'tag' => 'a',
-			'content' => '11'
-		);
-
-		$this->assertNotTag($matcher, $result);
+		$this->assertContains('<span>...</span>', $result);
 	}
 }
