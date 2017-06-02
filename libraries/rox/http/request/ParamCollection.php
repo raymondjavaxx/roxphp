@@ -14,39 +14,48 @@
 
 namespace rox\http\request;
 
-class ParamCollection implements \ArrayAccess {
+class ParamCollection implements \ArrayAccess
+{
 
-	protected $_data = array();
+    protected $data = [];
 
-	public function __construct($data) {
-		$this->_data = $data;
-	}
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
 
-	public function all() {
-		return $this->_data;
-	}
+    public function all()
+    {
+        return $this->data;
+    }
 
-	public function get($key, $default = null) {
-		return isset($this->_data[$key]) ? $this->_data[$key] : $default;
-	}
+    public function get($key, $default = null)
+    {
+        return isset($this->data[$key]) ? $this->data[$key] : $default;
+    }
 
-	public function set($key, $value) {
-		$this->_data[$key] = $value;
-	}
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
 
-	public function offsetExists($offset) {
-		return isset($this->_data[$offset]);
-	}
+    public function offsetExists($offset)
+    {
+        return isset($this->data[$offset]);
+    }
 
-	public function offsetGet($offset) {
-		return $this->get($offset);
-	}
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
 
-	public function offsetSet($offset, $value) {
-		$this->set($offset, $value);
-	}
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
 
-	public function offsetUnset($offset) {
-		unset($this->_data[$offset]);
-	}
+    public function offsetUnset($offset)
+    {
+        unset($this->data[$offset]);
+    }
 }

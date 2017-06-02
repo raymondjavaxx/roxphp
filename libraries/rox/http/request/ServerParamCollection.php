@@ -14,32 +14,33 @@
 
 namespace rox\http\request;
 
-class ServerParamCollection extends ParamCollection {
+class ServerParamCollection extends ParamCollection
+{
+    /**
+     * Returns all HTTP request headers
+     *
+     * Returned headers are normalized to lowercase:
+     *
+     *     array(
+     *         'content-type' => 'application/json',
+     *         'user-agent' => 'Mozilla/5 ...',
+     *         'accept-language' => 'en-us,en;q=0.5',
+     *         ...
+     *     )
+     *
+     * @return associative array containing HTTP request headers and their values
+     */
+    public function getHeaders()
+    {
+        $headers = [];
 
-	/**
-	 * Returns all HTTP request headers
-	 *
-	 * Returned headers are normalized to lowercase:
-	 *
-	 *     array(
-	 *         'content-type' => 'application/json',
-	 *         'user-agent' => 'Mozilla/5 ...',
-	 *         'accept-language' => 'en-us,en;q=0.5',
-	 *         ...
-	 *     )
-	 *
-	 * @return associative array containing HTTP request headers and their values
-	 */
-	public function getHeaders() {
-		$headers = array();
+        foreach ($this->_data as $key => $value) {
+            if (strpos($key, 'HTTP_') === 0) {
+                $header = str_replace('_', '-', strtolower(substr($key, 5)));
+                $headers[$header] = $value;
+            }
+        }
 
-		foreach ($this->_data as $key => $value) {
-			if (strpos($key, 'HTTP_') === 0) {
-				$header = str_replace('_', '-', strtolower(substr($key, 5)));
-				$headers[$header] = $value;
-			}
-		}
-
-		return $headers;
-	}
+        return $headers;
+    }
 }

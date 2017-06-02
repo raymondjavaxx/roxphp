@@ -14,6 +14,7 @@
 
 namespace rox\http\request;
 
-class Exception extends \rox\Exception {
-}
+class Exception extends \rox\Exception
+{
 
+}
