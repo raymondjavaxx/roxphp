@@ -15,15 +15,9 @@
 use \rox\Router;
 
 // Connect the homepage
-Router::connectRoot(array('controller' => 'pages', 'action' => 'home'));
+Router::connectRoot(['controller' => 'pages', 'action' => 'home']);
 
 // Custom routes
 
-// Default routes
-Router::on('GET', '/:controller', array('action' => 'index'));
-Router::on('GET', '/:controller/new', array('action' => 'add'));
-Router::on('POST','/:controller', array('action' => 'add'));
-Router::on('GET', '/:controller/:id', array('action' => 'view'));
-Router::on('GET', '/:controller/:id/edit', array('action' => 'edit'));
-Router::on('PUT', '/:controller/:id', array('action' => 'edit'));
-Router::on('DELETE', '/:controller/:id', array('action' => 'delete'));
+// Router::on('GET', '/articles', ['controller' => 'articles', action' => 'index']);
+// Router::on('GET', '/articles/:id', ['controller' => 'articles', action' => 'view']);

@@ -40,7 +40,9 @@ class Dispatcher {
 			throw new DispatcherException('No route matches request', 404);
 		}
 
-		$this->_loadController($params);
+		if (!class_exists($params['controller_class'])) {
+			throw new DispatcherException("Missing controller class {$params['controller_class']}", 404);
+		}
 
 		$response = new Response;
 
@@ -64,24 +66,4 @@ class Dispatcher {
 		return $controller->response;
 	}
 
-	/**
-	 * Loads controller by class name
-	 *
-	 * @param string $name
-	 * @throws \rox\http\DispatcherException
-	 */
-	protected function _loadController($params) {
-		$path = ROX_APP_PATH . "/controllers";
-		if (isset($params['namespace']) && $params['namespace']) {
-			$path .= "/{$params['namespace']}/{$params['controller_class']}.php";
-		} else {
-			$path .= "/{$params['controller_class']}.php";
-		}
-
-		if (!file_exists($path)) {
-			throw new DispatcherException('Missing controller file' . $path, 404);
-		}
-
-		require_once $path;
-	}
 }

@@ -12,17 +12,29 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace App\Controllers;
+
 /**
- * PagesController
+ * Application Controller
  *
  * @package App
  */
-class PagesController extends ApplicationController {
+abstract class ApplicationController extends \rox\action\Controller
+{
+	/**
+	 * Commonly used helpers
+	 *
+	 * @var array
+	 */
+	public $helpers = ['Form', 'Html', 'Pagination'];
 
 	/**
-	 * Renders the homepage
+	 * Called before the action gets invoked
+	 *
+	 * @return void
 	 */
-	public function homeAction() {
-		// just render it!
+	public function beforeFilter()
+	{
+		# code...
 	}
 }

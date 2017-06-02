@@ -89,7 +89,7 @@ class Controller {
 			$this->response = $config['response'];
 		}
 
-		$vars = get_class_vars('ApplicationController');
+		$vars = get_class_vars('App\\Controllers\\ApplicationController');
 		$this->helpers = array_merge($vars['helpers'], $this->helpers);
 	}
 

@@ -1,0 +1,9 @@
+{
+    "name": "app",
+    "autoload": {
+        "psr-0": {
+            "App\\": "app",
+            "rox": "libraries"
+        }
+    }
+}

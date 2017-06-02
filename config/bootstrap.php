@@ -15,33 +15,14 @@
 /**
  * Path to application folder
  */
-define('ROX_APP_PATH', dirname(__DIR__));
-
-define('ROX_LIBRARIES_PATH', dirname(ROX_APP_PATH).'/libraries');
-
-/**
- * Path to framework folder
- */
-define('ROX_FRAMEWORK_PATH', ROX_LIBRARIES_PATH.'/rox');
-
-// Set include paths
-set_include_path(implode(PATH_SEPARATOR, array(
-	ROX_APP_PATH . '/models',
-	ROX_APP_PATH . '/controllers',
-	ROX_APP_PATH . '/helpers',
-	ROX_APP_PATH . '/mailers',
-	ROX_APP_PATH . '/libraries',
-	ROX_LIBRARIES_PATH,
-	// uncoment the line below preserve default include paths
-	// get_include_path()
-)));
+define('ROX_APP_PATH', dirname(__DIR__) . '/app');
 
 // Set error reporting level
 error_reporting(0);
 
+require dirname(__DIR__) . '/vendor/autoload.php';
+
 if (PHP_SAPI !== 'cli') {
-	// Load and set the exception handler
-	require ROX_FRAMEWORK_PATH . '/exception/Handler.php';
 	\rox\exception\Handler::register();
 }
 
@@ -49,10 +30,6 @@ if (PHP_SAPI !== 'cli') {
 // set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 // 	throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
 // });
-
-// Load and register the autoloader
-require ROX_FRAMEWORK_PATH . '/Loader.php';
-\rox\Loader::register();
 
 // Load DB configuration file and init
 require ROX_APP_PATH . '/config/environment.php';

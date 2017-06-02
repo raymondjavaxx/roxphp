@@ -191,7 +191,7 @@ class Router {
 			$params += $defaults;
 
 			$params['action_method'] = Inflector::lowerCamelize($params['action']) . 'Action';
-			$params['controller_class'] = Inflector::camelize($params['controller']) . 'Controller';
+			$params['controller_class'] = 'App\\Controllers\\' . Inflector::camelize($params['controller']) . 'Controller';
 
 			return $params;
 		}
