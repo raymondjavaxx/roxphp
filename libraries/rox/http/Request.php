@@ -26,6 +26,13 @@ use \rox\http\request\Normalizer;
 class Request {
 
 	/**
+	 * Query params
+	 *
+	 * @var \rox\http\request\ParamCollection
+	 */
+	public $query;
+
+	/**
 	 * Request params
 	 *
 	 * @var \rox\http\request\ParamCollection
@@ -61,8 +68,8 @@ class Request {
 	 * @param array $server 
 	 */
 	public function __construct($query = array(), $data = array(), $server = array()) {
-		$this->query   = new ServerParamCollection($query);
-		$this->data    = new ServerParamCollection($data);
+		$this->query   = new ParamCollection($query);
+		$this->data    = new ParamCollection($data);
 		$this->server  = new ServerParamCollection($server);
 		$this->headers = new ParamCollection($this->server->getHeaders());
 	}
