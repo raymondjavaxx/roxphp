@@ -34,7 +34,7 @@ class ServerParamCollection extends ParamCollection
     {
         $headers = [];
 
-        foreach ($this->_data as $key => $value) {
+        foreach ($this->data as $key => $value) {
             if (strpos($key, 'HTTP_') === 0) {
                 $header = str_replace('_', '-', strtolower(substr($key, 5)));
                 $headers[$header] = $value;
