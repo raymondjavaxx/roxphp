@@ -27,7 +27,7 @@ class DataSource {
 	/**
 	 * Database connection
 	 * 
-	 * @var \DBO
+	 * @var \PDO
 	 */
 	protected $connection;
 
