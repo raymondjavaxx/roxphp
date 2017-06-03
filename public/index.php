@@ -16,7 +16,7 @@
 require dirname(__DIR__) . '/config/bootstrap.php';
 
 use \Rox\Action\Dispatcher;
-use \rox\http\Request;
+use \Rox\Http\Request;
 
 $dispatcher = new Dispatcher;
 $response = $dispatcher->dispatch(Request::fromGlobals());

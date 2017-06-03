@@ -79,8 +79,8 @@ class Controller
     /**
      * Constructor
      *
-     * @param array $config
-     * @return void
+     * @param \rox\http\Request $request  The HTTP request
+     * @param \rox\http\Response $response  The mutable HTTP response
      */
     public function __construct(Request $request, Response $response)
     {
@@ -168,7 +168,7 @@ class Controller
      * @param string $default
      */
     protected function redirectToReferer($default = '/') {
-        $url = $this->request->headers('referer', $default);
+        $url = $this->request->headers->get('referer', $default);
         $this->redirect($url);
     }
 

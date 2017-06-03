@@ -15,8 +15,8 @@
 namespace Rox\Action;
 
 use \rox\Router;
-use \rox\http\Request;
-use \rox\http\Response;
+use \Rox\Http\Request;
+use \Rox\Http\Response;
 
 /**
  * Dispatcher

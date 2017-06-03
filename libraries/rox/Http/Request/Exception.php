@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\http;
+namespace Rox\Http\Request;
 
 class Exception extends \rox\Exception
 {

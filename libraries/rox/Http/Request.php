@@ -12,11 +12,11 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\http;
+namespace Rox\Http;
 
-use \rox\http\request\ParamCollection;
-use \rox\http\request\ServerParamCollection;
-use \rox\http\request\Normalizer;
+use \Rox\Http\Request\ParamCollection;
+use \Rox\Http\Request\ServerParamCollection;
+use \Rox\Http\Request\Normalizer;
 
 /**
  * Request
@@ -28,28 +28,28 @@ class Request
     /**
      * Query params
      *
-     * @var \rox\http\request\ParamCollection
+     * @var \Rox\Http\Request\ParamCollection
      */
     public $query;
 
     /**
      * Request params
      *
-     * @var \rox\http\request\ParamCollection
+     * @var \Rox\Http\Request\ParamCollection
      */
     public $data;
 
     /**
      * Server params
      *
-     * @var \rox\http\request\ServerParamCollection
+     * @var \Rox\Http\Request\ServerParamCollection
      */
     public $server;
 
     /**
      * HTTP request headers
      *
-     * @var \rox\http\request\ParamCollection
+     * @var \Rox\Http\Request\ParamCollection
      */
     public $headers;
 
@@ -67,7 +67,7 @@ class Request
      * @param array $data 
      * @param array $server 
      */
-    public function __construct($query = array(), $data = array(), $server = array()) {
+    public function __construct(array $query = [], array $data = [], array $server = []) {
         $this->query   = new ParamCollection($query);
         $this->data    = new ParamCollection($data);
         $this->server  = new ServerParamCollection($server);
@@ -79,10 +79,9 @@ class Request
      *
      * @return \rox\http\Request
      */
-    public static function fromGlobals() {
-        $request = new static($_GET, $_POST, $_SERVER);
-        Normalizer::normalize($request);
-        return $request;
+    public static function fromGlobals()
+    {
+        return new static($_GET, $_POST, $_SERVER);
     }
 
     /**
@@ -90,7 +89,8 @@ class Request
      * 
      * @return string
      */
-    public function method() {
+    public function method()
+    {
         if ($this->method === null) {
             $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
 
@@ -107,7 +107,8 @@ class Request
      *
      * @return string
      */
-    public function rawBody() {
+    public function rawBody()
+    {
         return file_get_contents('php://input');
     }
 
@@ -117,7 +118,8 @@ class Request
      * @param string $method 
      * @return boolean
      */
-    public function is($method) {
+    public function is($method)
+    {
         return (strcmp($this->method(), $method) === 0);
     }
 
@@ -126,7 +128,8 @@ class Request
      * 
      * @return boolean
      */
-    public function isPost() {
+    public function isPost()
+    {
         return $this->is('POST');
     }
 
@@ -135,7 +138,8 @@ class Request
      * 
      * @return boolean
      */
-    public function isGet() {
+    public function isGet()
+    {
         return $this->is('GET');
     }
 
@@ -144,7 +148,8 @@ class Request
      *
      * @return boolean
      */
-    public function isPut() {
+    public function isPut()
+    {
         return $this->is('PUT');
     }
 
@@ -153,7 +158,8 @@ class Request
      *
      * @return boolean
      */
-    public function isDelete() {
+    public function isDelete()
+    {
         return $this->is('DELETE');
     }
 
@@ -162,7 +168,8 @@ class Request
      * 
      * @return boolean
      */
-    public function isAjax() {
+    public function isAjax()
+    {
         return $this->headers['x-requested-with'] === 'XMLHttpRequest';
     }
 
@@ -171,7 +178,8 @@ class Request
      * 
      * @return boolean
      */
-    public function isSSL() {
+    public function isSSL()
+    {
         if ($this->headers['x-forwarded-proto'] === 'https') {
             // SSL terminated by load balancer/reverse proxy
             return true;
