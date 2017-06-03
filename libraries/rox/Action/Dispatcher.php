@@ -12,7 +12,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace rox\action;
+namespace Rox\Action;
 
 use \rox\Router;
 use \rox\http\Request;
@@ -23,8 +23,8 @@ use \rox\http\Response;
  *
  * @package Rox
  */
-class Dispatcher {
-
+class Dispatcher
+{
 	/**
 	 * Dispatches an HTTP request
 	 *
@@ -32,7 +32,8 @@ class Dispatcher {
 	 * @return \rox\http\Response
 	 * @throws \rox\http\DispatcherException
 	 */
-	public function dispatch(Request $request) {
+	public function dispatch(Request $request)
+	{
 		$route = $request->query->get('route', '/');
 
 		$params = Router::parseUrl($route, $request);
@@ -44,12 +45,7 @@ class Dispatcher {
 			throw new DispatcherException("Missing controller class {$params['controller_class']}", 404);
 		}
 
-		$response = new Response;
-
-		$controller = new $params['controller_class'](array(
-			'request' => $request,
-			'response' => $response
-		));
+		$controller = new $params['controller_class']($request, new Response);
 
 		$controller->params = $params;
 

@@ -19,7 +19,7 @@ namespace App\Controllers;
  *
  * @package App
  */
-abstract class ApplicationController extends \rox\action\Controller
+abstract class ApplicationController extends \Rox\Action\Controller
 {
 	/**
 	 * Commonly used helpers

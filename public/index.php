@@ -15,7 +15,7 @@
 // include the bootstrap file
 require dirname(__DIR__) . '/config/bootstrap.php';
 
-use \rox\action\Dispatcher;
+use \Rox\Action\Dispatcher;
 use \rox\http\Request;
 
 $dispatcher = new Dispatcher;
