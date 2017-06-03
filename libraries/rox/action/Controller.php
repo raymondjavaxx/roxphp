@@ -15,7 +15,7 @@
 namespace rox\action;
 
 use \rox\Rox;
-use \rox\Inflector;
+use \Rox\Utils\Inflector;
 use \rox\Router;
 
 /**

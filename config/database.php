@@ -13,7 +13,7 @@
  */
 
 use \rox\active_record\ConnectionManager;
-use \rox\util\Environment;
+use \Rox\Utils\Environment;
 
 switch (Environment::get()) {
 	/*

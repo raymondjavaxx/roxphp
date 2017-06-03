@@ -15,6 +15,7 @@
 namespace rox;
 
 use \rox\http\Request;
+use \Rox\Utils\Inflector;
 
 /**
  * Router

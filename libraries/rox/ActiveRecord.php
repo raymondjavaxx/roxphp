@@ -14,7 +14,7 @@
 
 namespace rox;
 
-use \rox\Inflector;
+use \Rox\Util\Inflector;
 use \rox\Exception;
 use \rox\active_record\AssociationCollection;
 use \rox\active_record\RecordNotFoundException;

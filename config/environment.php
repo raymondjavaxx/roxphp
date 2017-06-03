@@ -1,6 +1,6 @@
 <?php
 
-use \rox\util\Environment;
+use \Rox\Utils\Environment;
 
 $environment = Environment::detect();
 require_once __DIR__ . "/environments/{$environment}.php";

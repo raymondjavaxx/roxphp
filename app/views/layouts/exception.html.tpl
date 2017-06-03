@@ -19,7 +19,7 @@
     </div>
     <div id="container">
       <?php echo $rox_layout_content; ?>
-      <?php if (!\rox\util\Environment::is('production')) : ?>
+      <?php if (!\Rox\Utils\Environment::is('production')) : ?>
         <div class="exception">
           <h3><?php echo get_class($exception) ?>: <?php echo $exception->getMessage(); ?></h3>
 

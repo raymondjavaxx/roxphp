@@ -15,6 +15,7 @@
 namespace rox;
 
 use \rox\Exception;
+use \Rox\Utils\Inflector;
 
 /**
  * Rox class
