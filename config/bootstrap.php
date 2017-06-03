@@ -32,7 +32,7 @@ if (PHP_SAPI !== 'cli') {
 // });
 
 // Load DB configuration file and init
-require ROX_APP_PATH . '/config/environment.php';
-require ROX_APP_PATH . '/config/database.php';
-require ROX_APP_PATH . '/config/routes.php';
-require ROX_APP_PATH . '/config/init.php';
+require __DIR__ . '/environment.php';
+require __DIR__ . '/database.php';
+require __DIR__ . '/routes.php';
+require __DIR__ . '/init.php';
