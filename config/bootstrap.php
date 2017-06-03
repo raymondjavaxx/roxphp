@@ -23,12 +23,12 @@ error_reporting(0);
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 if (PHP_SAPI !== 'cli') {
-	\rox\exception\Handler::register();
+    \rox\exception\Handler::register();
 }
 
 // Treat errors as exceptions
 // set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-// 	throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
+//  throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
 // });
 
 // Load DB configuration file and init

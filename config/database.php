@@ -13,48 +13,10 @@
  */
 
 use \rox\active_record\ConnectionManager;
-use \Rox\Utils\Environment;
 
-switch (Environment::get()) {
-	/*
-	case 'production':
-		// Production database configuration
-		ConnectionManager::setConfig('default', array(
-			'host'     => '127.0.0.1',
-			'username' => 'root',
-			'password' => '',
-			'database' => 'rox_app'
-		));
-		break;
-
-	case 'staging':
-		// Development database configuration
-		ConnectionManager::setConfig('default', array(
-			'host'     => '127.0.0.1',
-			'username' => 'root',
-			'password' => '',
-			'database' => 'rox_app_stage'
-		));
-		break;
-
-	case 'test':
-		// Testing database configuration
-		ConnectionManager::setConfig('default', array(
-			'host'     => '127.0.0.1',
-			'username' => 'root',
-			'password' => '',
-			'database' => 'rox_app_test'
-		));
-		break;
-	*/
-
-	default:
-		// Development database configuration
-		ConnectionManager::setConfig('default', array(
-			'host'     => '127.0.0.1',
-			'username' => 'root',
-			'password' => '',
-			'database' => 'rox_app_dev'
-		));
-		break;
-}
+ConnectionManager::setConfig('default', array(
+    'host'     => '127.0.0.1',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'rox_app_dev'
+));
